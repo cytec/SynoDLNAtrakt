@@ -1,0 +1,53 @@
+<episodedetails xsd="http://www.w3.org/2001/XMLSchema" xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <title>Spagat zwischen Attentat und Heldentat</title>
+  <season>4</season>
+  <episode>14</episode>
+  <aired>2010-02-24</aired>
+  <plot>Gus und Shawn werden zu einer Expertenkommission geladen, die für den Schutz des schwerreichen Geschäftsmannes Bonaventure ins Leben gerufen wurde. Auf Bonaventure wurden in der Vergangenheit verschiedene Attentate verübt. Doch jetzt ist die Bedrohung so stark, dass man extra eine Expertenkommission gründet, um ihn zu schützen. Erst viel zu spät erfährt Shawn, dass sein Auftraggeber, Mr. Snowden, der eigentliche Attentäter ist und der durch ihn gute Tipps bekommt, wie man an Bonaventure herankommt. Shawn ruft das Dezernat zur Hilfe, und gemeinsam gelingt es ihnen in letzter Sekunde, Bonaventure vor einem kaltblütigen Anschlag zu schützen. Zunächst wird als Täter Mr. Snowden entlarvt. Als sich jedoch Bonaventure und Shawn ins Auto retten können, werden sie von Boyd überrascht, der es ebenfalls auf Bonaventure abgesehen hat.</plot>
+  <displayseason />
+  <displayepisode />
+  <thumb>http://www.thetvdb.com/banners/episodes/79335/1191411.jpg</thumb>
+  <watched>false</watched>
+  <credits>Andy Berman|Steve Franks</credits>
+  <director>Stephen Surjik</director>
+  <rating>7.5</rating>
+  <actor>
+    <name>Bruce Davison</name>
+  </actor>
+  <actor>
+    <name>Miguel Ferrer</name>
+  </actor>
+  <actor>
+    <name>Chris Sarandon</name>
+  </actor>
+  <actor>
+    <name>James Roday</name>
+    <role>Shawn Spencer</role>
+    <thumb>http://www.thetvdb.com/banners/actors/70875.jpg</thumb>
+  </actor>
+  <actor>
+    <name>Dulé Hill</name>
+    <role>Burton 'Gus' Guster</role>
+    <thumb>http://www.thetvdb.com/banners/actors/70876.jpg</thumb>
+  </actor>
+  <actor>
+    <name>Maggie Lawson</name>
+    <role>Juliet O'Hara</role>
+    <thumb>http://www.thetvdb.com/banners/actors/70877.jpg</thumb>
+  </actor>
+  <actor>
+    <name>Kirsten Nelson</name>
+    <role>Karen Vick</role>
+    <thumb>http://www.thetvdb.com/banners/actors/70880.jpg</thumb>
+  </actor>
+  <actor>
+    <name>Corbin Bernsen</name>
+    <role>Henry Spencer</role>
+    <thumb>http://www.thetvdb.com/banners/actors/70879.jpg</thumb>
+  </actor>
+  <actor>
+    <name>Timothy Omundson</name>
+    <role>Carlton Lassiter</role>
+    <thumb>http://www.thetvdb.com/banners/actors/70878.jpg</thumb>
+  </actor>
+</episodedetails>
