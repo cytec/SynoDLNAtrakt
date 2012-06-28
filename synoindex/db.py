@@ -11,7 +11,7 @@ db_lock = threading.Lock()
 
 def checkDB():
     if FIRSTRUN==1:
-        conn = sqlite3.connect('snoindex.db')
+        conn = sqlite3.connect('SynoDLNAtrakt.db')
         curs = conn.cursor()
         curs.execute("""CREATE TABLE watch (id INTEGER PRIMARY KEY,
             folder TEXT, 
@@ -66,7 +66,7 @@ def dict_factory(cursor, row):
 # myDB.action("INSERT INTO history (action, date, showid, season, episode, quality, resource, provider) VALUES (?,?,?,?,?,?,?,?)",
 #                 [action, logDate, showid, season, episode, quality, resource, provider])
 class DBConnection:
-    def __init__(self, filename="synoindex.db", suffix=None, row_type="dict"):
+    def __init__(self, filename="SynoDLNAtrakt.db", suffix=None, row_type="dict"):
 
         self.filename = filename
         self.connection = sqlite3.connect(filename)

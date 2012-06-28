@@ -1,10 +1,6 @@
 import urllib2, simplejson, hashlib, json
 from synoindex import config
 
-
-
-
-
 responses = {
     100: ('Continue', 'Request received, please continue'),
     101: ('Switching Protocols',
@@ -74,29 +70,44 @@ responses = {
 
 sha1hash=hashlib.sha1(config.trakt_pass).hexdigest()
 
-def scrobble(dict, type):
-	if type="series":
-		action="show/episode/"
-	if type="movie":
-		action="movie/"
-
-
-
-  postdata={
+def scrobble(dict):
+  if dict["type"]=="series":
+    action="show/episode"
+    
+    postdata={
       "username": config.trakt_user,
       "password": sha1hash,
       "tvdb_id": dict["tvdb_id"],
-      "title": dict["title"],
-      "year": dict["year"],
+      "title": dict["name"],
+      #"year": dict["year"],
       "episodes": [
+        {
+          "season": dict["season"],
+          "episode": dict["episode"]
+        }
+      ]
+    }
+  if dict["type"]=="movie":
+    action="movie"
+
+    postdata={
+      "username": config.trakt_user,
+      "password": sha1hash,
+      "movies": [
           {
-              "season": dict["season"],
-              "episode": dict["episode"]
+              "imdb_id": dict["imdb_id"],
+              "title": dict["name"],
+              "year": dict["year"]
+              # "plays": 1,
+              # "last_played": 1255960578
           }
       ]
-  }
+    }
+
+
 
   url = "http://api.trakt.tv/{0}/seen/{1}".format(action, config.trakt_key)
+  print "\tSending infos to trakt: URL: {0}, Data: {1}".format(url, postdata)
 
   request = urllib2.Request(url, json.dumps(postdata))
   response = urllib2.urlopen(request)
@@ -104,4 +115,6 @@ def scrobble(dict, type):
   resp_data = response.read()
   resp_json = json.loads(resp_data)
 
-  print resp_json
+  ##TODO: Format the responses
+
+  print "TRAKT: response: {0}".format(resp_json)
