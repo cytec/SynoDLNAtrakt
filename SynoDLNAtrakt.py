@@ -116,8 +116,10 @@ for key in idtimes.keys():
 		print ""
 
 #move accesslog away for faster handling on the next time ;)
-# newlogpath = path + "/accesslog-backups/{0}-access.log".format(datetime.date.today())
-
-# shutil.move(config.accesslog, newlogpath)
-# os.popen('touch {0}'.format(config.accesslog-backups))
-# print "ACCESSLOG moved to backup directory..."
+# if config.delete_logs:
+	# newlogpath = path + "/accesslog-backups/{0}-access.log".format(datetime.date.today())
+	
+	# shutil.copy(config.accesslog, newlogpath)
+	# truncate accesslog (jsut clean it)
+	# open(config.accesslog, 'w').close()
+	# print "ACCESSLOG moved to backup directory..."	

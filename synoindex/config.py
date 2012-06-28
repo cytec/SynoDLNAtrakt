@@ -33,7 +33,7 @@ else:
 	Config.set('General','scrobble_series', 1)
 	Config.set('General','scrobble_movies', 1)
 	Config.set('General','try_guessing', 1)
-	Config.set('General','delete_logs', 1)
+	Config.set('General','delete_logs', 0)
 	Config.set('General','use_database', 1)
 	Config.set('General','loglevel', 'INFO')
 
