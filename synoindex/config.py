@@ -17,8 +17,8 @@ if os.path.exists(configfile):
 	trakt_user = parser.get('Trakt', 'trakt_user')
 	trakt_pass = parser.get('Trakt', 'trakt_pass')
 	trakt_key = parser.get('Trakt', 'trakt_key')
-	delete_logs = parser.get('General','delete_logs')
-	use_database = parser.get('General','use_database')
+	delete_logs = parser.getboolean('General','delete_logs')
+	use_database = parser.getboolean('General','use_database')
 	loglevel = parser.get('General','loglevel')
 else:
 	Config = ConfigParser()
