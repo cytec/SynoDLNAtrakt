@@ -12,35 +12,17 @@ movieregex = "(?P<name>.*).?\(?(?P<year>\d{4})\)?"
 
 def getVideoPath(theid):
 	#/usr/syno/pgsql/bin/psql mediaserver admin -tA -c "select path from video where id = theid"
-	thepath = os.popen('/usr/syno/pgsql/bin/psql mediaserver admin -tA -c "select path from video where id = {0}"'.format(theid)).read()
+	thepath = os.popen('{0} mediaserver admin -tA -c "select path from video where id = {1}"'.format(config.psql, theid)).read().strip()
 	return thepath
 
 def getVideoDuration(theid):
 	#/usr/syno/pgsql/bin/psql mediaserver admin -tA -c "select duration from video where id = 13282"
-	duraton = os.popen('/usr/syno/pgsql/bin/psql mediaserver admin -tA -c "select duration from video where id = {0}"'.format(theid)).read().strip()
+	duraton = os.popen('{0} mediaserver admin -tA -c "select duration from video where id = {1}"'.format(config.psql, theid)).read().strip()
 	return duraton
-
-
-# def isMediaType(filepath):
-# 	response = {}
-# 	for curdir in config.seriesdir:
-#   		if curdir in filepath:
-#   			response["directory"] = curdir
-#   			response["type"] = "series"
-#   			response["filepath"] = os.popen('/usr/syno/pgsql/bin/psql mediaserver admin -tA -c "select path from video where id = {0}"'.format(theid)).read()
-#    			return response
-
-#   	for curdir in config.moviedir:
-#   		if curdir in filepath:
-#   			response["directory"] = curdir
-#   			response["type"] = "movie"
-#   			response["filepath"] = os.popen('/usr/syno/pgsql/bin/psql mediaserver admin -tA -c "select path from video where id = {0}"'.format(theid)).read()
-#    			return response
-# 	return False
 
 def isMediaType(theid):
 	response = {}
-	thepath = os.popen('/usr/syno/pgsql/bin/psql mediaserver admin -tA -c "select path from video where id = {0}"'.format(theid)).read().strip()
+	thepath = os.popen('{0} mediaserver admin -tA -c "select path from video where id = {1}"'.format(config.psql, theid)).read().strip()
 	if thepath:
 		for curdir in config.seriesdir:
   			if curdir in thepath:
@@ -57,12 +39,10 @@ def isMediaType(theid):
    				return response
 	return False
 
-
 def getSeries(filepath, curdir):
 	myfilestring = filepath.replace(curdir,'')
 	series, season, filename = myfilestring.split('/')
-
-	logger.debug("splitting {0} -> Series: {1}, Season: {2}, Filename: {3}".format(filepath, series, season, filename))
+	logger.debug("Splitting {0} -> Series: {1}, Season: {2}, Filename: {3}".format(filepath, series, season, filename))
 
 def durationStamps(time):
 	if not int(time):
@@ -79,11 +59,6 @@ def getProcess(length, viewed):
   	percent = int(viewed) / (int(length) / 100)
   	logger.debug("Duration: {0}s, Viewed: {1}s = {2}% watched".format(length, viewed, percent))
   	return percent
-  	# if percent > 80:
-  	#   print "going to scrobble"
-  	# else:
-  	#   print "{0}% is not enoutgh to scrobble... you need at least {1}".format(percent, minpercent)
-
 
 def checkNFO(filepath, nfotype):
 	#check the nfo for the needed id stuff...
@@ -92,8 +67,6 @@ def checkNFO(filepath, nfotype):
 		directory = os.path.dirname(filepath)
 		directory = re.sub(r'Staffel \d{2}|Season \d{2}', '', directory)
 		nfofile = directory + "tvshow.nfo"
-		#print nfofile
-		#nfofile = "tvshow.nfo"
 		try:
 			dom = parse(nfofile)
 			seriesidTag = dom.getElementsByTagName('id')[0].toxml()
@@ -155,7 +128,7 @@ def checkNFO(filepath, nfotype):
 				logger.debug("Type: {3}, Series: {0}, Season: {1}, Episode: {2}".format(name, season, episode, nfotype)) 
 				return season, episode
 			else:
-				logger.error("Please enable try_guessing in settings or place an tvshow.nfo for: {0}".format(directory))
+				logger.error("Please enable try_guessing in settings or place an nfo for: {0}".format(directory))
 			return 0
 
 	if nfotype == "movie":
@@ -198,7 +171,7 @@ def checkNFO(filepath, nfotype):
 					firstresult = results[0]
 					movieinfo = firstresult.info()
 					imdb_id = movieinfo["imdb_id"]
-					#print "DEBUG: tmdb gave the following keys: {0}".format(movieinfo.keys())
+					logger.debug("DEBUG: tmdb gave the following keys: {0}".format(movieinfo.keys()))
 					title = movieinfo["original_name"]
 					logger.info("Found result for {0} -> Fullname: {1} imdb_id: {2}".format(searchstring, title, imdb_id))
 					return title, imdb_id, year
