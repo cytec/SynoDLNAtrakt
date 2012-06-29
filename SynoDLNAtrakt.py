@@ -63,52 +63,61 @@ def getDurationFromLog(id):
 medialist = [ "avi","mkv","mov","mp4","m4v","ts","hdmov","wmv","mpg","mpeg","xvid"]
 logregex = ".*(?P<theid>\d{5})\.(?P<ext>\w{3,5})"
 
-for line in open(config.accesslog):
-	try:
-		data = p.parse(line)
-		#theid, extension = data["%r"].replace("GET /v/NDLNA/",'').replace(' HTTP/1.1','').split('.')
+logger.info("Starting SynoDLNAtrakt...")
+
+if not os.file.exists(config.accesslog):
+	logger.info("{0} doesn't exist please check your settings and make sure you anabled MediaServers Debug mode".format(config.accesslog))
+	sys.exit(1)
+
+if os.path.getsize(config.accesslog) > 0:
+	for line in open(config.accesslog):
 		try:
-			x = re.match(logregex, data["%r"])
-			theid = x.group("theid")
-			extension = x.group("ext")
-		except:
-			theid, extension = data["%r"].replace("GET /v/NDLNA/",'').replace(' HTTP/1.1','').split('.')
-
-		if extension not in medialist:
-			continue
-		
-		#calculate the actual date from the log (for timedelta calculations)
-		thedate = datetime.datetime.fromtimestamp(time.mktime(time.strptime(data["%t"], time_format)))
-		try:
-			if not idtimes.has_key(theid):
-				thedate = [thedate]
-				idtimes[theid]=thedate
-			else:
-				datelist = idtimes[theid]
-				datelist.append(thedate)
-				idtimes[theid]=datelist
-		except:
-			logger.error("Sorry something went wrong here, cant create dictionary")
-          
-	except:
-		logger.error("Unable to parse line: {0}".format(line))
-
-
-for key in idtimes.keys():
-	mediaelement = helper.isMediaType(key)
-	if mediaelement:
-		scrobbledict = buildMediaElement(mediaelement, key)
-		if scrobbledict:
-			trakt.scrobble(scrobbledict)
-
-
-#move accesslog away for faster handling on the next time ;)
-if config.delete_logs:
-	if not os.path.exists(path + "/accesslog-backups/"):
-		os.makedirs(path + "/accesslog-backups/")
-	newlogpath = path + "/accesslog-backups/{0}-access.log".format(datetime.date.today())
+			data = p.parse(line)
+			#theid, extension = data["%r"].replace("GET /v/NDLNA/",'').replace(' HTTP/1.1','').split('.')
+			try:
+				x = re.match(logregex, data["%r"])
+				theid = x.group("theid")
+				extension = x.group("ext")
+			except:
+				theid, extension = data["%r"].replace("GET /v/NDLNA/",'').replace(' HTTP/1.1','').split('.')
 	
-	shutil.copy(config.accesslog, newlogpath)
-	#truncate accesslog (jsut clean it)
-	open(config.accesslog, 'w').close()
-	logger.info("access.log moved to backup directory: {0}".format(newlogpath))	
+			if extension not in medialist:
+				continue
+			
+			#calculate the actual date from the log (for timedelta calculations)
+			thedate = datetime.datetime.fromtimestamp(time.mktime(time.strptime(data["%t"], time_format)))
+			try:
+				if not idtimes.has_key(theid):
+					thedate = [thedate]
+					idtimes[theid]=thedate
+				else:
+					datelist = idtimes[theid]
+					datelist.append(thedate)
+					idtimes[theid]=datelist
+			except:
+				logger.error("Sorry something went wrong here, cant create dictionary")
+	          
+		except:
+			logger.error("Unable to parse line: {0}".format(line))
+	
+	
+	for key in idtimes.keys():
+		mediaelement = helper.isMediaType(key)
+		if mediaelement:
+			scrobbledict = buildMediaElement(mediaelement, key)
+			if scrobbledict:
+				trakt.scrobble(scrobbledict)
+	
+	
+	#move accesslog away for faster handling on the next time ;)
+	if config.delete_logs:
+		if not os.path.exists(path + "/accesslog-backups/"):
+			os.makedirs(path + "/accesslog-backups/")
+		newlogpath = path + "/accesslog-backups/{0}-access.log".format(datetime.date.today())
+		
+		shutil.copy(config.accesslog, newlogpath)
+		#truncate accesslog (jsut clean it)
+		open(config.accesslog, 'w').close()
+		logger.info("{0} moved to backup directory: {1}".format(config.accesslog, newlogpath))
+else:
+	logger.info("{0} seems to be empty, please play some stuff first".format(config.accesslog))		
