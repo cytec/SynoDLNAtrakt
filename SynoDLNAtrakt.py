@@ -65,7 +65,7 @@ logregex = ".*(?P<theid>\d{5})\.(?P<ext>\w{3,5})"
 
 logger.info("Starting SynoDLNAtrakt...")
 
-if not os.file.exists(config.accesslog):
+if not os.path.exists(config.accesslog):
 	logger.info("{0} doesn't exist please check your settings and make sure you anabled MediaServers Debug mode".format(config.accesslog))
 	sys.exit(1)
 
