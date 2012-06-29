@@ -60,7 +60,7 @@ def getDurationFromLog(id):
 	logger.debug("Duration Timestamp: {0}".format(time))
 	#return enddade - startdate, enddade
 
-medialist = [ "avi", "mkv"]
+medialist = [ "avi","mkv","mov","mp4","m4v","ts","hdmov","wmv","mpg","mpeg","xvid"]
 
 for line in open(config.accesslog):
 	try:
