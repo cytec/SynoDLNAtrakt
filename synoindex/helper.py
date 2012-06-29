@@ -17,8 +17,8 @@ def getVideoPath(theid):
 
 def getVideoDuration(theid):
 	#/usr/syno/pgsql/bin/psql mediaserver admin -tA -c "select duration from video where id = 13282"
-	duraton = os.popen('{0} mediaserver admin -tA -c "select duration from video where id = {1}"'.format(config.psql, theid)).read().strip()
-	return duraton
+	duration = os.popen('{0} mediaserver admin -tA -c "select duration from video where id = {1}"'.format(config.psql, theid)).read().strip()
+	return duration
 
 def isMediaType(theid):
 	response = {}
@@ -45,12 +45,16 @@ def getSeries(filepath, curdir):
 	logger.debug("Splitting {0} -> Series: {1}, Season: {2}, Filename: {3}".format(filepath, series, season, filename))
 
 def durationStamps(time):
-	if not int(time):
+	try:
 		h, m, s = time.split(":")
-		time = int(h*60)
-		time = (time + int(m))*60
-		time = (time + int(s))
-	return time
+		timestamp = int(h*60)
+		timestamp = (timestamp + int(m))*60
+		timestamp = (timestamp + int(s))
+		logger.debug("timestamp for: {0} is {1}".format(time, timestamp))
+	except:
+		timestamp = time
+		logger.debug("{0} seems to be a timestamp already".format(time))
+	return timestamp
 
 def getProcess(length, viewed):
 	minpercent = 80
@@ -82,7 +86,7 @@ def checkNFO(filepath, nfotype):
 		except:
 			logger.error("cant find/open file: {0}".format(nfofile))
 			if config.try_guessing:
-				logger.debug("Trying to guess infos from Filename...")
+				logger.info("Trying to guess infos from Filename...")
 				seriesname = os.path.basename(filepath)
 				p = re.match(seriesregex, seriesname)
 				name = p.group("name").replace(".", " ").strip()
@@ -94,8 +98,8 @@ def checkNFO(filepath, nfotype):
 				tvdb_id = showinfo["id"]
 				realname = showinfo["seriesname"]
 				year = showinfo["firstaired"]
-				logger.debug("tvdb gave the following keys: {0}".format(showinfo.data.keys()))
-				logger.info("Found result for {0} -> Fullname: {1}, tvdb_id: {2}, Year: {3}".format(name, realname, tvdb_id, year))
+				#logger.debug("tvdb gave the following keys: {0}".format(showinfo.data.keys()))
+				logger.info("Found result for {0} -> Fullname: {1}, tvdb_id: {2}, Year: {3}".format(seriesname, realname, tvdb_id, year))
 				return tvdb_id, realname
 			else:
 				logger.error("Please enable try_guessing in settings or place an tvshow.nfo for: {0}".format(directory))
@@ -125,7 +129,7 @@ def checkNFO(filepath, nfotype):
 				name = p.group("name").replace(".", " ").strip()
 				season = p.group("season")
 				episode = p.group("episode")
-				logger.debug("Type: {3}, Series: {0}, Season: {1}, Episode: {2}".format(name, season, episode, nfotype)) 
+				logger.debug("Type: {3}, Series: {0}, Season: {1}, Episode: {2}".format(seriesname, season, episode, nfotype)) 
 				return season, episode
 			else:
 				logger.error("Please enable try_guessing in settings or place an nfo for: {0}".format(directory))
@@ -171,7 +175,7 @@ def checkNFO(filepath, nfotype):
 					firstresult = results[0]
 					movieinfo = firstresult.info()
 					imdb_id = movieinfo["imdb_id"]
-					logger.debug("DEBUG: tmdb gave the following keys: {0}".format(movieinfo.keys()))
+					#logger.debug("tmdb gave the following keys: {0}".format(movieinfo.keys()))
 					title = movieinfo["original_name"]
 					logger.info("Found result for {0} -> Fullname: {1} imdb_id: {2}".format(searchstring, title, imdb_id))
 					return title, imdb_id, year

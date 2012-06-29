@@ -61,11 +61,19 @@ def getDurationFromLog(id):
 	#return enddade - startdate, enddade
 
 medialist = [ "avi","mkv","mov","mp4","m4v","ts","hdmov","wmv","mpg","mpeg","xvid"]
+logregex = ".*(?P<theid>\d{5})\.(?P<ext>\w{3,5})"
 
 for line in open(config.accesslog):
 	try:
 		data = p.parse(line)
-		theid, extension = data["%r"].replace("GET /v/NDLNA/",'').replace(' HTTP/1.1','').split('.')
+		#theid, extension = data["%r"].replace("GET /v/NDLNA/",'').replace(' HTTP/1.1','').split('.')
+		try:
+			x = re.match(logregex, data["%r"])
+			theid = x.group("theid")
+			extension = x.group("ext")
+		except:
+			theid, extension = data["%r"].replace("GET /v/NDLNA/",'').replace(' HTTP/1.1','').split('.')
+
 		if extension not in medialist:
 			continue
 		
