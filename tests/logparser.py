@@ -4,7 +4,7 @@ accesslog = "logparser.log"
 
 p = apachelog.parser(apachelog.formats['lighttpd'])
 time_format = "[%d/%b/%Y:%H:%M:%S +0200]"
-regex = ".*(?P<theid>\d{5})\.(?P<ext>[a-z]{3,4})"
+regex = ".*(?P<theid>\d{5})\.(?P<ext>\w{3,5})"
 
 testlist = ["mkv","mp4","avi"]
 
