@@ -25,18 +25,18 @@ def isMediaType(theid):
 	thepath = os.popen('{0} mediaserver admin -tA -c "select path from video where id = {1}"'.format(config.psql, theid)).read().strip()
 	if thepath:
 		for curdir in config.seriesdir:
-  			if curdir in thepath:
-  				response["directory"] = curdir
-  				response["type"] = "series"
-  				response["thepath"] = thepath
-   				return response
+			if curdir in thepath:
+				response["directory"] = curdir
+				response["type"] = "series"
+				response["thepath"] = thepath
+	 			return response
 	
-  		for curdir in config.moviedir:
-  			if curdir in thepath:
-  				response["directory"] = curdir
-  				response["type"] = "movie"
-  				response["thepath"] = thepath
-   				return response
+		for curdir in config.moviedir:
+			if curdir in thepath:
+				response["directory"] = curdir
+				response["type"] = "movie"
+				response["thepath"] = thepath
+	 			return response
 	return False
 
 def getSeries(filepath, curdir):
@@ -46,19 +46,19 @@ def getSeries(filepath, curdir):
 
 def durationStamps(time):
 	if not int(time):
-  		h, m, s = time.split(":")
-  		time = int(h*60)
-  		time = (time + int(m))*60
-  		time = (time + int(s))
-  	return time
+		h, m, s = time.split(":")
+		time = int(h*60)
+		time = (time + int(m))*60
+		time = (time + int(s))
+	return time
 
 def getProcess(length, viewed):
-  	minpercent = 80
-  	length = durationStamps(length)
-  	viewed = durationStamps(viewed)
-  	percent = int(viewed) / (int(length) / 100)
-  	logger.debug("Duration: {0}s, Viewed: {1}s = {2}% watched".format(length, viewed, percent))
-  	return percent
+	minpercent = 80
+	length = durationStamps(length)
+	viewed = durationStamps(viewed)
+	percent = int(viewed) / (int(length) / 100)
+	logger.debug("Duration: {0}s, Viewed: {1}s = {2}% watched".format(length, viewed, percent))
+	return percent
 
 def checkNFO(filepath, nfotype):
 	#check the nfo for the needed id stuff...

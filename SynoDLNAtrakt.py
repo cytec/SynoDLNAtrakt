@@ -76,9 +76,9 @@ for line in open(config.accesslog):
 				thedate = [thedate]
 				idtimes[theid]=thedate
 			else:
-			 	datelist = idtimes[theid]
-			  	datelist.append(thedate)
-			  	idtimes[theid]=datelist
+				datelist = idtimes[theid]
+				datelist.append(thedate)
+				idtimes[theid]=datelist
 		except:
 			logger.error("Sorry something went wrong here, cant create dictionary")
           
