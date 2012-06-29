@@ -1,5 +1,7 @@
 import urllib2, simplejson, hashlib, json
 from synoindex import config
+from synoindex.logger import logger
+
 
 responses = {
     100: ('Continue', 'Request received, please continue'),
@@ -107,7 +109,7 @@ def scrobble(dict):
 
 
   url = "http://api.trakt.tv/{0}/seen/{1}".format(action, config.trakt_key)
-  print "\tSending infos to trakt: URL: {0}, Data: {1}".format(url, postdata)
+  logger.info("Sending infos to trakt: URL: {0}, Data: {1}".format(url, postdata))
 
   request = urllib2.Request(url, json.dumps(postdata))
   response = urllib2.urlopen(request)
@@ -117,4 +119,4 @@ def scrobble(dict):
 
   ##TODO: Format the responses
 
-  print "TRAKT: response: {0}".format(resp_json)
+  logger.info("response: {0}".format(resp_json))

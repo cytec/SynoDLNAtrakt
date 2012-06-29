@@ -4,6 +4,7 @@ from synoindex import config
 from synoindex import trakt
 
 from lib.apachelog import apachelog as apachelog
+from synoindex.logger import logger
 
 
 p = apachelog.parser(apachelog.formats['lighttpd'])
@@ -19,7 +20,7 @@ sys.path.insert(0, os.path.join(path, 'lib'))
 
 def buildMediaElement(mediaelement, theid):
 	if mediaelement:
-		print "DEBUG:\tMediatype: {0}, Directory: {1}".format(mediaelement["type"], mediaelement["directory"])
+		logger.debug("Mediatype: {0}, Directory: {1}".format(mediaelement["type"], mediaelement["directory"]))
 		mediaelement["id"] = theid
 		mediaelement["thepath"] = helper.getVideoPath(theid)
 		mediaelement["duration"] = helper.getVideoDuration(theid)
@@ -34,28 +35,14 @@ def buildMediaElement(mediaelement, theid):
 			try:
 				mediaelement["name"], mediaelement["imdb_id"], mediaelement["year"] = helper.checkNFO(mediaelement["thepath"], "movie")
 			except:
-				print "ERROR\t: cant make medialement"
+				logger.error("cant make medialement")
 				return None
-
+		logger.debug("created mediaobject: {0}".format(mediaelement))
 		return mediaelement
 	else:
-		print "xx Seems not to be a mediafile that i currently support.."
+		logger.error("Seems not to be a mediafile that i currently support..")
 		return None
-	
-# mediaelement = helper.isMediaType(filename)
 
-# if mediaelement:
-# 	buildMediaElement(mediaelement, theid)
-
-# 	print mediaelement
-
-
-# mediaelement = helper.isMediaType(filename2)
-
-# if mediaelement:
-# 	buildMediaElement(mediaelement, theid2)
-
-# 	print mediaelement
 
 def getDurationFromLog(id):
 	dates = idtimes[id]
@@ -64,13 +51,13 @@ def getDurationFromLog(id):
 
 	duration = enddade - startdate
 	
-	print "Fileid: " + str(id)
-	print "Duration: " + str(duration)
+	logger.debug("Fileid: " + str(id))
+	logger.debug("Duration: " + str(duration))
 	h, m, s = str(duration).split(":")
 	time = int(h*60)
 	time = (time + int(m))*60
 	time = (time + int(s))
-	print "Duration Timestamp: {0}".format(time)
+	logger.debug("Duration Timestamp: {0}".format(time))
 	#return enddade - startdate, enddade
 
 medialist = [ "avi", "mkv"]
@@ -93,33 +80,27 @@ for line in open(config.accesslog):
 			  	datelist.append(thedate)
 			  	idtimes[theid]=datelist
 		except:
-			print "ERROR"
+			logger.error("Sorry something went wrong here, cant create dictionary")
           
 	except:
-           #sys.stderr.write("Unable to parse %s" % line)
-		print "Unable to parse line: {0}".format(line)
+		logger.error("Unable to parse line: {0}".format(line))
 
 
 for key in idtimes.keys():
-	#getDurationFromLog(key)
 	mediaelement = helper.isMediaType(key)
 	if mediaelement:
 		scrobbledict = buildMediaElement(mediaelement, key)
 		if scrobbledict:
-			# print scrobbledict
-			# print ""
-			# print ""
 			trakt.scrobble(scrobbledict)
-			print ""
-			print ""
-	else:
-		print ""
+
 
 #move accesslog away for faster handling on the next time ;)
-# if config.delete_logs:
-	# newlogpath = path + "/accesslog-backups/{0}-access.log".format(datetime.date.today())
+if config.delete_logs:
+	if not os.path.exists(path + "/accesslog-backups/"):
+		os.makedirs(path + "/accesslog-backups/")
+	newlogpath = path + "/accesslog-backups/{0}-access.log".format(datetime.date.today())
 	
-	# shutil.copy(config.accesslog, newlogpath)
-	# truncate accesslog (jsut clean it)
-	# open(config.accesslog, 'w').close()
-	# print "ACCESSLOG moved to backup directory..."	
+	shutil.copy(config.accesslog, newlogpath)
+	#truncate accesslog (jsut clean it)
+	open(config.accesslog, 'w').close()
+	logger.info("access.log moved to backup directory: {0}".format(newlogpath))	

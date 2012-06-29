@@ -4,6 +4,7 @@ from xml.dom.minidom import parse, parseString
 from lib.themoviedb import tmdb
 from lib.tvdb_api import tvdb_api
 from synoindex import config
+from synoindex.logger import logger
 
 seriesregex = "(?P<name>.*).?[sS](?P<season>\d{1,2})[eE|xX|epEP|\.|-]?(?P<episode>\d{1,2})"
 movieregex = "(?P<name>.*).?\(?(?P<year>\d{4})\)?"
@@ -61,7 +62,7 @@ def getSeries(filepath, curdir):
 	myfilestring = filepath.replace(curdir,'')
 	series, season, filename = myfilestring.split('/')
 
-	print "DEBUG\t: splitting {0} -> Series: {1}, Season: {2}, Filename: {3}".format(filepath, series, season, filename)
+	logger.debug("splitting {0} -> Series: {1}, Season: {2}, Filename: {3}".format(filepath, series, season, filename))
 
 def durationStamps(time):
 	if not int(time):
@@ -76,7 +77,7 @@ def getProcess(length, viewed):
   	length = durationStamps(length)
   	viewed = durationStamps(viewed)
   	percent = int(viewed) / (int(length) / 100)
-  	print "DEBUG\t: Duration: {0}s, Viewed: {1}s = {2}% watched".format(length, viewed, percent)
+  	logger.debug("Duration: {0}s, Viewed: {1}s = {2}% watched".format(length, viewed, percent))
   	return percent
   	# if percent > 80:
   	#   print "going to scrobble"
@@ -103,28 +104,28 @@ def checkNFO(filepath, nfotype):
 			except:
 				nameTag = dom.getElementsByTagName('title')[0].toxml()
 				name=nameTag.replace('<title>','').replace('</title>','')
-			print "DEBUG\t: SeriesID for {0} is: {1}".format(name, seriesid)
+			logger.debug("SeriesID for {0} is: {1}".format(name, seriesid))
 			return seriesid, name
 		except:
-			print "ERROR\t: cant find/open file: {0}".format(nfofile)
+			logger.error("cant find/open file: {0}".format(nfofile))
 			if config.try_guessing:
-				print "DEBUG\t: Trying to guess infos from Filename..."
+				logger.debug("Trying to guess infos from Filename...")
 				seriesname = os.path.basename(filepath)
 				p = re.match(seriesregex, seriesname)
 				name = p.group("name").replace(".", " ").strip()
 				season = p.group("season")
 				episode = p.group("episode")
-				print "DEBUG\t: Type: {3}, Name: {0}, Season: {1}, Episode: {2}".format(name, season, episode, nfotype) 
+				logger.debug("Type: {3}, Name: {0}, Season: {1}, Episode: {2}".format(name, season, episode, nfotype))
 				t = tvdb_api.Tvdb()
 				showinfo = t[name]	
 				tvdb_id = showinfo["id"]
 				realname = showinfo["seriesname"]
 				year = showinfo["firstaired"]
-				print "DEBUG\t: tvdb gave the following keys: {0}".format(showinfo.data.keys())
-				print "DEBUG\t: Found result for {0} -> Fullname: {1}, tvdb_id: {2}, Year: {3}".format(name, realname, tvdb_id, year)
+				logger.debug("tvdb gave the following keys: {0}".format(showinfo.data.keys()))
+				logger.info("Found result for {0} -> Fullname: {1}, tvdb_id: {2}, Year: {3}".format(name, realname, tvdb_id, year))
 				return tvdb_id, realname
 			else:
-				"ERROR\t: Please enable try_guessing in settings or place an tvshow.nfo for: {0}".format(directory)
+				logger.error("Please enable try_guessing in settings or place an tvshow.nfo for: {0}".format(directory))
 			return 0
 
 		
@@ -140,21 +141,21 @@ def checkNFO(filepath, nfotype):
 			season=seasonTag.replace('<season>','').replace('</season>','')
 			episodeTag = dom.getElementsByTagName('episode')[0].toxml()
 			episode=episodeTag.replace('<episode>','').replace('</episode>','')
-			print 'INFO\t: TVSHOW info -> Season: {0}, Episode: {1}'.format(season, episode)
+			logger.info('TVSHOW info -> Season: {0}, Episode: {1}'.format(season, episode))
 			return season, episode
 		except:
-			print "ERROR\t: Cant find/open/parse file: {0}".format(nfofile)
+			logger.error("Cant find/open/parse file: {0}".format(nfofile))
 			if config.try_guessing:
-				print "DEBUG\t: Trying to guess infos from Filename..."
+				logger.info("Trying to guess infos from Filename...")
 				seriesname = os.path.basename(filepath)
 				p = re.match(seriesregex, seriesname)
 				name = p.group("name").replace(".", " ").strip()
 				season = p.group("season")
 				episode = p.group("episode")
-				print "DEBUG\t: Type: {3}, Series: {0}, Season: {1}, Episode: {2}".format(name, season, episode, nfotype) 
+				logger.debug("Type: {3}, Series: {0}, Season: {1}, Episode: {2}".format(name, season, episode, nfotype)) 
 				return season, episode
 			else:
-				"ERROR\t: Please enable try_guessing in settings or place an tvshow.nfo for: {0}".format(directory)
+				logger.error("Please enable try_guessing in settings or place an tvshow.nfo for: {0}".format(directory))
 			return 0
 
 	if nfotype == "movie":
@@ -168,12 +169,12 @@ def checkNFO(filepath, nfotype):
 			name=nametag.replace('<title>','').replace('</title>','')
 			yeartag = dom.getElementsByTagName('year')[0].toxml()
 			year=yeartag.replace('<year>','').replace('</year>','')
-			print 'INFO\t: Movie info -> Name: {0}, Year: {1}, imdb_id: {2}'.format(name, year, tvdb_id)
+			logger.info('Movie info -> Name: {0}, Year: {1}, imdb_id: {2}'.format(name, year, tvdb_id))
 			return season, episode
 		except:
-			print "ERROR\t: Cant find/open file: {0}".format(nfofile)
+			logger.error("Cant find/open file: {0}".format(nfofile))
 			if config.try_guessing:
-				print "DEBUG\t: Trying to guess infos from Filename..."
+				logger.info("Trying to guess infos from Filename...")
 				
 				try:
 					moviename = os.path.basename(filepath)
@@ -189,7 +190,7 @@ def checkNFO(filepath, nfotype):
 					year = p.group("year")
 					searchstring = "{0} ({1})".format(name, year)
 
-				print "DEBUG\t: Type: {3}, Name: {0}, Year: {1}, Searchstring: {2}".format(name, year, searchstring, nfotype)
+				logger.debug("Type: {3}, Name: {0}, Year: {1}, Searchstring: {2}".format(name, year, searchstring, nfotype))
 				#we need imdb id for scrobbleing to trakt, so lets make a moviedb lookup here to get these infos (especially if there is no year in the name....)
 				#this ALWAYS uses the first resault that comes from tmdb...
 				results = tmdb.search(searchstring)
@@ -199,12 +200,12 @@ def checkNFO(filepath, nfotype):
 					imdb_id = movieinfo["imdb_id"]
 					#print "DEBUG: tmdb gave the following keys: {0}".format(movieinfo.keys())
 					title = movieinfo["original_name"]
-					print "DEBUG: Found result for {0} -> Fullname: {1} imdb_id: {2}".format(searchstring, title, imdb_id)
+					logger.info("Found result for {0} -> Fullname: {1} imdb_id: {2}".format(searchstring, title, imdb_id))
 					return title, imdb_id, year
 				else:
-					print "ERROR: Can't find any matches for {0}: {1}".format(nfotype, searchstring)
+					logger.error("Can't find any matches for {0}: {1}".format(nfotype, searchstring))
 			else:
-				"ERROR\t: Please enable try_guessing in settings or place an nfo for: {0}".format(filepath)
+				logger.error("Please enable try_guessing in settings or place an nfo for: {0}".format(filepath))
 				return 0
 
 		
