@@ -75,6 +75,11 @@ def mediaelementToDatabase(mediaelement):
 	if mediaelement["type"] == "movie":
 		myDB.upsert("scrobble",{'imdb_id': mediaelement["imdb_id"]},{'id': mediaelement["id"]})
 
+def markScrobbled(theid):
+	db.checkDB()
+	myDB = db.DBConnection()
+	myDB.upsert("scrobble",{'scrobbled': 1]},{'id': theid})
+
 def checkNFO(filepath, nfotype):
 	#check the nfo for the needed id stuff...
 	#check if there is an nfo file... if not, fuck it and try to get infos from tvdb...

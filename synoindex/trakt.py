@@ -124,6 +124,8 @@ def scrobble(dict):
 		return {'status' : 'failure', 'error' : e.reason[0]}
 
 	if response['status'] == 'success':
+		#marking the id as scrobbled inside the database...
+		helper.markScrobbled(dict["id"])
 		if dict['type'] == 'series':
 			logger.info('Trakt responded with: %s' % response['message'])
 		else:
