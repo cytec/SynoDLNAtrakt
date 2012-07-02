@@ -112,12 +112,24 @@ def scrobble(dict):
 	logger.info("Sending infos for {0} \"{1}\" to trakt".format(dict["type"], dict["name"]))
 	logger.debug("Sending infos to trakt: URL: {0}, Data: {1}".format(url, postdata))
 
-	request = urllib2.Request(url, json.dumps(postdata))
-	response = urllib2.urlopen(request)
+	try:
+		request = urllib2.Request(url, json.dumps(postdata))
+		response = urllib2.urlopen(request)
+		resp_data = response.read()
+		resp_json = json.loads(resp_data)
+		logger.debug("response: {0}".format(resp_json))
+	except urllib2.HTTPError, e:
+        result = {'status' : 'failure', 'error' : responses[e.code][1]}
+    except urllib2.URLError, e:
+        return {'status' : 'failure', 'error' : e.reason[0]}
 
-	resp_data = response.read()
-	resp_json = json.loads(resp_data)
+    if result['status'] == 'success':
+        logger.info('Trakt responded with: %s' % result['message'])
+        return {'status' : True, 'message' : result['message']}
+    else:
+        logger.info('Trakt responded with: %s' % result['error'])
+        return {'status' : False, 'message' : result['error']}
 
 	##TODO: Format the responses
 
-	logger.info("response: {0}".format(resp_json))
+	
