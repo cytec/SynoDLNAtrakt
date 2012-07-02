@@ -84,6 +84,11 @@ def mediaelementFromDatabase(theid):
 	db.checkDB()
 	myDB = db.DBConnection()
 
+def FileInDB(theid):
+	db.checkDB()
+	myDB = db.DBConnection()
+	response = myDB.select("SELECT scrobbled from scrobble WHERE id = {0}".format(theid))
+	return response
 
 def checkNFO(filepath, nfotype):
 	#check the nfo for the needed id stuff...

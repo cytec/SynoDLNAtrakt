@@ -131,9 +131,13 @@ if os.path.getsize(config.accesslog) > 0:
 	for key in idtimes.keys():
 		mediaelement = helper.isMediaType(key)
 		if mediaelement:
-			scrobbledict = buildMediaElement(mediaelement, key)
-			if scrobbledict:
-				trakt.scrobble(scrobbledict)
+			isinDB = helper.FileInDB(key)
+			if not isinDB:
+				scrobbledict = buildMediaElement(mediaelement, key)
+				if scrobbledict:
+					trakt.scrobble(scrobbledict)
+			else:
+				logger.info("{0} already in Database and scrobbled to trakt".format(key))
 					
 	
 	
