@@ -15,4 +15,8 @@ if config.logtoconsole:
 	logger.addHandler(console) 
 
 logger.addHandler(hdlr)
-logger.setLevel(logging.DEBUG)
+
+if config.debugmode:
+	logger.setLevel(logging.DEBUG)
+else:
+	logger.setLevel(logging.INFO)
