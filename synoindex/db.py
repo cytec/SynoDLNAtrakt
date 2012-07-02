@@ -1,58 +1,19 @@
 import os
 import sqlite3
 import threading
+from synoindex import config
 
-
-VERSION=001
 FIRSTRUN=1
 
 db_lock = threading.Lock()
 
 
 def checkDB():
-	if FIRSTRUN==1:
+	if not os.path.exists('SynoDLNAtrakt.db'):
 		conn = sqlite3.connect('SynoDLNAtrakt.db')
 		curs = conn.cursor()
-		curs.execute("""CREATE TABLE watch (id INTEGER PRIMARY KEY,
-			folder TEXT, 
-			abitrate NUMERIC, 
-			vbitrate NUMERIC, 
-			acodec TEXT, 
-			vcodec TEXT, 
-			achannels NUMERIC, 
-			width NUMERIC, 
-			height NUMERIC,
-			allaudio NUMERIC,
-			germanfirst NUMERIC,
-			subtitles NUMERIC,
-			moveit NUMERIC,
-			moveto NUMERIC,
-			deleteit NUMERIC,
-			addmeta NUMERIC
-			appletv NUMERIC, appletvaddon NUMERIC)""")
-		curs.execute("""CREATE TABLE files (id INTEGER PRIMARY KEY, 
-			folder TEXT, 
-			filename TEXT, 
-			title TEXT,
-			acodec TEXT,
-			vcodec TEXT,
-			abitrate NUMERIC,
-			vbitrate NUMERIC,
-			achannels NUMERIC,
-			atracks NUMERIC,
-			subtitles NUMERIC,
-			series NUMERIC)""")
-		curs.execute("""CREATE TABLE metadata (id INTEGER PRIMARY KEY, 
-			fileid NUMERIC,
-			folder TEXT, 
-			filename TEXT, 
-			title TEXT,
-			season NUMERIC,
-			episode NUMERIC,
-			plot NUMERIC,
-			year NUMERIC)""")
-		curs.execute("""CREATE TABLE pyencoder (version NUMERIC)""")
-		curs.execute("INSERT INTO pyencoder (version) VALUES (1)")
+		curs.execute("""CREATE TABLE scrobble (id NUMERIC, thepath TEXT, name TEXT, process NUMERIC, lastviewed TEXT, imdb_id TEXT, tvdb_id NUMERIC, duration NUMERIC, viewed NUMERIC, type TEXT, directory TEXT, year NUMERIC, season NUMERIC, episode NUMERIC, scrobbled NUMERIC);""")
+		curs.execute("""CREATE TABLE synoindex (version NUMERIC, lastrun NUMERIC);""")
 		conn.commit()
 
 # http://stackoverflow.com/questions/3300464/how-can-i-get-dict-from-sqlite-query

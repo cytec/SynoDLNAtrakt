@@ -4,6 +4,7 @@ from xml.dom.minidom import parse, parseString
 from lib.themoviedb import tmdb
 from lib.tvdb_api import tvdb_api
 from synoindex import config
+from synoindex import db
 from synoindex.logger import logger
 
 seriesregex = "(?P<name>.*).?[sS](?P<season>\d{1,2})[eE|xX|epEP|\.|-]?(?P<episode>\d{1,2})"
@@ -63,6 +64,16 @@ def getProcess(length, viewed):
 	percent = int(viewed) / (int(length) / 100)
 	logger.debug("Duration: {0}s, Viewed: {1}s = {2}% watched".format(length, viewed, percent))
 	return percent
+
+def mediaelementToDatabase(mediaelement):
+	#create db if not exist...
+	db.checkDB()
+	myDB = db.DBConnection()
+	myDB.upsert("scrobble",{'id': mediaelement["id"], 'lastviewed': mediaelement["lastviewedstamp"], 'process': mediaelement["process"], 'name':mediaelement["name"], 'thepath': mediaelement["thepath"], 'viewed':mediaelement["viewed"], 'duration':mediaelement["duration"], 'year':mediaelement["year"], 'directory':mediaelement["directory"], 'type':mediaelement["type"]},{'id': mediaelement["id"]})
+	if mediaelement["type"] == "series":
+		myDB.upsert("scrobble",{'season': mediaelement["season"], 'episode': mediaelement["episode"], 'tvdb_id': mediaelement["tvdb_id"]},{'id': mediaelement["id"]})
+	if mediaelement["type"] == "movie":
+		myDB.upsert("scrobble",{'imdb_id': mediaelement["imdb_id"]},{'id': mediaelement["id"]})
 
 def checkNFO(filepath, nfotype):
 	#check the nfo for the needed id stuff...

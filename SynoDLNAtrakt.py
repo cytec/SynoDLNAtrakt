@@ -53,7 +53,7 @@ def buildMediaElement(mediaelement, theid):
 			logger.error("{0}, was watched {1}% we need at least {2}%... skipping it".format(mediaelement["thepath"], mediaelement["process"], config.min_progress))
 			return None
 		else:
-			
+
 			mediaelement["lastviewedstamp"] = calendar.timegm(mediaelement["lastviewed"].timetuple())
 			#generate timestamp from lastviewed (datetime obj)
 			#d = datetime.datetime.now()
@@ -76,6 +76,7 @@ def buildMediaElement(mediaelement, theid):
 					return None
 			logger.debug("created mediaobject: {0}".format(mediaelement))
 			#insert created infos in database...
+			helper.mediaelementToDatabase(mediaelement)
 			return mediaelement
 	else:
 		logger.error("Seems not to be a mediafile that i currently support..")
