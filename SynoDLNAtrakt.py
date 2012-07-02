@@ -2,6 +2,7 @@ import os, sys, re, datetime, time, shutil
 from synoindex import helper
 from synoindex import config
 from synoindex import trakt
+import calendar
 
 from lib.apachelog import apachelog as apachelog
 from synoindex.logger import logger
@@ -18,6 +19,7 @@ path = os.path.dirname(os.path.abspath( __file__ ))
 # Insert local directories into path
 sys.path.insert(0, os.path.join(path, 'lib'))
 
+#TODO: cleanup!
 
 def getDurationFromLog(id):
 	dates = idtimes[id]
@@ -47,6 +49,15 @@ def buildMediaElement(mediaelement, theid):
 		mediaelement["process"] = helper.getProcess(mediaelement["duration"], mediaelement["viewed"])
 		
 		#quit here if process is not enough... (saves time)
+
+		#generate timestamp from lastviewed (datetime obj)
+		#d = datetime.datetime.now()
+		#calendar.timegm(d.timetuple())
+
+		#timestamp is needed for scrobbling last viewed date and to save it in database...
+
+		#generate datetime from timestamp
+		#datetime.datetime.utcfromtimestamp(1341237828)
 
 		if mediaelement["type"] == "series":
 			mediaelement["tvdb_id"], mediaelement["name"] = helper.checkNFO(mediaelement["thepath"], "series")
@@ -80,7 +91,6 @@ if os.path.getsize(config.accesslog) > 0:
 	for line in open(config.accesslog):
 		try:
 			data = p.parse(line)
-			#theid, extension = data["%r"].replace("GET /v/NDLNA/",'').replace(' HTTP/1.1','').split('.')
 			try:
 				x = re.match(logregex, data["%r"])
 				theid = x.group("theid")
