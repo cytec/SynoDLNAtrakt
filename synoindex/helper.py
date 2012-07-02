@@ -78,12 +78,12 @@ def mediaelementToDatabase(mediaelement):
 def markScrobbled(theid):
 	db.checkDB()
 	myDB = db.DBConnection()
-	myDB.upsert("scrobble",{'scrobbled': 1]},{'id': theid})
+	myDB.upsert("scrobble",{'scrobbled': 1},{'id': theid})
 
 def mediaelementFromDatabase(theid):
 	db.checkDB()
 	myDB = db.DBConnection()
-	
+
 
 def checkNFO(filepath, nfotype):
 	#check the nfo for the needed id stuff...
