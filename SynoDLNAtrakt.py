@@ -109,7 +109,10 @@ if os.path.getsize(config.accesslog) > 0:
 		if mediaelement:
 			scrobbledict = buildMediaElement(mediaelement, key)
 			if scrobbledict:
-				trakt.scrobble(scrobbledict)
+				if scrobbledict["process"] > config.min_progress:
+					trakt.scrobble(scrobbledict)
+				else:
+					logger.error("{0}, was only watched {1}%".format(scrobbledict["name"], scrobbledict["process"]))
 	
 	
 	#move accesslog away for faster handling on the next time ;)

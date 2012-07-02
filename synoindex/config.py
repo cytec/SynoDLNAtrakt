@@ -20,6 +20,7 @@ if os.path.exists(configfile):
 	delete_logs = parser.getboolean('General','delete_logs')
 	use_database = parser.getboolean('General','use_database')
 	loglevel = parser.get('General','loglevel')
+	min_progress = parser.get('Trakt','min_progress')
 else:
 	Config = ConfigParser()
 	cfgfile = open(configfile,'w')
@@ -41,6 +42,7 @@ else:
 	Config.set('Trakt','trakt_user','Username')
 	Config.set('Trakt','trakt_pass', 'Password')
 	Config.set('Trakt','trakt_key', 'API-Key')
+	Config.set('Trakt','min_progress', 80)
 	Config.write(cfgfile)
 	cfgfile.close()
 	print "Config file: {0} generated. please reastart me now.".format(configfile)
