@@ -112,7 +112,7 @@ if os.path.getsize(config.accesslog) > 0:
 				if scrobbledict["process"] > config.min_progress:
 					trakt.scrobble(scrobbledict)
 				else:
-					logger.error("{0}, was only watched {1}%".format(scrobbledict["name"], scrobbledict["process"]))
+					logger.error("{0}, was only watched {1}% we need at least {2}".format(scrobbledict["name"], scrobbledict["process"], config.min_progress))
 	
 	
 	#move accesslog away for faster handling on the next time ;)
