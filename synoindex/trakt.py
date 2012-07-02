@@ -124,7 +124,7 @@ def scrobble(dict):
 		return {'status' : 'failure', 'error' : e.reason[0]}
 
 	if response['status'] == 'success':
-		if postdata['type'] == 'series':
+		if dict['type'] == 'series':
 			logger.info('Trakt responded with: %s' % response['message'])
 		else:
 			logger.info('Trakt responded with: %s' % response['status'])
