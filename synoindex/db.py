@@ -4,10 +4,7 @@ import threading
 from synoindex import config
 from synoindex.logger import logger
 
-FIRSTRUN=1
-
 db_lock = threading.Lock()
-
 
 def checkDB():
 	if not os.path.exists('SynoDLNAtrakt.db'):

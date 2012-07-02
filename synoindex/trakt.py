@@ -102,7 +102,7 @@ def scrobble(dict):
 							"title": dict["name"],
 							"year": dict["year"]
 							# "plays": 1,
-							# "last_played": 1255960578
+							"last_played": dict["lastviewedstamp"]
 					}
 			]
 		}
