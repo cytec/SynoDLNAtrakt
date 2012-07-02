@@ -2,6 +2,7 @@ import re, os, sys
 from ConfigParser import SafeConfigParser, ConfigParser
 
 configfile = "SynoDLNAtrakt.ini"
+logtoconsole=0
 
 if os.path.exists(configfile):
 	parser = SafeConfigParser()
