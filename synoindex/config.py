@@ -16,12 +16,16 @@ if os.path.exists(configfile):
 	scrobble_series = parser.getboolean('General', 'scrobble_series')
 	scrobble_movies = parser.getboolean('General', 'scrobble_movies')
 	try_guessing = parser.getboolean('General', 'try_guessing')
+	delete_logs = parser.getboolean('General','delete_logs')
+	use_database = parser.getboolean('General','use_database')
+
 	trakt_user = parser.get('Trakt', 'trakt_user')
 	trakt_pass = parser.get('Trakt', 'trakt_pass')
 	trakt_key = parser.get('Trakt', 'trakt_key')
-	delete_logs = parser.getboolean('General','delete_logs')
-	use_database = parser.getboolean('General','use_database')
-	
+
+	use_boxcar = parser.getboolean('Boxcar', 'use_boxcar')
+	boxcar_username = parser.get('Boxcar', 'boxcar_username')
+
 	debugmode = parser.getboolean('Advanced','debugmode')
 	min_progress = parser.get('Advanced','min_progress')
 	interval = parser.get('Advanced','interval')
@@ -46,6 +50,10 @@ else:
 	Config.set('Trakt','trakt_user','Username')
 	Config.set('Trakt','trakt_pass', 'Password')
 	Config.set('Trakt','trakt_key', 'API-Key')
+
+	Config.add_section('Boxcar')
+	Config.set('Boxcar','use_boxcar', 0)
+	Config.set('Boxcar','boxcar_username', '')
 
 	Config.add_section('Advanced')
 	Config.set('Advanced','min_progress', 80)
