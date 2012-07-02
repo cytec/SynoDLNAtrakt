@@ -50,7 +50,7 @@ def buildMediaElement(mediaelement, theid):
 		
 		#quit here if process is not enough... (saves time)
 		if int(mediaelement["process"]) < int(config.min_progress):
-			logger.error("{0}, was watched {1}% we need at least {2}%... skipping it".format(scrobbledict["thepath"], scrobbledict["process"], config.min_progress))
+			logger.error("{0}, was watched {1}% we need at least {2}%... skipping it".format(mediaelement["thepath"], mediaelement["process"], config.min_progress))
 			return None
 		else:
 			#generate timestamp from lastviewed (datetime obj)
