@@ -69,11 +69,11 @@ def mediaelementToDatabase(mediaelement):
 	#create db if not exist...
 	db.checkDB()
 	myDB = db.DBConnection()
-	myDB.upsert("scrobble",{'id': mediaelement["id"], 'lastviewed': mediaelement["lastviewedstamp"], 'process': mediaelement["process"], 'name':mediaelement["name"], 'thepath': mediaelement["thepath"], 'viewed':mediaelement["viewed"], 'duration':mediaelement["duration"], 'year':mediaelement["year"], 'directory':mediaelement["directory"], 'type':mediaelement["type"]},{'id': mediaelement["id"]})
+	myDB.upsert("scrobble",{'id': mediaelement["id"], 'lastviewed': mediaelement["lastviewedstamp"], 'process': mediaelement["process"], 'name':mediaelement["name"], 'thepath': mediaelement["thepath"], 'viewed':mediaelement["viewed"], 'duration':mediaelement["duration"], 'directory':mediaelement["directory"], 'type':mediaelement["type"]},{'id': mediaelement["id"]})
 	if mediaelement["type"] == "series":
 		myDB.upsert("scrobble",{'season': mediaelement["season"], 'episode': mediaelement["episode"], 'tvdb_id': mediaelement["tvdb_id"]},{'id': mediaelement["id"]})
 	if mediaelement["type"] == "movie":
-		myDB.upsert("scrobble",{'imdb_id': mediaelement["imdb_id"]},{'id': mediaelement["id"]})
+		myDB.upsert("scrobble",{'imdb_id': mediaelement["imdb_id"], 'year':mediaelement["year"]},{'id': mediaelement["id"]})
 
 def markScrobbled(theid):
 	db.checkDB()
