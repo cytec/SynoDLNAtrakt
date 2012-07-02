@@ -22,6 +22,10 @@ if os.path.exists(configfile):
 	use_database = parser.getboolean('General','use_database')
 	loglevel = parser.get('General','loglevel')
 	min_progress = parser.get('Trakt','min_progress')
+
+	if parser.has_option('General','logtoconsole'):
+		logtoconsole = parser.get('General','logtoconsole')
+
 else:
 	Config = ConfigParser()
 	cfgfile = open(configfile,'w')
