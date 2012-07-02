@@ -50,6 +50,7 @@ def buildMediaElement(mediaelement, theid):
 		
 		#quit here if process is not enough... (saves time)
 		if int(mediaelement["process"]) < int(config.min_progress):
+			logger.error("{0}, was watched {1}% we need at least {2}%... skipping it".format(scrobbledict["name"], scrobbledict["process"], config.min_progress))
 			return None
 		else:
 			#generate timestamp from lastviewed (datetime obj)
@@ -128,10 +129,8 @@ if os.path.getsize(config.accesslog) > 0:
 		if mediaelement:
 			scrobbledict = buildMediaElement(mediaelement, key)
 			if scrobbledict:
-				if int(scrobbledict["process"]) > int(config.min_progress):
-					trakt.scrobble(scrobbledict)
-				else:
-					logger.error("{0}, was watched {1}% we need at least {2}%... skipping it".format(scrobbledict["name"], scrobbledict["process"], config.min_progress))
+				trakt.scrobble(scrobbledict)
+					
 	
 	
 	#move accesslog away for faster handling on the next time ;)
