@@ -29,7 +29,7 @@ def getDurationFromLog(id):
 	logger.debug("Fileid: " + str(id))
 	logger.debug("Duration: " + str(duration))
 	h, m, s = str(duration).split(":")
-	time = int(h*60)
+	time = int(h)*60
 	time = (time + int(m))*60
 	time = (time + int(s))
 	logger.debug("Duration Timestamp: {0}".format(time))
