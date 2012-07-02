@@ -119,16 +119,16 @@ def scrobble(dict):
 		resp_json = json.loads(resp_data)
 		logger.debug("response: {0}".format(resp_json))
 	except urllib2.HTTPError, e:
-        result = {'status' : 'failure', 'error' : responses[e.code][1]}
-    except urllib2.URLError, e:
-        return {'status' : 'failure', 'error' : e.reason[0]}
+		result = {'status' : 'failure', 'error' : responses[e.code][1]}
+	except urllib2.URLError, e:
+		return {'status' : 'failure', 'error' : e.reason[0]}
 
-    if result['status'] == 'success':
-        logger.info('Trakt responded with: %s' % result['message'])
-        return {'status' : True, 'message' : result['message']}
-    else:
-        logger.info('Trakt responded with: %s' % result['error'])
-        return {'status' : False, 'message' : result['error']}
+	if result['status'] == 'success':
+		logger.info('Trakt responded with: %s' % result['message'])
+		#return {'status' : True, 'message' : result['message']}
+	else:
+		logger.info('Trakt responded with: %s' % result['error'])
+		#return {'status' : False, 'message' : result['error']}
 
 	##TODO: Format the responses
 
