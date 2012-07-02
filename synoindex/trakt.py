@@ -109,7 +109,8 @@ def scrobble(dict):
 		
 
 	url = "http://api.trakt.tv/{0}/seen/{1}".format(action, config.trakt_key)
-	logger.info("Sending infos to trakt: URL: {0}, Data: {1}".format(url, postdata))
+	logger.info("Sending infos for {0} \"{1}\" to trakt".format(dict["type"], dict["name"]))
+	logger.debug("Sending infos to trakt: URL: {0}, Data: {1}".format(url, postdata))
 
 	request = urllib2.Request(url, json.dumps(postdata))
 	response = urllib2.urlopen(request)
