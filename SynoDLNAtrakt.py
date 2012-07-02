@@ -18,13 +18,31 @@ path = os.path.dirname(os.path.abspath( __file__ ))
 # Insert local directories into path
 sys.path.insert(0, os.path.join(path, 'lib'))
 
+
+def getDurationFromLog(id):
+	dates = idtimes[id]
+	startdate = dates[1]
+	enddade = dates[-1]
+
+	duration = enddade - startdate
+	
+	logger.debug("Fileid: " + str(id))
+	logger.debug("Duration: " + str(duration))
+	h, m, s = str(duration).split(":")
+	time = int(h*60)
+	time = (time + int(m))*60
+	time = (time + int(s))
+	logger.debug("Duration Timestamp: {0}".format(time))
+	logger.debug("Last viewed: {0}, for: {1}".format(enddade, duration))
+	return time, enddade
+
 def buildMediaElement(mediaelement, theid):
 	if mediaelement:
 		logger.debug("Mediatype: {0}, Directory: {1}".format(mediaelement["type"], mediaelement["directory"]))
 		mediaelement["id"] = theid
 		mediaelement["thepath"] = helper.getVideoPath(theid)
 		mediaelement["duration"] = helper.getVideoDuration(theid)
-		mediaelement["viewed"], mediaelement["lastviewed"] = helper.getDurationFromLog(theid)
+		mediaelement["viewed"], mediaelement["lastviewed"] = getDurationFromLog(theid)
 		mediaelement["process"] = helper.getProcess(mediaelement["duration"], mediaelement["viewed"])
 	
 		if mediaelement["type"] == "series":
@@ -44,22 +62,6 @@ def buildMediaElement(mediaelement, theid):
 		return None
 
 
-def getDurationFromLog(id):
-	dates = idtimes[id]
-	startdate = dates[1]
-	enddade = dates[-1]
-
-	duration = enddade - startdate
-	
-	logger.debug("Fileid: " + str(id))
-	logger.debug("Duration: " + str(duration))
-	h, m, s = str(duration).split(":")
-	time = int(h*60)
-	time = (time + int(m))*60
-	time = (time + int(s))
-	logger.debug("Duration Timestamp: {0}".format(time))
-	logger.debug("Last viewed: {0}, for: {1}".format(enddade, duration))
-	return time, enddade
 
 medialist = [ "avi","mkv","mov","mp4","m4v","ts","hdmov","wmv","mpg","mpeg","xvid"]
 logregex = ".*(?P<theid>\d{5})\.(?P<ext>\w{3,5})"
