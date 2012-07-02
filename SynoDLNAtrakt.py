@@ -87,6 +87,9 @@ if not os.path.exists(config.accesslog):
 	logger.info("{0} doesn't exist please check your settings and make sure you anabled MediaServers Debug mode".format(config.accesslog))
 	sys.exit(1)
 
+
+#this may should be moved to helper.py too
+
 if os.path.getsize(config.accesslog) > 0:
 	for line in open(config.accesslog):
 		try:
