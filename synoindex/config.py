@@ -3,6 +3,10 @@ from ConfigParser import SafeConfigParser, ConfigParser
 
 configfile = "SynoDLNAtrakt.ini"
 logtoconsole=0
+min_progress=80
+interval=24
+
+#TODO: check if everything we need is in config file...
 
 if os.path.exists(configfile):
 	parser = SafeConfigParser()
@@ -21,11 +25,9 @@ if os.path.exists(configfile):
 	delete_logs = parser.getboolean('General','delete_logs')
 	use_database = parser.getboolean('General','use_database')
 	loglevel = parser.get('General','loglevel')
-	min_progress = parser.get('Trakt','min_progress')
-
-	if parser.has_option('General','logtoconsole'):
-		logtoconsole = parser.get('General','logtoconsole')
-
+	min_progress = parser.get('Advanced','min_progress')
+	interval = parser.get('Advanced','interval')
+	logtoconsole = parser.get('Advanced','logtoconsole')
 else:
 	Config = ConfigParser()
 	cfgfile = open(configfile,'w')
@@ -47,7 +49,9 @@ else:
 	Config.set('Trakt','trakt_user','Username')
 	Config.set('Trakt','trakt_pass', 'Password')
 	Config.set('Trakt','trakt_key', 'API-Key')
-	Config.set('Trakt','min_progress', 80)
+	Config.set('Advanced','min_progress', 80)
+	Config.set('Advanced','logtoconsole', 0)
+	Config.set('Advanced','interval', 24)
 	Config.write(cfgfile)
 	cfgfile.close()
 	print "Config file: {0} generated. please reastart me now.".format(configfile)
