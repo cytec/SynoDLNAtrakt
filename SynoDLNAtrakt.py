@@ -44,7 +44,6 @@ def buildMediaElement(mediaelement, theid):
 		logger.info("Processing File: {0}".format(mediaelement["thepath"]))
 		logger.debug("Mediatype: {0}, Directory: {1}".format(mediaelement["type"], mediaelement["directory"]))
 		mediaelement["id"] = theid
-		#mediaelement["thepath"] = helper.getVideoPath(theid)
 		mediaelement["duration"] = helper.getVideoDuration(theid)
 		mediaelement["viewed"], mediaelement["lastviewed"] = getDurationFromLog(theid)
 		mediaelement["process"] = helper.getProcess(mediaelement["duration"], mediaelement["viewed"])
@@ -54,6 +53,8 @@ def buildMediaElement(mediaelement, theid):
 			logger.error("{0}, was watched {1}% we need at least {2}%... skipping it".format(mediaelement["thepath"], mediaelement["process"], config.min_progress))
 			return None
 		else:
+			
+			mediaelement["lastviewedstamp"] = calendar.timegm(mediaelement["lastviewed"].timetuple())
 			#generate timestamp from lastviewed (datetime obj)
 			#d = datetime.datetime.now()
 			#calendar.timegm(d.timetuple())
