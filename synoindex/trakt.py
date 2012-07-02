@@ -1,5 +1,6 @@
 import urllib2, simplejson, hashlib, json
 from synoindex import config
+from synoindex import helper
 from synoindex.logger import logger
 
 
