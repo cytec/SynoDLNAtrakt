@@ -37,6 +37,7 @@ def getDurationFromLog(id):
 	return time, enddade
 
 def buildMediaElement(mediaelement, theid):
+	#check if given id is already in Database and get the lastviewed value to compare if its the same entry.
 	if mediaelement:
 		logger.debug("Mediatype: {0}, Directory: {1}".format(mediaelement["type"], mediaelement["directory"]))
 		mediaelement["id"] = theid
@@ -44,7 +45,9 @@ def buildMediaElement(mediaelement, theid):
 		mediaelement["duration"] = helper.getVideoDuration(theid)
 		mediaelement["viewed"], mediaelement["lastviewed"] = getDurationFromLog(theid)
 		mediaelement["process"] = helper.getProcess(mediaelement["duration"], mediaelement["viewed"])
-	
+		
+		#quit here if process is not enough... (saves time)
+
 		if mediaelement["type"] == "series":
 			mediaelement["tvdb_id"], mediaelement["name"] = helper.checkNFO(mediaelement["thepath"], "series")
 			mediaelement["season"], mediaelement["episode"] = helper.checkNFO(mediaelement["thepath"], "episode")
@@ -56,6 +59,7 @@ def buildMediaElement(mediaelement, theid):
 				logger.error("cant make medialement")
 				return None
 		logger.debug("created mediaobject: {0}".format(mediaelement))
+		#insert created infos in database...
 		return mediaelement
 	else:
 		logger.error("Seems not to be a mediafile that i currently support..")
