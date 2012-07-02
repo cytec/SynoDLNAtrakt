@@ -21,23 +21,6 @@ sys.path.insert(0, os.path.join(path, 'lib'))
 
 #TODO: cleanup!
 
-def getDurationFromLog(id):
-	dates = idtimes[id]
-	startdate = dates[1]
-	enddade = dates[-1]
-
-	duration = enddade - startdate
-	
-	logger.debug("Fileid: " + str(id))
-	logger.debug("Duration: " + str(duration))
-	h, m, s = str(duration).split(":")
-	time = int(h)*60
-	time = (time + int(m))*60
-	time = (time + int(s))
-	logger.debug("Duration Timestamp: {0}".format(time))
-	logger.debug("Last viewed: {0}, for: {1}".format(enddade, duration))
-	return time, enddade
-
 def buildMediaElement(mediaelement, theid):
 	#check if given id is already in Database and get the lastviewed value to compare if its the same entry.
 	if mediaelement:
@@ -133,7 +116,7 @@ if os.path.getsize(config.accesslog) > 0:
 		if mediaelement:
 			isinDB = helper.FileInDB(key)
 			if not isinDB:
-				scrobbledict = buildMediaElement(mediaelement, key)
+				scrobbledict = helper.buildMediaElement(mediaelement, key)
 				if scrobbledict:
 					trakt.scrobble(scrobbledict)
 			else:

@@ -65,6 +65,23 @@ def getProcess(length, viewed):
 	logger.debug("Duration: {0}s, Viewed: {1}s = {2}% watched".format(length, viewed, percent))
 	return percent
 
+def getDurationFromLog(id):
+	dates = idtimes[id]
+	startdate = dates[1]
+	enddade = dates[-1]
+
+	duration = enddade - startdate
+	
+	logger.debug("Fileid: " + str(id))
+	logger.debug("Duration: " + str(duration))
+	h, m, s = str(duration).split(":")
+	time = int(h)*60
+	time = (time + int(m))*60
+	time = (time + int(s))
+	logger.debug("Duration Timestamp: {0}".format(time))
+	logger.debug("Last viewed: {0}, for: {1}".format(enddade, duration))
+	return time, enddade
+
 def mediaelementToDatabase(mediaelement):
 	#create db if not exist...
 	db.checkDB()
@@ -83,6 +100,8 @@ def markScrobbled(theid):
 def mediaelementFromDatabase(theid):
 	db.checkDB()
 	myDB = db.DBConnection()
+	response = myDB.select("SELECT * from scrobble WHERE id = {0}".format(theid))
+	return response
 
 def FileInDB(theid):
 	db.checkDB()
@@ -211,4 +230,46 @@ def checkNFO(filepath, nfotype):
 				logger.error("Please enable try_guessing in settings or place an nfo for: {0}".format(filepath))
 				return 0
 
+def buildMediaElement(mediaelement, theid):
+	#check if given id is already in Database and get the lastviewed value to compare if its the same entry.
+	if mediaelement:
+		logger.info("Processing File: {0}".format(mediaelement["thepath"]))
+		logger.debug("Mediatype: {0}, Directory: {1}".format(mediaelement["type"], mediaelement["directory"]))
+		mediaelement["id"] = theid
+		mediaelement["duration"] = getVideoDuration(theid)
+		mediaelement["viewed"], mediaelement["lastviewed"] = getDurationFromLog(theid)
+		mediaelement["process"] = getProcess(mediaelement["duration"], mediaelement["viewed"])
 		
+		#quit here if process is not enough... (saves time)
+		if int(mediaelement["process"]) < int(config.min_progress):
+			logger.error("File with id: {0}, was watched {1}% we need at least {2}%... skipping it".format(mediaelement["id"], mediaelement["process"], config.min_progress))
+			return None
+		else:
+
+			mediaelement["lastviewedstamp"] = calendar.timegm(mediaelement["lastviewed"].timetuple())
+			#generate timestamp from lastviewed (datetime obj)
+			#d = datetime.datetime.now()
+			#calendar.timegm(d.timetuple())
+	
+			#timestamp is needed for scrobbling last viewed date and to save it in database...
+	
+			#generate datetime from timestamp
+			#datetime.datetime.utcfromtimestamp(1341237828)
+	
+			if mediaelement["type"] == "series":
+				mediaelement["tvdb_id"], mediaelement["name"] = checkNFO(mediaelement["thepath"], "series")
+				mediaelement["season"], mediaelement["episode"] = checkNFO(mediaelement["thepath"], "episode")
+		
+			if mediaelement["type"] == "movie":
+				try:
+					mediaelement["name"], mediaelement["imdb_id"], mediaelement["year"] = checkNFO(mediaelement["thepath"], "movie")
+				except:
+					logger.error("cant make medialement")
+					return None
+			logger.debug("created mediaobject: {0}".format(mediaelement))
+			#insert created infos in database...
+			mediaelementToDatabase(mediaelement)
+			return mediaelement
+	else:
+		logger.error("Seems not to be a mediafile that i currently support..")
+		return None		
