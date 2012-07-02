@@ -117,7 +117,7 @@ def scrobble(dict):
 		response = urllib2.urlopen(request)
 		response = response.read()
 		response = json.loads(resp_data)
-		logger.debug("response: {0}".format(resp_json))
+		logger.debug("response: {0}".format(response))
 	except urllib2.HTTPError, e:
 		result = {'status' : 'failure', 'error' : responses[e.code][1]}
 	except urllib2.URLError, e:
