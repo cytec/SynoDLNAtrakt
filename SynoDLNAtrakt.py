@@ -49,29 +49,31 @@ def buildMediaElement(mediaelement, theid):
 		mediaelement["process"] = helper.getProcess(mediaelement["duration"], mediaelement["viewed"])
 		
 		#quit here if process is not enough... (saves time)
-
-		#generate timestamp from lastviewed (datetime obj)
-		#d = datetime.datetime.now()
-		#calendar.timegm(d.timetuple())
-
-		#timestamp is needed for scrobbling last viewed date and to save it in database...
-
-		#generate datetime from timestamp
-		#datetime.datetime.utcfromtimestamp(1341237828)
-
-		if mediaelement["type"] == "series":
-			mediaelement["tvdb_id"], mediaelement["name"] = helper.checkNFO(mediaelement["thepath"], "series")
-			mediaelement["season"], mediaelement["episode"] = helper.checkNFO(mediaelement["thepath"], "episode")
+		if int(mediaelement["process"]) < int(config.min_progress):
+			return None
+		else:
+			#generate timestamp from lastviewed (datetime obj)
+			#d = datetime.datetime.now()
+			#calendar.timegm(d.timetuple())
 	
-		if mediaelement["type"] == "movie":
-			try:
-				mediaelement["name"], mediaelement["imdb_id"], mediaelement["year"] = helper.checkNFO(mediaelement["thepath"], "movie")
-			except:
-				logger.error("cant make medialement")
-				return None
-		logger.debug("created mediaobject: {0}".format(mediaelement))
-		#insert created infos in database...
-		return mediaelement
+			#timestamp is needed for scrobbling last viewed date and to save it in database...
+	
+			#generate datetime from timestamp
+			#datetime.datetime.utcfromtimestamp(1341237828)
+	
+			if mediaelement["type"] == "series":
+				mediaelement["tvdb_id"], mediaelement["name"] = helper.checkNFO(mediaelement["thepath"], "series")
+				mediaelement["season"], mediaelement["episode"] = helper.checkNFO(mediaelement["thepath"], "episode")
+		
+			if mediaelement["type"] == "movie":
+				try:
+					mediaelement["name"], mediaelement["imdb_id"], mediaelement["year"] = helper.checkNFO(mediaelement["thepath"], "movie")
+				except:
+					logger.error("cant make medialement")
+					return None
+			logger.debug("created mediaobject: {0}".format(mediaelement))
+			#insert created infos in database...
+			return mediaelement
 	else:
 		logger.error("Seems not to be a mediafile that i currently support..")
 		return None
