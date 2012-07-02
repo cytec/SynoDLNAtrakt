@@ -50,7 +50,7 @@ def buildMediaElement(mediaelement, theid):
 		
 		#quit here if process is not enough... (saves time)
 		if int(mediaelement["process"]) < int(config.min_progress):
-			logger.error("{0}, was watched {1}% we need at least {2}%... skipping it".format(mediaelement["thepath"], mediaelement["process"], config.min_progress))
+			logger.error("File with id: {0}, was watched {1}% we need at least {2}%... skipping it".format(mediaelement["id"], mediaelement["process"], config.min_progress))
 			return None
 		else:
 
@@ -137,7 +137,7 @@ if os.path.getsize(config.accesslog) > 0:
 				if scrobbledict:
 					trakt.scrobble(scrobbledict)
 			else:
-				logger.info("{0} already in Database and scrobbled to trakt".format(key))
+				logger.info("File with id: \"{0}\" is already in Database and scrobbled to trakt. Skipping it".format(key))
 					
 	
 	
