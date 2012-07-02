@@ -61,7 +61,7 @@ class DBConnection:
 					break
 				except sqlite3.OperationalError, e:
 					if "unable to open database file" in e.message or "database is locked" in e.message:
-						logger.warning(u"DB error: ".format(ex(e))))
+						logger.warning(u"DB error: ".format(ex(e)))
 						#print "error(e)"
 						attempt += 1
 						time.sleep(1)
@@ -70,7 +70,7 @@ class DBConnection:
 						#print "error(e)"
 						raise
 				except sqlite3.DatabaseError, e:
-					logger.error(u"Fatal error executing query: ".format(ex(e))))
+					logger.error(u"Fatal error executing query: ".format(ex(e)))
 					#print "error(e)"
 					raise
 	
