@@ -2,6 +2,7 @@ import os
 import sqlite3
 import threading
 from synoindex import config
+from synoindex.logger import logger
 
 FIRSTRUN=1
 
@@ -48,29 +49,29 @@ class DBConnection:
 			while attempt < 5:
 				try:
 					if args == None:
-						#logger.log(self.filename+": "+query, logger.DEBUG)
-						print query
+						logger.debug("{0}: {1}".format(self.filename, query))
+						#print query
 						sqlResult = self.connection.execute(query)
 					else:
-						#logger.log(self.filename+": "+query+" with args "+str(args), logger.DEBUG)
-						print query, args
+						logger.debug("{0}: {1} with args {2}".format(self.filename, query, args))
+						#print query, args
 						sqlResult = self.connection.execute(query, args)
 					self.connection.commit()
 					# get out of the connection attempt loop since we were successful
 					break
 				except sqlite3.OperationalError, e:
 					if "unable to open database file" in e.message or "database is locked" in e.message:
-						#logger.log(u"DB error: "+ex(e), logger.WARNING)
-						print "error(e)"
+						logger.warning(u"DB error: ".format(ex(e))))
+						#print "error(e)"
 						attempt += 1
 						time.sleep(1)
 					else:
-						#logger.log(u"DB error: "+ex(e), logger.ERROR)
-						print "error(e)"
+						logger.error(u"DB error: ".format(ex(e)))
+						#print "error(e)"
 						raise
 				except sqlite3.DatabaseError, e:
-					#logger.log(u"Fatal error executing query: " + ex(e), logger.ERROR)
-					print "error(e)"
+					logger.error(u"Fatal error executing query: ".format(ex(e))))
+					#print "error(e)"
 					raise
 	
 			return sqlResult
