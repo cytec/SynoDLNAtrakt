@@ -95,6 +95,7 @@ if not os.path.exists(config.accesslog):
 #this may should be moved to helper.py too
 
 if os.path.getsize(config.accesslog) > 0:
+	logger.info("Parsing MediaServer log file from: {0}".format(config.accesslog))
 	for line in open(config.accesslog):
 		try:
 			data = p.parse(line)
@@ -123,7 +124,7 @@ if os.path.getsize(config.accesslog) > 0:
 	          
 		except:
 			logger.error("Unable to parse line: {0}".format(line))
-	
+	logger.info("Parsing for: {0} gave {1} entry(s)".format(config.accesslog, len(idtimes)))
 	
 	for key in idtimes.keys():
 		mediaelement = helper.isMediaType(key)
