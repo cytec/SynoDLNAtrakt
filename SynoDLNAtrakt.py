@@ -24,7 +24,7 @@ def buildMediaElement(mediaelement, theid):
 		mediaelement["id"] = theid
 		mediaelement["thepath"] = helper.getVideoPath(theid)
 		mediaelement["duration"] = helper.getVideoDuration(theid)
-		mediaelement["viewed"] = helper.getVideoDuration(theid)
+		mediaelement["viewed"], mediaelement["lastviewed"] = helper.getDurationFromLog(theid)
 		mediaelement["process"] = helper.getProcess(mediaelement["duration"], mediaelement["viewed"])
 	
 		if mediaelement["type"] == "series":
@@ -58,7 +58,8 @@ def getDurationFromLog(id):
 	time = (time + int(m))*60
 	time = (time + int(s))
 	logger.debug("Duration Timestamp: {0}".format(time))
-	#return enddade - startdate, enddade
+	logger.debug("Last viewed: {0}, for: {1}".format(enddade, duration))
+	return time, enddade
 
 medialist = [ "avi","mkv","mov","mp4","m4v","ts","hdmov","wmv","mpg","mpeg","xvid"]
 logregex = ".*(?P<theid>\d{5})\.(?P<ext>\w{3,5})"
