@@ -100,7 +100,7 @@ def scrobble(dict):
 					{
 							"imdb_id": dict["imdb_id"],
 							"title": dict["name"],
-							"year": dict["year"]
+							"year": dict["year"],
 							# "plays": 1,
 							"last_played": dict["lastviewedstamp"]
 					}
