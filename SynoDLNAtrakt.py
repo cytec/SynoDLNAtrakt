@@ -34,22 +34,22 @@ try:
 except:
 	logger.error("Can't check if your MeidaServer runs in Debugmode or not...")
 
-def getDurationFromLog(id):
-	dates = idtimes[id]
+def getDurationFromLog(theid):
+	dates = idtimes[theid]
 	startdate = dates[1]
-	enddade = dates[-1]
+	enddate = dates[-1]
 
-	duration = enddade - startdate
+	duration = enddate - startdate
 	
-	logger.debug("Fileid: " + str(id))
+	logger.debug("Fileid: " + str(theid))
 	logger.debug("Duration: " + str(duration))
 	h, m, s = str(duration).split(":")
 	time = int(h)*60
 	time = (time + int(m))*60
 	time = (time + int(s))
 	logger.debug("Duration Timestamp: {0}".format(time))
-	logger.debug("Last viewed: {0}, for: {1}".format(enddade, duration))
-	return time, enddade
+	logger.debug("Last viewed: {0}, for: {1}".format(enddate, duration))
+	return time, enddate
 
 def buildMediaElement(mediaelement, theid):
 	#check if given id is already in Database and get the lastviewed value to compare if its the same entry.
