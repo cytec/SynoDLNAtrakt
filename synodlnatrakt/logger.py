@@ -1,5 +1,5 @@
 import logging
-from synoindex import config
+from synodlnatrakt import config
 
 logger = logging.getLogger("SynoDLNAtrakt")
 

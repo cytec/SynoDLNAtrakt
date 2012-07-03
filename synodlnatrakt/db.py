@@ -1,8 +1,8 @@
 import os
 import sqlite3
 import threading
-from synoindex import config
-from synoindex.logger import logger
+from synodlnatrakt import config
+from synodlnatrakt.logger import logger
 
 db_lock = threading.Lock()
 

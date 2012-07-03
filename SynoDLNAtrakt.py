@@ -1,12 +1,12 @@
 import os, sys, re, datetime, time, shutil
-from synoindex import helper
-from synoindex import config
-from synoindex import trakt
+from synodlnatrakt import helper
+from synodlnatrakt import config
+from synodlnatrakt import trakt
 import calendar
 
 from lib.apachelog import apachelog as apachelog
-from synoindex.logger import logger
-from synoindex.boxcar import BoxcarNotifier
+from synodlnatrakt.logger import logger
+from synodlnatrakt.boxcar import BoxcarNotifier
 
 
 p = apachelog.parser(apachelog.formats['lighttpd'])

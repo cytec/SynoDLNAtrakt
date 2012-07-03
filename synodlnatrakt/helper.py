@@ -3,9 +3,9 @@ from ConfigParser import SafeConfigParser
 from xml.dom.minidom import parse, parseString
 from lib.themoviedb import tmdb
 from lib.tvdb_api import tvdb_api
-from synoindex import config
-from synoindex import db
-from synoindex.logger import logger
+from synodlnatrakt import config
+from synodlnatrakt import db
+from synodlnatrakt.logger import logger
 
 seriesregex = "(?P<name>.*).?[sS](?P<season>\d{1,2})[eE|xX|epEP|\.|-]?(?P<episode>\d{1,2})"
 movieregex = "(?P<name>.*).?\(?(?P<year>\d{4})\)?"
