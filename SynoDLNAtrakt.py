@@ -76,7 +76,9 @@ def buildMediaElement(mediaelement, theid):
 					return None
 			logger.debug("created mediaobject: {0}".format(mediaelement))
 			#insert created infos in database...
-			helper.mediaelementToDatabase(mediaelement)
+			if config.use_database:
+				helper.mediaelementToDatabase(mediaelement)
+				
 			return mediaelement
 	else:
 		logger.error("Seems not to be a mediafile that i currently support..")
@@ -131,14 +133,18 @@ if os.path.getsize(config.accesslog) > 0:
 	for key in idtimes.keys():
 		mediaelement = helper.isMediaType(key)
 		if mediaelement:
-			isinDB = helper.FileInDB(key)
-			if not isinDB:
+			if config.use_database:
+				isinDB = helper.FileInDB(key)
+				if not isinDB:
+					scrobbledict = buildMediaElement(mediaelement, key)
+					if scrobbledict:
+						trakt.scrobble(scrobbledict)
+				else:
+					logger.info("File with id: \"{0}\" is already in Database and scrobbled to trakt. Skipping it".format(key))
+			else:
 				scrobbledict = buildMediaElement(mediaelement, key)
 				if scrobbledict:
 					trakt.scrobble(scrobbledict)
-			else:
-				logger.info("File with id: \"{0}\" is already in Database and scrobbled to trakt. Skipping it".format(key))
-					
 	
 	
 	#move accesslog away for faster handling on the next time ;)
