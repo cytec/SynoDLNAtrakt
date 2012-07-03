@@ -19,7 +19,7 @@
 
 import urllib, urllib2
 import time
-
+from synoindex import config
 from synoindex.logger import logger
 
 API_URL = "https://boxcar.io/devices/providers/MH0S7xOFSwVLNvNhTpiC/notifications"
