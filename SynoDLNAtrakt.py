@@ -6,6 +6,7 @@ import calendar
 
 from lib.apachelog import apachelog as apachelog
 from synoindex.logger import logger
+from synoindex.boxcar import BoxcarNotifier
 
 
 p = apachelog.parser(apachelog.formats['lighttpd'])
@@ -130,6 +131,7 @@ if os.path.getsize(config.accesslog) > 0:
 			logger.error("Unable to parse line: {0}".format(line))
 	logger.info("Parsing for: {0} gave {1} entry(s)".format(config.accesslog, len(idtimes)))
 	
+	scrobblers = 0
 	for key in idtimes.keys():
 		mediaelement = helper.isMediaType(key)
 		if mediaelement:
@@ -139,14 +141,19 @@ if os.path.getsize(config.accesslog) > 0:
 					scrobbledict = buildMediaElement(mediaelement, key)
 					if scrobbledict:
 						trakt.scrobble(scrobbledict)
+						scrobblers = scrobblers + 1
 				else:
 					logger.info("File with id: \"{0}\" is already in Database and scrobbled to trakt. Skipping it".format(key))
 			else:
 				scrobbledict = buildMediaElement(mediaelement, key)
 				if scrobbledict:
 					trakt.scrobble(scrobbledict)
+					scrobblers = scrobblers + 1
 	
-	
+	if use_boxcar:
+		box = BoxcarNotifier()
+		box._notifyBoxcar("SynoDLNAtrakt","Scrobbled {0} entrys to trakt".format(scrobblers))
+
 	#move accesslog away for faster handling on the next time ;)
 	if config.delete_logs:
 		if not os.path.exists(path + "/accesslog-backups/"):
