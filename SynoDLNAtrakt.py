@@ -151,8 +151,9 @@ if os.path.getsize(config.accesslog) > 0:
 					scrobblers = scrobblers + 1
 	
 	if config.use_boxcar:
-		box = BoxcarNotifier()
-		box._notifyBoxcar("SynoDLNAtrakt","Scrobbled {0} of {1} entrys to trakt".format(scrobblers, len(idtimes)))
+		if scrobblers > 0:
+			box = BoxcarNotifier()
+			box._notifyBoxcar("SynoDLNAtrakt","Scrobbled {0} of {1} entrys to trakt".format(scrobblers, len(idtimes)))
 
 	#move accesslog away for faster handling on the next time ;)
 	if config.delete_logs:
