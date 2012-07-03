@@ -22,6 +22,18 @@ sys.path.insert(0, os.path.join(path, 'lib'))
 
 #TODO: cleanup!
 
+#check if debugmode is acitvated
+try:
+	debugfile = open('/var/packages/MediaServer/etc/dmsinfo.conf')
+	filelines = debugfile.readlines()
+	debugfile.close()
+	value = filelines[-1].replace("loglevel_mediaservice=\"","").replace("\"\n","")
+	if int(value) < 3:
+		logger.error("MediaServer not running in Debugmode!")
+		sys.exit("Please enable Debugmode for MediaServer first!")
+except:
+	logger.error("Can't check if your MeidaServer runs in Debugmode or not...")
+
 def getDurationFromLog(id):
 	dates = idtimes[id]
 	startdate = dates[1]
