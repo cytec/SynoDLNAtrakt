@@ -150,7 +150,7 @@ if os.path.getsize(config.accesslog) > 0:
 					trakt.scrobble(scrobbledict)
 					scrobblers = scrobblers + 1
 	
-	if use_boxcar:
+	if config.use_boxcar:
 		box = BoxcarNotifier()
 		box._notifyBoxcar("SynoDLNAtrakt","Scrobbled {0} of {1} entrys to trakt".format(scrobblers, len(idtimes)))
 
