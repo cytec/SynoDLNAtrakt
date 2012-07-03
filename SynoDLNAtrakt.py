@@ -1,13 +1,12 @@
 import os, sys, re, datetime, time, shutil
-from synodlnatrakt import helper
-from synodlnatrakt import config
-from synodlnatrakt import trakt
 import calendar
 
 from lib.apachelog import apachelog as apachelog
 from synodlnatrakt.logger import logger
 from synodlnatrakt.boxcar import BoxcarNotifier
-
+from synodlnatrakt import helper
+from synodlnatrakt import config
+from synodlnatrakt import trakt
 
 p = apachelog.parser(apachelog.formats['lighttpd'])
 time_format = "[%d/%b/%Y:%H:%M:%S +0200]"

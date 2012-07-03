@@ -1,7 +1,7 @@
 import urllib2, simplejson, hashlib, json
-from synoindex import config
-from synoindex import helper
-from synoindex.logger import logger
+from synodlnatrakt import config
+from synodlnatrakt import helper
+from synodlnatrakt.logger import logger
 
 
 responses = {
