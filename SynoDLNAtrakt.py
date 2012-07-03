@@ -31,6 +31,8 @@ try:
 	if int(value) < 3:
 		logger.error("MediaServer not running in Debugmode!")
 		sys.exit("Please enable Debugmode for MediaServer first!")
+	else:
+		logger.debug("MediaServer running in Debugmode")
 except:
 	logger.error("Can't check if your MeidaServer runs in Debugmode or not...")
 
