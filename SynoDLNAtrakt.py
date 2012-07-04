@@ -103,7 +103,7 @@ def buildMediaElement(mediaelement, theid):
 medialist = [ "avi","mkv","mov","mp4","m4v","ts","hdmov","wmv","mpg","mpeg","xvid"]
 logregex = ".*(?P<theid>\d{5})\.(?P<ext>\w{3,5})"
 
-logger.info(use_boxcar"Starting SynoDLNAtrakt...")
+logger.info(u"Starting SynoDLNAtrakt...")
 
 if not os.path.exists(config.accesslog):
 	logger.info(u"{0} doesn't exist please check your settings and make sure you anabled MediaServers Debug mode".format(config.accesslog))
