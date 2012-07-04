@@ -17,18 +17,18 @@ def getVideoPath(theid):
 	#/usr/syno/pgsql/bin/psql mediaserver admin -tA -c "select path from video where id = theid"
 	thepath = os.popen('{0} mediaserver admin -tA -c "select path from video where id = {1}"'.format(config.psql, theid)).read().strip()
 	#thepath = ek.ek(os.path.abspath, thepath)
-	return u"{0}".format(thepath)
+	return unicode(thepath, 'utf-8')
 
 def getVideoDuration(theid):
 	#/usr/syno/pgsql/bin/psql mediaserver admin -tA -c "select duration from video where id = 13282"
 	duration = os.popen('{0} mediaserver admin -tA -c "select duration from video where id = {1}"'.format(config.psql, theid)).read().strip()
-	return duration
+	return u"{0}".format(duration)
 
 def isMediaType(theid):
 	response = {}
 	thepath = os.popen('{0} mediaserver admin -tA -c "select path from video where id = {1}"'.format(config.psql, theid)).read().strip()
 	#thepath = ek.ek(os.path.abspath, thepath)
-	thepath = u"{0}".format(thepath)
+	thepath = unicode(thepath, 'utf-8')
 	if thepath:
 		for curdir in config.seriesdir:
 			if curdir in thepath:
