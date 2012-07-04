@@ -28,6 +28,7 @@ def isMediaType(theid):
 	response = {}
 	thepath = os.popen('{0} mediaserver admin -tA -c "select path from video where id = {1}"'.format(config.psql, theid)).read().strip()
 	#thepath = ek.ek(os.path.abspath, thepath)
+	thepath = unicode(thepath, 'utf-8')
 	if thepath:
 		for curdir in config.seriesdir:
 			if curdir in thepath:
@@ -47,7 +48,7 @@ def isMediaType(theid):
 def getSeries(filepath, curdir):
 	myfilestring = filepath.replace(curdir,'')
 	series, season, filename = myfilestring.split('/')
-	logger.debug("Splitting {0} -> Series: {1}, Season: {2}, Filename: {3}".format(filepath, series, season, filename))
+	logger.debug(u"Splitting {0} -> Series: {1}, Season: {2}, Filename: {3}".format(filepath, series, season, filename))
 
 def durationStamps(time):
 	try:
@@ -55,10 +56,10 @@ def durationStamps(time):
 		timestamp = int(h*60)
 		timestamp = (timestamp + int(m))*60
 		timestamp = (timestamp + int(s))
-		logger.debug("timestamp for: {0} is {1}".format(time, timestamp))
+		logger.debug(u"timestamp for: {0} is {1}".format(time, timestamp))
 	except:
 		timestamp = time
-		logger.debug("{0} seems to be a timestamp already".format(time))
+		logger.debug(u"{0} seems to be a timestamp already".format(time))
 	return timestamp
 
 def getProcess(length, viewed):
@@ -66,7 +67,7 @@ def getProcess(length, viewed):
 	length = durationStamps(length)
 	viewed = durationStamps(viewed)
 	percent = int(viewed) / (int(length) / 100)
-	logger.debug("Duration: {0}s, Viewed: {1}s = {2}% watched".format(length, viewed, percent))
+	logger.debug(u"Duration: {0}s, Viewed: {1}s = {2}% watched".format(length, viewed, percent))
 	return percent
 
 def getDurationFromLog(id):
@@ -76,14 +77,14 @@ def getDurationFromLog(id):
 
 	duration = enddade - startdate
 	
-	logger.debug("Fileid: " + str(id))
-	logger.debug("Duration: " + str(duration))
+	logger.debug(u"Fileid: " + str(id))
+	logger.debug(u"Duration: " + str(duration))
 	h, m, s = str(duration).split(":")
 	time = int(h)*60
 	time = (time + int(m))*60
 	time = (time + int(s))
-	logger.debug("Duration Timestamp: {0}".format(time))
-	logger.debug("Last viewed: {0}, for: {1}".format(enddade, duration))
+	logger.debug(u"Duration Timestamp: {0}".format(time))
+	logger.debug(u"Last viewed: {0}, for: {1}".format(enddade, duration))
 	return time, enddade
 
 def mediaelementToDatabase(mediaelement):
@@ -130,28 +131,28 @@ def checkNFO(filepath, nfotype):
 			except:
 				nameTag = dom.getElementsByTagName('title')[0].toxml()
 				name=nameTag.replace('<title>','').replace('</title>','')
-			logger.debug("SeriesID for {0} is: {1}".format(name, seriesid))
+			logger.debug(u"SeriesID for {0} is: {1}".format(name, seriesid))
 			return seriesid, name
 		except:
-			logger.error("cant find/open file: {0}".format(nfofile))
+			logger.error(u"cant find/open file: {0}".format(nfofile))
 			if config.try_guessing:
-				logger.info("Trying to guess infos from Filename...")
+				logger.info(u"Trying to guess infos from Filename...")
 				seriesname = os.path.basename(filepath)
 				p = re.match(seriesregex, seriesname)
 				name = p.group("name").replace(".", " ").strip()
 				season = p.group("season")
 				episode = p.group("episode")
-				logger.debug("Type: {3}, Name: {0}, Season: {1}, Episode: {2}".format(name, season, episode, nfotype))
+				logger.debug(u"Type: {3}, Name: {0}, Season: {1}, Episode: {2}".format(name, season, episode, nfotype))
 				t = tvdb_api.Tvdb()
 				showinfo = t[name]	
 				tvdb_id = showinfo["id"]
 				realname = showinfo["seriesname"]
 				year = showinfo["firstaired"]
 				#logger.debug("tvdb gave the following keys: {0}".format(showinfo.data.keys()))
-				logger.info("Found result for {0} -> Fullname: {1}, tvdb_id: {2}, Year: {3}".format(seriesname, realname, tvdb_id, year))
+				logger.info(u"Found result for {0} -> Fullname: {1}, tvdb_id: {2}, Year: {3}".format(seriesname, realname, tvdb_id, year))
 				return tvdb_id, realname
 			else:
-				logger.error("Please enable try_guessing in settings or place an tvshow.nfo for: {0}".format(directory))
+				logger.error(u"Please enable try_guessing in settings or place an tvshow.nfo for: {0}".format(directory))
 			return 0
 
 		
@@ -167,21 +168,21 @@ def checkNFO(filepath, nfotype):
 			season=seasonTag.replace('<season>','').replace('</season>','')
 			episodeTag = dom.getElementsByTagName('episode')[0].toxml()
 			episode=episodeTag.replace('<episode>','').replace('</episode>','')
-			logger.info('TVSHOW info -> Season: {0}, Episode: {1}'.format(season, episode))
+			logger.info(u'TVSHOW info -> Season: {0}, Episode: {1}'.format(season, episode))
 			return season, episode
 		except:
-			logger.error("Cant find/open/parse file: {0}".format(nfofile))
+			logger.error(u"Cant find/open/parse file: {0}".format(nfofile))
 			if config.try_guessing:
-				logger.info("Trying to guess infos from Filename...")
+				logger.info(u"Trying to guess infos from Filename...")
 				seriesname = os.path.basename(filepath)
 				p = re.match(seriesregex, seriesname)
 				name = p.group("name").replace(".", " ").strip()
 				season = p.group("season")
 				episode = p.group("episode")
-				logger.debug("Type: {3}, Series: {0}, Season: {1}, Episode: {2}".format(seriesname, season, episode, nfotype)) 
+				logger.debug(u"Type: {3}, Series: {0}, Season: {1}, Episode: {2}".format(seriesname, season, episode, nfotype)) 
 				return season, episode
 			else:
-				logger.error("Please enable try_guessing in settings or place an nfo for: {0}".format(directory))
+				logger.error(u"Please enable try_guessing in settings or place an nfo for: {0}".format(directory))
 			return 0
 
 	if nfotype == "movie":
@@ -195,12 +196,12 @@ def checkNFO(filepath, nfotype):
 			name=nametag.replace('<title>','').replace('</title>','')
 			yeartag = dom.getElementsByTagName('year')[0].toxml()
 			year=yeartag.replace('<year>','').replace('</year>','')
-			logger.info('Movie info -> Name: {0}, Year: {1}, imdb_id: {2}'.format(name, year, tvdb_id))
+			logger.info(u'Movie info -> Name: {0}, Year: {1}, imdb_id: {2}'.format(name, year, tvdb_id))
 			return season, episode
 		except:
-			logger.error("Cant find/open file: {0}".format(nfofile))
+			logger.error(u"Cant find/open file: {0}".format(nfofile))
 			if config.try_guessing:
-				logger.info("Trying to guess infos from Filename...")
+				logger.info(u"Trying to guess infos from Filename...")
 				
 				try:
 					moviename = os.path.basename(filepath)
@@ -216,7 +217,7 @@ def checkNFO(filepath, nfotype):
 					year = p.group("year")
 					searchstring = "{0} ({1})".format(name, year)
 
-				logger.debug("Type: {3}, Name: {0}, Year: {1}, Searchstring: {2}".format(name, year, searchstring, nfotype))
+				logger.debug(u"Type: {3}, Name: {0}, Year: {1}, Searchstring: {2}".format(name, year, searchstring, nfotype))
 				#we need imdb id for scrobbleing to trakt, so lets make a moviedb lookup here to get these infos (especially if there is no year in the name....)
 				#this ALWAYS uses the first resault that comes from tmdb...
 				results = tmdb.search(searchstring)
@@ -226,12 +227,12 @@ def checkNFO(filepath, nfotype):
 					imdb_id = movieinfo["imdb_id"]
 					#logger.debug("tmdb gave the following keys: {0}".format(movieinfo.keys()))
 					title = movieinfo["original_name"]
-					logger.info("Found result for {0} -> Fullname: {1} imdb_id: {2}".format(searchstring, title, imdb_id))
+					logger.info(u"Found result for {0} -> Fullname: {1} imdb_id: {2}".format(searchstring, title, imdb_id))
 					return title, imdb_id, year
 				else:
-					logger.error("Can't find any matches for {0}: {1}".format(nfotype, searchstring))
+					logger.error(u"Can't find any matches for {0}: {1}".format(nfotype, searchstring))
 			else:
-				logger.error("Please enable try_guessing in settings or place an nfo for: {0}".format(filepath))
+				logger.error(u"Please enable try_guessing in settings or place an nfo for: {0}".format(filepath))
 				return 0
 
 def buildMediaElement(mediaelement, theid):

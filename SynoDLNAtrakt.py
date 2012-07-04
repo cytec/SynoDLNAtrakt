@@ -28,12 +28,12 @@ try:
 	debugfile.close()
 	value = filelines[-1].replace("loglevel_mediaservice=\"","").replace("\"\n","")
 	if int(value) < 3:
-		logger.error("MediaServer not running in Debugmode!")
-		sys.exit("Please enable Debugmode for MediaServer first!")
+		logger.error(u"MediaServer not running in Debugmode!")
+		sys.exit(u"Please enable Debugmode for MediaServer first!")
 	else:
-		logger.debug("MediaServer running in Debugmode")
+		logger.debug(u"MediaServer running in Debugmode")
 except:
-	logger.error("Can't check if your MeidaServer runs in Debugmode or not...")
+	logger.error(u"Can't check if your MeidaServer runs in Debugmode or not...")
 
 def getDurationFromLog(theid):
 	dates = idtimes[theid]
@@ -42,21 +42,21 @@ def getDurationFromLog(theid):
 
 	duration = enddate - startdate
 	
-	logger.debug("Fileid: " + str(theid))
-	logger.debug("Duration: " + str(duration))
+	logger.debug(u"Fileid: " + str(theid))
+	logger.debug(u"Duration: " + str(duration))
 	h, m, s = str(duration).split(":")
 	time = int(h)*60
 	time = (time + int(m))*60
 	time = (time + int(s))
-	logger.debug("Duration Timestamp: {0}".format(time))
-	logger.debug("Last viewed: {0}, for: {1}".format(enddate, duration))
+	logger.debug(u"Duration Timestamp: {0}".format(time))
+	logger.debug(u"Last viewed: {0}, for: {1}".format(enddate, duration))
 	return time, enddate
 
 def buildMediaElement(mediaelement, theid):
 	#check if given id is already in Database and get the lastviewed value to compare if its the same entry.
 	if mediaelement:
-		logger.info("Processing File: {0}".format(mediaelement["thepath"]))
-		logger.debug("Mediatype: {0}, Directory: {1}".format(mediaelement["type"], mediaelement["directory"]))
+		logger.info(u"Processing File: {0}".format(mediaelement["thepath"]))
+		logger.debug(u"Mediatype: {0}, Directory: {1}".format(mediaelement["type"], mediaelement["directory"]))
 		mediaelement["id"] = theid
 		mediaelement["duration"] = helper.getVideoDuration(theid)
 		mediaelement["viewed"], mediaelement["lastviewed"] = getDurationFromLog(theid)
@@ -64,7 +64,7 @@ def buildMediaElement(mediaelement, theid):
 		
 		#quit here if process is not enough... (saves time)
 		if int(mediaelement["process"]) < int(config.min_progress):
-			logger.error("File with id: {0}, was watched {1}% we need at least {2}%... skipping it".format(mediaelement["id"], mediaelement["process"], config.min_progress))
+			logger.error(u"File with id: {0}, was watched {1}% we need at least {2}%... skipping it".format(mediaelement["id"], mediaelement["process"], config.min_progress))
 			return None
 		else:
 
@@ -86,16 +86,16 @@ def buildMediaElement(mediaelement, theid):
 				try:
 					mediaelement["name"], mediaelement["imdb_id"], mediaelement["year"] = helper.checkNFO(mediaelement["thepath"], "movie")
 				except:
-					logger.error("cant make medialement")
+					logger.error(u"cant make medialement")
 					return None
-			logger.debug("created mediaobject: {0}".format(mediaelement))
+			logger.debug(u"created mediaobject: {0}".format(mediaelement))
 			#insert created infos in database...
 			if config.use_database:
 				helper.mediaelementToDatabase(mediaelement)
 				
 			return mediaelement
 	else:
-		logger.error("Seems not to be a mediafile that i currently support..")
+		logger.error(u"Seems not to be a mediafile that i currently support..")
 		return None
 
 
@@ -103,17 +103,17 @@ def buildMediaElement(mediaelement, theid):
 medialist = [ "avi","mkv","mov","mp4","m4v","ts","hdmov","wmv","mpg","mpeg","xvid"]
 logregex = ".*(?P<theid>\d{5})\.(?P<ext>\w{3,5})"
 
-logger.info("Starting SynoDLNAtrakt...")
+logger.info(use_boxcar"Starting SynoDLNAtrakt...")
 
 if not os.path.exists(config.accesslog):
-	logger.info("{0} doesn't exist please check your settings and make sure you anabled MediaServers Debug mode".format(config.accesslog))
+	logger.info(u"{0} doesn't exist please check your settings and make sure you anabled MediaServers Debug mode".format(config.accesslog))
 	sys.exit(1)
 
 
 #this may should be moved to helper.py too
 
 if os.path.getsize(config.accesslog) > 0:
-	logger.info("Parsing MediaServer log file from: {0}".format(config.accesslog))
+	logger.info(u"Parsing MediaServer log file from: {0}".format(config.accesslog))
 	for line in open(config.accesslog):
 		try:
 			data = p.parse(line)
@@ -138,11 +138,11 @@ if os.path.getsize(config.accesslog) > 0:
 					datelist.append(thedate)
 					idtimes[theid]=datelist
 			except:
-				logger.error("Sorry something went wrong here, cant create dictionary")
+				logger.error(u"Sorry something went wrong here, cant create dictionary")
 	          
 		except:
-			logger.error("Unable to parse line: {0}".format(line))
-	logger.info("Parsing for: {0} gave {1} entry(s)".format(config.accesslog, len(idtimes)))
+			logger.error(u"Unable to parse line: {0}".format(line))
+	logger.info(u"Parsing for: {0} gave {1} entry(s)".format(config.accesslog, len(idtimes)))
 	
 	scrobblers = 0
 	for key in idtimes.keys():
@@ -156,7 +156,7 @@ if os.path.getsize(config.accesslog) > 0:
 						trakt.scrobble(scrobbledict)
 						scrobblers = scrobblers + 1
 				else:
-					logger.info("File with id: \"{0}\" is already in Database and scrobbled to trakt. Skipping it".format(key))
+					logger.info(u"File with id: \"{0}\" is already in Database and scrobbled to trakt. Skipping it".format(key))
 			else:
 				scrobbledict = buildMediaElement(mediaelement, key)
 				if scrobbledict:
@@ -166,7 +166,7 @@ if os.path.getsize(config.accesslog) > 0:
 	if config.use_boxcar:
 		if scrobblers > 0:
 			box = BoxcarNotifier()
-			box._notifyBoxcar("SynoDLNAtrakt","Scrobbled {0} of {1} entrys to trakt".format(scrobblers, len(idtimes)))
+			box._notifyBoxcar(u"SynoDLNAtrakt","Scrobbled {0} of {1} entrys to trakt".format(scrobblers, len(idtimes)))
 
 	#move accesslog away for faster handling on the next time ;)
 	if config.delete_logs:
@@ -177,6 +177,6 @@ if os.path.getsize(config.accesslog) > 0:
 		shutil.copy(config.accesslog, newlogpath)
 		#truncate accesslog (jsut clean it)
 		open(config.accesslog, 'w').close()
-		logger.info("{0} moved to backup directory: {1}".format(config.accesslog, newlogpath))
+		logger.info(u"{0} moved to backup directory: {1}".format(config.accesslog, newlogpath))
 else:
-	logger.info("{0} seems to be empty, please play some stuff first".format(config.accesslog))		
+	logger.info(u"{0} seems to be empty, please play some stuff first".format(config.accesslog))		
