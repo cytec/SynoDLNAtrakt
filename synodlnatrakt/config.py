@@ -5,6 +5,7 @@ from lib.configobj import ConfigObj
 
 CFG = ConfigObj("SynoDLNAtrakt.ini")
 CONFIG_FILE = "SynoDLNAtrakt.ini"
+SYS_ENCODING = sys.getdefaultencoding()
 
 def CheckSection(sec):
     """ Check if INI section exists, if not create it """

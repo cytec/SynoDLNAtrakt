@@ -6,6 +6,8 @@ from lib.tvdb_api import tvdb_api
 from synodlnatrakt import config
 from synodlnatrakt import db
 from synodlnatrakt.logger import logger
+from synodlnatrakt import encodingKludge as ek
+
 
 seriesregex = "(?P<name>.*).?[sS](?P<season>\d{1,2})[eE|xX|epEP|\.|-]?(?P<episode>\d{1,2})"
 movieregex = "(?P<name>.*).?\(?(?P<year>\d{4})\)?"
@@ -14,6 +16,7 @@ movieregex = "(?P<name>.*).?\(?(?P<year>\d{4})\)?"
 def getVideoPath(theid):
 	#/usr/syno/pgsql/bin/psql mediaserver admin -tA -c "select path from video where id = theid"
 	thepath = os.popen('{0} mediaserver admin -tA -c "select path from video where id = {1}"'.format(config.psql, theid)).read().strip()
+	thepath = ek.ek(os.path.abspath, thepath)
 	return thepath
 
 def getVideoDuration(theid):
@@ -24,6 +27,7 @@ def getVideoDuration(theid):
 def isMediaType(theid):
 	response = {}
 	thepath = os.popen('{0} mediaserver admin -tA -c "select path from video where id = {1}"'.format(config.psql, theid)).read().strip()
+	thepath = ek.ek(os.path.abspath, thepath)
 	if thepath:
 		for curdir in config.seriesdir:
 			if curdir in thepath:
