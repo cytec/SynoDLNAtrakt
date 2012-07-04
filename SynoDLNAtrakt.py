@@ -55,7 +55,7 @@ def getDurationFromLog(theid):
 def buildMediaElement(mediaelement, theid):
 	#check if given id is already in Database and get the lastviewed value to compare if its the same entry.
 	if mediaelement:
-		logger.info(u"Processing File: {0}".format(mediaelement["thepath"]))
+		logger.info("Processing File: {0}".format(mediaelement["thepath"]))
 		logger.debug(u"Mediatype: {0}, Directory: {1}".format(mediaelement["type"], mediaelement["directory"]))
 		mediaelement["id"] = theid
 		mediaelement["duration"] = helper.getVideoDuration(theid)

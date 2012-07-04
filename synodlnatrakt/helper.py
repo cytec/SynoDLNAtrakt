@@ -134,6 +134,7 @@ def checkNFO(filepath, nfotype):
 			logger.debug(u"SeriesID for {0} is: {1}".format(name, seriesid))
 			return seriesid, name
 		except:
+			#TODO: fix some unicode errors here...
 			logger.error(u"cant find/open file: {0}".format(nfofile))
 			if config.try_guessing:
 				logger.info(u"Trying to guess infos from Filename...")
@@ -247,7 +248,7 @@ def buildMediaElement(mediaelement, theid):
 		
 		#quit here if process is not enough... (saves time)
 		if int(mediaelement["process"]) < int(config.min_progress):
-			logger.error("File with id: {0}, was watched {1}% we need at least {2}%... skipping it".format(mediaelement["id"], mediaelement["process"], config.min_progress))
+			logger.error(u"File with id: {0}, was watched {1}% we need at least {2}%... skipping it".format(mediaelement["id"], mediaelement["process"], config.min_progress))
 			return None
 		else:
 
@@ -269,12 +270,12 @@ def buildMediaElement(mediaelement, theid):
 				try:
 					mediaelement["name"], mediaelement["imdb_id"], mediaelement["year"] = checkNFO(mediaelement["thepath"], "movie")
 				except:
-					logger.error("cant make medialement")
+					logger.error(u"cant make medialement")
 					return None
-			logger.debug("created mediaobject: {0}".format(mediaelement))
+			logger.debug(u"created mediaobject: {0}".format(mediaelement))
 			#insert created infos in database...
 			mediaelementToDatabase(mediaelement)
 			return mediaelement
 	else:
-		logger.error("Seems not to be a mediafile that i currently support..")
+		logger.error(u"Seems not to be a mediafile that i currently support..")
 		return None		
