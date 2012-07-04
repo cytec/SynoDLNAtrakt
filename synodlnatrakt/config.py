@@ -1,11 +1,22 @@
-import os, sys
+import os, sys, locale
 from lib.configobj import ConfigObj
 #from synoindex.logger import logger
 #import logging gave error cause of endless redirects -.-
 
 CFG = ConfigObj("SynoDLNAtrakt.ini")
 CONFIG_FILE = "SynoDLNAtrakt.ini"
-SYS_ENCODING = sys.getdefaultencoding()
+SYS_ENCODING = ''
+
+try:
+    locale.setlocale(locale.LC_ALL, "")
+    SYS_ENCODING = locale.getpreferredencoding()
+except (locale.Error, IOError):
+    pass
+
+# for OSes that are poorly configured I'll just force UTF-8
+if not SYS_ENCODING or SYS_ENCODING in ('ANSI_X3.4-1968', 'US-ASCII', 'ASCII'):
+    SYS_ENCODING = 'UTF-8'
+
 
 def CheckSection(sec):
     """ Check if INI section exists, if not create it """
