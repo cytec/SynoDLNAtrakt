@@ -16,7 +16,8 @@ movieregex = "(?P<name>.*).?\(?(?P<year>\d{4})\)?"
 def getVideoPath(theid):
 	#/usr/syno/pgsql/bin/psql mediaserver admin -tA -c "select path from video where id = theid"
 	thepath = os.popen('{0} mediaserver admin -tA -c "select path from video where id = {1}"'.format(config.psql, theid)).read().strip()
-	#thepath = ek.ek(os.path.abspath, thepath)
+	#get it as utf-8
+	#thepath = os.popen('{0} mediaserver admin -tA -c "select path from video where id = {1}"'.format(config.psql, theid)).read().strip().decode('utf-8')
 	return unicode(thepath, 'utf-8')
 
 def getVideoDuration(theid):
