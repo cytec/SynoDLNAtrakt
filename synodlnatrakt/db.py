@@ -3,6 +3,7 @@ import sqlite3
 import threading
 from synodlnatrakt import config
 from synodlnatrakt.logger import logger
+from synodlnatrakt import exceptions as ex
 
 db_lock = threading.Lock()
 
