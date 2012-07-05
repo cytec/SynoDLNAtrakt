@@ -73,7 +73,7 @@ def buildMediaElement(mediaelement, theid):
 		
 		#quit here if process is not enough... (saves time)
 		if int(mediaelement["process"]) < int(config.min_progress):
-			logger.error(u"File with id: {0}, was watched {1}% we need at least {2}%... skipping it".format(mediaelement["id"], mediaelement["process"], config.min_progress))
+			logger.error(u"File with the ID: {0}, has been viewed {1}% we need at least {2}%... skipping it".format(mediaelement["id"], mediaelement["process"], config.min_progress))
 			return None
 		else:
 			#currently only used for movies... idk if its possible to scrobble this for series.
@@ -93,18 +93,18 @@ def buildMediaElement(mediaelement, theid):
 					mediaelement["tvdb_id"], mediaelement["name"] = helper.checkNFO(mediaelement["thepath"], "series")
 					mediaelement["season"], mediaelement["episode"] = helper.checkNFO(mediaelement["thepath"], "episode")
 				except:
-					logger.error(u"cant make {0} medialement".format(mediaelement["type"]))
+					logger.error(u"Could not create {0} MediaElement".format(mediaelement["type"]))
 					return None
 			#handling for mediatype movies
 			if mediaelement["type"] == "movie":
 				try:
 					mediaelement["name"], mediaelement["imdb_id"], mediaelement["year"] = helper.checkNFO(mediaelement["thepath"], "movie")
 				except:
-					logger.error(u"cant make {0} medialement".format(mediaelement["type"]))
+					logger.error(u"Could not create {0} MediaElement".format(mediaelement["type"]))
 					return None
 
 			#log the created mediaobject in debug mode
-			logger.debug(u"created mediaobject: {0}".format(mediaelement))
+			logger.debug(u"MediaElement successfully created: {0}".format(mediaelement))
 			
 			#insert created infos in database if activated
 			if config.use_database:
@@ -112,7 +112,7 @@ def buildMediaElement(mediaelement, theid):
 				
 			return mediaelement
 	else:
-		logger.error(u"Seems not to be a mediafile that i currently support..")
+		logger.error(u"File with the ID: {0} seems not to be a media file that i currently support")
 		return None
 
 
@@ -120,7 +120,7 @@ logger.info(u"Starting SynoDLNAtrakt...")
 
 #check for accesslog and exit if not found
 if not os.path.exists(config.accesslog):
-	logger.info(u"{0} doesn't exist please check your settings and make sure you anabled MediaServers Debug mode".format(config.accesslog))
+	logger.info(u"{0} doesn't exist please check your settings and make sure you enabled MediaServers Debug mode".format(config.accesslog))
 	sys.exit(1)
 
 
@@ -152,11 +152,11 @@ if os.path.getsize(config.accesslog) > 0:
 					datelist.append(thedate)
 					idtimes[theid]=datelist
 			except:
-				logger.error(u"Sorry something went wrong here, cant create dictionary")
+				logger.error(u"Sorry something went wrong here, can't create dictionary")
 	          
 		except:
 			logger.error(u"Unable to parse line: {0}".format(line))
-	logger.info(u"Parsing for: {0} gave {1} entry(s)".format(config.accesslog, len(idtimes)))
+	logger.info(u"Parsing: {0} gave {1} entry(s)".format(config.accesslog, len(idtimes)))
 	
 	scrobblers = 0
 	for key in idtimes.keys():

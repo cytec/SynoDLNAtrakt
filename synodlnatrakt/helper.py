@@ -159,7 +159,7 @@ def checkNFO(filepath, nfotype):
 				logger.info(u"Found result for {0} -> Fullname: {1}, tvdb_id: {2}, Year: {3}".format(seriesname, realname, tvdb_id, year))
 				return tvdb_id, realname
 			else:
-				logger.error(u"Please enable try_guessing in settings or place an tvshow.nfo for: {0}".format(directory))
+				logger.error(u"Please enable try_guessing in settings or create an tvshow.nfo for: {0}".format(directory))
 			return 0
 
 		
@@ -180,7 +180,7 @@ def checkNFO(filepath, nfotype):
 		except:
 			logger.error(u"Cant find/open/parse file: {0}".format(nfofile))
 			if config.try_guessing:
-				logger.info(u"Trying to guess infos from Filename...")
+				logger.info(u"try to guess infos from Filename...")
 				seriesname = os.path.basename(filepath)
 				p = re.match(seriesregex, seriesname)
 				name = p.group("name").replace(".", " ").strip()
@@ -189,7 +189,7 @@ def checkNFO(filepath, nfotype):
 				logger.debug(u"Type: {3}, Series: {0}, Season: {1}, Episode: {2}".format(seriesname, season, episode, nfotype)) 
 				return season, episode
 			else:
-				logger.error(u"Please enable try_guessing in settings or place an nfo for: {0}".format(directory))
+				logger.error(u"Please enable try_guessing in settings or create an .nfo for: {0}".format(directory))
 			return 0
 
 	if nfotype == "movie":
@@ -208,7 +208,7 @@ def checkNFO(filepath, nfotype):
 		except:
 			logger.error(u"Cant find/open file: {0}".format(nfofile))
 			if config.try_guessing:
-				logger.info(u"Trying to guess infos from Filename...")
+				logger.info(u"try to guess infos from Filename...")
 				
 				try:
 					moviename = os.path.basename(filepath)
@@ -239,49 +239,5 @@ def checkNFO(filepath, nfotype):
 				else:
 					logger.error(u"Can't find any matches for {0}: {1}".format(nfotype, searchstring))
 			else:
-				logger.error(u"Please enable try_guessing in settings or place an nfo for: {0}".format(filepath))
+				logger.error(u"Please enable try_guessing in settings or create an .nfo for: {0}".format(filepath))
 				return 0
-
-def buildMediaElement(mediaelement, theid):
-	#check if given id is already in Database and get the lastviewed value to compare if its the same entry.
-	if mediaelement:
-		logger.info("Processing File: {0}".format(mediaelement["thepath"]))
-		logger.debug("Mediatype: {0}, Directory: {1}".format(mediaelement["type"], mediaelement["directory"]))
-		mediaelement["id"] = theid
-		mediaelement["duration"] = getVideoDuration(theid)
-		mediaelement["viewed"], mediaelement["lastviewed"] = getDurationFromLog(theid)
-		mediaelement["process"] = getProcess(mediaelement["duration"], mediaelement["viewed"])
-		
-		#quit here if process is not enough... (saves time)
-		if int(mediaelement["process"]) < int(config.min_progress):
-			logger.error(u"File with id: {0}, was watched {1}% we need at least {2}%... skipping it".format(mediaelement["id"], mediaelement["process"], config.min_progress))
-			return None
-		else:
-
-			mediaelement["lastviewedstamp"] = calendar.timegm(mediaelement["lastviewed"].timetuple())
-			#generate timestamp from lastviewed (datetime obj)
-			#d = datetime.datetime.now()
-			#calendar.timegm(d.timetuple())
-	
-			#timestamp is needed for scrobbling last viewed date and to save it in database...
-	
-			#generate datetime from timestamp
-			#datetime.datetime.utcfromtimestamp(1341237828)
-	
-			if mediaelement["type"] == "series":
-				mediaelement["tvdb_id"], mediaelement["name"] = checkNFO(mediaelement["thepath"], "series")
-				mediaelement["season"], mediaelement["episode"] = checkNFO(mediaelement["thepath"], "episode")
-		
-			if mediaelement["type"] == "movie":
-				try:
-					mediaelement["name"], mediaelement["imdb_id"], mediaelement["year"] = checkNFO(mediaelement["thepath"], "movie")
-				except:
-					logger.error(u"cant make medialement")
-					return None
-			logger.debug(u"created mediaobject: {0}".format(mediaelement))
-			#insert created infos in database...
-			mediaelementToDatabase(mediaelement)
-			return mediaelement
-	else:
-		logger.error(u"Seems not to be a mediafile that i currently support..")
-		return None		
