@@ -1,3 +1,8 @@
+# Author: cytec <iamcytec@googlemail.com>
+# URL: http://github.com/cytec/SynoDLNAtrakt/
+#
+# This file is part of SynoDLNAtrakt.
+
 import re, os, sys
 from ConfigParser import SafeConfigParser, ConfigParser
 from synoindex.logger import logger

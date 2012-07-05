@@ -1,3 +1,8 @@
+# Author: cytec <iamcytec@googlemail.com>
+# URL: http://github.com/cytec/SynoDLNAtrakt/
+#
+# This file is part of SynoDLNAtrakt.
+
 import re, os
 from ConfigParser import SafeConfigParser
 from xml.dom.minidom import parse, parseString

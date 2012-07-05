@@ -1,3 +1,8 @@
+# Author: cytec <iamcytec@googlemail.com>
+# URL: http://github.com/cytec/SynoDLNAtrakt/
+#
+# This file is part of SynoDLNAtrakt.
+
 import urllib2, simplejson, hashlib, json
 from synodlnatrakt import config
 from synodlnatrakt import helper
