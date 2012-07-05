@@ -64,8 +64,8 @@ def getDurationFromLog(theid):
 def buildMediaElement(mediaelement, theid):
 	#check if given id is already in Database and get the lastviewed value to compare if its the same entry.
 	if mediaelement:
-		logger.info(u"Processing File: {0}".format(mediaelement["thepath"]))
-		logger.debug(u"Mediatype: {0}, Directory: {1}".format(mediaelement["type"], mediaelement["directory"]))
+		logger.info(u"processing file: {0}".format(mediaelement["thepath"]))
+		logger.debug(u"mediatype: {0}, directory: {1}".format(mediaelement["type"], mediaelement["directory"]))
 		mediaelement["id"] = theid
 		mediaelement["duration"] = helper.getVideoDuration(theid)
 		mediaelement["viewed"], mediaelement["lastviewed"] = getDurationFromLog(theid)
@@ -76,7 +76,7 @@ def buildMediaElement(mediaelement, theid):
 			logger.error(u"File with id: {0}, was watched {1}% we need at least {2}%... skipping it".format(mediaelement["id"], mediaelement["process"], config.min_progress))
 			return None
 		else:
-
+			#currently only used for movies... idk if its possible to scrobble this for series.
 			mediaelement["lastviewedstamp"] = calendar.timegm(mediaelement["lastviewed"].timetuple())
 			#generate timestamp from lastviewed (datetime obj)
 			#d = datetime.datetime.now()
@@ -86,19 +86,27 @@ def buildMediaElement(mediaelement, theid):
 	
 			#generate datetime from timestamp
 			#datetime.datetime.utcfromtimestamp(1341237828)
-	
+			
+			#handling for mediatype series
 			if mediaelement["type"] == "series":
-				mediaelement["tvdb_id"], mediaelement["name"] = helper.checkNFO(mediaelement["thepath"], "series")
-				mediaelement["season"], mediaelement["episode"] = helper.checkNFO(mediaelement["thepath"], "episode")
-		
+				try:
+					mediaelement["tvdb_id"], mediaelement["name"] = helper.checkNFO(mediaelement["thepath"], "series")
+					mediaelement["season"], mediaelement["episode"] = helper.checkNFO(mediaelement["thepath"], "episode")
+				except:
+					logger.error(u"cant make {0} medialement".format(mediaelement["type"]))
+					return None
+			#handling for mediatype movies
 			if mediaelement["type"] == "movie":
 				try:
 					mediaelement["name"], mediaelement["imdb_id"], mediaelement["year"] = helper.checkNFO(mediaelement["thepath"], "movie")
 				except:
-					logger.error(u"cant make medialement")
+					logger.error(u"cant make {0} medialement".format(mediaelement["type"]))
 					return None
+
+			#log the created mediaobject in debug mode
 			logger.debug(u"created mediaobject: {0}".format(mediaelement))
-			#insert created infos in database...
+			
+			#insert created infos in database if activated
 			if config.use_database:
 				helper.mediaelementToDatabase(mediaelement)
 				
@@ -108,12 +116,9 @@ def buildMediaElement(mediaelement, theid):
 		return None
 
 
-
-medialist = [ "avi","mkv","mov","mp4","m4v","ts","hdmov","wmv","mpg","mpeg","xvid"]
-logregex = ".*(?P<theid>\d{5})\.(?P<ext>\w{3,5})"
-
 logger.info(u"Starting SynoDLNAtrakt...")
 
+#check for accesslog and exit if not found
 if not os.path.exists(config.accesslog):
 	logger.info(u"{0} doesn't exist please check your settings and make sure you anabled MediaServers Debug mode".format(config.accesslog))
 	sys.exit(1)
@@ -127,13 +132,13 @@ if os.path.getsize(config.accesslog) > 0:
 		try:
 			data = p.parse(line)
 			try:
-				x = re.match(logregex, data["%r"])
+				x = re.match(config.logregex, data["%r"])
 				theid = x.group("theid")
 				extension = x.group("ext")
 			except:
 				theid, extension = data["%r"].replace("GET /v/NDLNA/",'').replace(' HTTP/1.1','').split('.')
 	
-			if extension not in medialist:
+			if extension not in config.medialist:
 				continue
 			
 			#calculate the actual date from the log (for timedelta calculations)
@@ -172,6 +177,7 @@ if os.path.getsize(config.accesslog) > 0:
 					trakt.scrobble(scrobbledict)
 					scrobblers = scrobblers + 1
 	
+	#send boxcar notifications if activated
 	if config.use_boxcar:
 		if scrobblers > 0:
 			box = BoxcarNotifier()
