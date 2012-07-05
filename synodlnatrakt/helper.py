@@ -212,6 +212,8 @@ def checkNFO(filepath, nfotype):
 				
 				try:
 					moviename = os.path.basename(filepath)
+					for junk in config.removejunk:
+						moviename = moviename.replace(junk,'')
 					p = re.match(movieregex, moviename)
 					name = p.group("name").replace("."," ").replace("-"," ").strip()
 					year = p.group("year")
