@@ -77,7 +77,8 @@ def buildMediaElement(mediaelement, theid):
 			return None
 		else:
 			#currently only used for movies... idk if its possible to scrobble this for series.
-			mediaelement["lastviewedstamp"] = calendar.timegm(mediaelement["lastviewed"].timetuple())
+			#mediaelement["lastviewedstamp"] = calendar.timegm(mediaelement["lastviewed"].timetuple())
+			mediaelement["lastviewedstamp"] = time.mktime(mediaelement["lastviewed"].timetuple())
 			#generate timestamp from lastviewed (datetime obj)
 			#d = datetime.datetime.now()
 			#calendar.timegm(d.timetuple())
