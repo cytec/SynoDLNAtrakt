@@ -38,7 +38,7 @@ except:
 def getDurationFromLog(theid):
 	dates = idtimes[theid]
 	
-	startdate = dates[1]
+	startdate = dates[0]
 	try:
 		enddate = dates[-1]
 	except:
