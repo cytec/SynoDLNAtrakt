@@ -16,8 +16,9 @@ SYS_ENCODING = ''
 medialist = [ "avi","mkv","mov","mp4","m4v","ts","hdmov","wmv","mpg","mpeg","xvid"]
 
 #regex for getting the id and extension from access.log
-logregex = ".*(?P<theid>\d{4,5})\.(?P<ext>\w{3,5})"
+logregex = "[^0-9]*(?P<theid>\d{4,5})\.(?P<ext>\w{3,5})"
 
+removejunk = ["BR-Rip","DVDRip"]
 
 try:
     locale.setlocale(locale.LC_ALL, "")
