@@ -52,12 +52,12 @@ def getDurationFromLog(theid):
 	duration = enddate - startdate
 	
 	logger.debug(u"Fileid: " + str(theid))
-	logger.debug(u"Duration: " + str(duration))
+	logger.debug(u"Viewed: " + str(duration))
 	h, m, s = str(duration).split(":")
 	time = int(h)*60
 	time = (time + int(m))*60
 	time = (time + int(s))
-	logger.debug(u"Duration Timestamp: {0}".format(time))
+	logger.debug(u"Viewed Timestamp: {0}".format(time))
 	logger.debug(u"Last viewed: {0}, for: {1}".format(enddate, duration))
 	return time, enddate
 
