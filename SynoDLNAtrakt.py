@@ -150,12 +150,12 @@ if os.path.getsize(config.accesslog) > 0:
 					idtimes[theid]=thedate
 				else:
 					datelist = idtimes[theid]
-					checkdate = datelist[0].day()
-					if checkdate == thedate.day():
+					checkdate = datelist[0].day
+					if checkdate == thedate.day:
 						datelist.append(thedate)
 						idtimes[theid]=datelist
 					else:
-						logger.info("{0} seems to be a different date...".format(thedate))
+						logger.info("{0} seems to be a different date for ID: {1}".format(thedate, theid))
 			except:
 				logger.error(u"Sorry something went wrong here, can't create dictionary")
 	          
