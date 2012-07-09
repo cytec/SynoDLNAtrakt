@@ -150,12 +150,20 @@ if os.path.getsize(config.accesslog) > 0:
 					idtimes[theid]=thedate
 				else:
 					datelist = idtimes[theid]
-					checkdate = datelist[0].day
-					if checkdate == thedate.day:
+					checkdate = datelist[0]
+					#first access plus 6 hours timeframe...
+					expirationdate = checkdate + datetime.timedelta(hours=6)
+					#if its between the 6hours timeframe, add it else skipp it...
+					#print "First view: {0}, Falid till: {1}".format(checkdate, expirationdate)
+					if expirationdate > thedate:
 						datelist.append(thedate)
 						idtimes[theid]=datelist
 					else:
-						logger.info("{0} seems to be a different date for ID: {1}".format(thedate, theid))
+						#when its outside the timframe, try to overwrite it with the newer date...
+						logger.debug("{0} is more than 6hours after the first access to: {1}".format(thedate, theid))
+						logger.debug("Overwriting {0} with new startdate: {1}".format(theid, thedate))
+						thedate = [thedate]
+						idtimes[theid]=thedate
 			except:
 				logger.error(u"Sorry something went wrong here, can't create dictionary")
 	          
