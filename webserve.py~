@@ -62,7 +62,7 @@ class Root(object):
 					f = open(name, 'w')
 					f.write(imagedata)
 					f.close()
-				image = "<img src='data/cache/{0}.jpg' width='250'/>".format(entry["tvdb_id"])
+				image = "<img src='data/cache/{0}.jpg' width='150'/>".format(entry["tvdb_id"])
 
 				
 				#image = t['scrubs']['_banners']['poster']['680x1000']['35308']['_bannerpath']
