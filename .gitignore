@@ -1,5 +1,6 @@
-*.ini
+SynoDLNAtrakt.ini
 *.pyc
+*.py~
 .DS_Store
 *.log
 *.db
