@@ -79,6 +79,7 @@ CheckSection('General')
 CheckSection('Advanced')
 CheckSection('Trakt')
 CheckSection('Boxcar')
+CheckSection('Postprocessing')
 
 #general
 psql = check_setting_str(CFG, 'General', 'psql', '/usr/syno/pgsql/bin/psql')
@@ -90,7 +91,6 @@ delete_logs = bool(check_setting_int(CFG, 'General', 'delete_logs', 0))
 scrobble_series = bool(check_setting_int(CFG, 'General', 'scrobble_series', 1))
 use_database = bool(check_setting_int(CFG, 'General', 'use_database', 1))
 scrobble_movies = bool(check_setting_int(CFG, 'General', 'scrobble_movies', 1))
-
 
 #adcanced
 logtoconsole = bool(check_setting_int(CFG, 'Advanced', 'logtoconsole', 0))
@@ -107,6 +107,14 @@ trakt_key = check_setting_str(CFG, 'Trakt', 'trakt_key', '')
 use_boxcar = bool(check_setting_int(CFG, 'Boxcar', 'use_boxcar', 0))
 boxcar_username = check_setting_str(CFG, 'Boxcar', 'boxcar_username', '')
 
+#postprocessing
+move_watched_movies = bool(check_setting_int(CFG, 'Postprocessing', 'move_watched_movies', 0))
+move_watched_series = bool(check_setting_int(CFG, 'Postprocessing', 'move_watched_series', 0))
+move_movies_to_dir = check_setting_int(CFG, 'Postprocessing', 'move_movies_to_dir', '/path/to/viewed/moviedir/')
+move_series_to_dir = check_setting_int(CFG, 'Postprocessing', 'move_series_to_dir', '/path/to/viewed/seriesdir/')
+update_synoindex = bool(check_setting_int(CFG, 'Postprocessing', 'update_synoindex', 0))
+delete_from_index = bool(check_setting_int(CFG, 'Postprocessing', 'delete_from_index', 0))
+
 def save_config():
 
     new_config = ConfigObj()
@@ -122,7 +130,7 @@ def save_config():
     new_config['General']['scrobble_series'] = int(scrobble_series)
     new_config['General']['use_database'] = int(use_database)
     new_config['General']['scrobble_movies'] = int(scrobble_movies)
-    
+
     new_config['Advanced'] = {}
     new_config['Advanced']['logtoconsole'] = int(logtoconsole)
     new_config['Advanced']['debugmode'] = int(debugmode)
@@ -137,6 +145,13 @@ def save_config():
     new_config['Boxcar'] = {}
     new_config['Boxcar']['use_boxcar'] = int(use_boxcar)
     new_config['Boxcar']['boxcar_username'] = boxcar_username
+
+    new_config['Postprocessing']['move_watched_movies'] = int(move_watched_movies)
+    new_config['Postprocessing']['move_watched_series'] = int(move_watched_series)
+    new_config['Postprocessing']['move_movies_to_dir'] = move_movies_to_dir
+    new_config['Postprocessing']['move_series_to_dir'] = move_series_to_dir
+    new_config['Postprocessing']['update_synoindex'] = int(update_synoindex)
+    new_config['Postprocessing']['delete_from_index'] = int(delete_from_index)
 
     new_config.write()
 

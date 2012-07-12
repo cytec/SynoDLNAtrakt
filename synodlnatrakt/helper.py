@@ -243,3 +243,22 @@ def checkNFO(filepath, nfotype):
 			else:
 				logger.error(u"Please enable try_guessing in settings or create an .nfo for: {0}".format(filepath))
 				return 0
+
+def processWatched(mediaelement):
+	if config.delete_from_index:
+		subprocess.call('synoindex','-d', mediaelement["thepath"])
+		logger.info("Deleted {0} from the synoindex database".format(mediaelement["thepath"]))
+	if mediaelement["type"] == "movie" and if config.move_watched_movies:
+		dirname, filename = os.path.dirname(mediaelement["thepath"])
+		path, foldername = os.path.split(dirname)
+		newpath = os.path.join(backupfolder, foldername)
+		os.rename(dirname, newpath)
+		newfullpath = os.path.join(newpath, filename)
+		logger.info("Moved {0} to {1}".format(mediaelement["thepath"], newfullpath))
+		if config.update_synoindex:
+			subprocess.call('synoindex','-N', newfullpath, mediaelement["thepath"])
+			logger.info("Updated synoindex for {0} with {1}".format(mediaelement["thepath"], newfullpath))
+
+	if mediaelement["type"] == "series" and if config.move_watched_series:
+		pass
+		#move it to the new movie dir...
