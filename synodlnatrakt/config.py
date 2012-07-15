@@ -110,8 +110,8 @@ boxcar_username = check_setting_str(CFG, 'Boxcar', 'boxcar_username', '')
 #postprocessing
 move_watched_movies = bool(check_setting_int(CFG, 'Postprocessing', 'move_watched_movies', 0))
 move_watched_series = bool(check_setting_int(CFG, 'Postprocessing', 'move_watched_series', 0))
-move_movies_to_dir = check_setting_int(CFG, 'Postprocessing', 'move_movies_to_dir', '/path/to/viewed/moviedir/')
-move_series_to_dir = check_setting_int(CFG, 'Postprocessing', 'move_series_to_dir', '/path/to/viewed/seriesdir/')
+move_movies_to_dir = check_setting_str(CFG, 'Postprocessing', 'move_movies_to_dir', '/path/to/viewed/moviedir/')
+move_series_to_dir = check_setting_str(CFG, 'Postprocessing', 'move_series_to_dir', '/path/to/viewed/seriesdir/')
 update_synoindex = bool(check_setting_int(CFG, 'Postprocessing', 'update_synoindex', 0))
 delete_from_index = bool(check_setting_int(CFG, 'Postprocessing', 'delete_from_index', 0))
 
@@ -146,6 +146,7 @@ def save_config():
     new_config['Boxcar']['use_boxcar'] = int(use_boxcar)
     new_config['Boxcar']['boxcar_username'] = boxcar_username
 
+    new_config['Postprocessing'] = {}
     new_config['Postprocessing']['move_watched_movies'] = int(move_watched_movies)
     new_config['Postprocessing']['move_watched_series'] = int(move_watched_series)
     new_config['Postprocessing']['move_movies_to_dir'] = move_movies_to_dir
