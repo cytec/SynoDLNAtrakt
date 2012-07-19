@@ -20,6 +20,8 @@ logregex = "[^0-9]*(?P<theid>\d{4,5})\.(?P<ext>\w{3,5})"
 
 removejunk = ["BR-Rip","DVDRip"]
 
+trakt_key = "860f1d1eda847c3b934a2d942eef110e13d21b12"
+
 try:
     locale.setlocale(locale.LC_ALL, "")
     SYS_ENCODING = locale.getpreferredencoding()
@@ -101,7 +103,7 @@ interval = check_setting_int(CFG, 'Advanced', 'interval', 12)
 #trakt
 trakt_pass = check_setting_str(CFG, 'Trakt', 'trakt_pass', '')
 trakt_user = check_setting_str(CFG, 'Trakt', 'trakt_user', '')
-trakt_key = check_setting_str(CFG, 'Trakt', 'trakt_key', '')
+#trakt_key = check_setting_str(CFG, 'Trakt', 'trakt_key', '')
 
 #boxcar
 use_boxcar = bool(check_setting_int(CFG, 'Boxcar', 'use_boxcar', 0))
@@ -140,7 +142,7 @@ def save_config():
     new_config['Trakt'] = {}
     new_config['Trakt']['trakt_pass'] = trakt_pass
     new_config['Trakt']['trakt_user'] = trakt_user
-    new_config['Trakt']['trakt_key'] = trakt_key
+    #new_config['Trakt']['trakt_key'] = trakt_key
 
     new_config['Boxcar'] = {}
     new_config['Boxcar']['use_boxcar'] = int(use_boxcar)
