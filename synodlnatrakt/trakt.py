@@ -80,7 +80,7 @@ sha1hash=hashlib.sha1(config.trakt_pass).hexdigest()
 
 def scrobble(dict):
 	if dict["type"]=="series":
-		action="show/episode"
+		action="show"
 		
 		postdata={
 			"username": config.trakt_user,
@@ -88,6 +88,7 @@ def scrobble(dict):
 			"tvdb_id": dict["tvdb_id"],
 			"title": dict["name"],
 			#"year": dict["year"],
+			"progress": dict["process"],
 			"episodes": [
 				{
 					"season": dict["season"],
@@ -107,14 +108,15 @@ def scrobble(dict):
 							"title": dict["name"],
 							"year": dict["year"],
 							# "plays": 1,
-							"last_played": dict["lastviewedstamp"]
+							"progress": dict["process"],
+							#"last_played": dict["lastviewedstamp"]
 					}
 			]
 		}
 
 		
 
-	url = "http://api.trakt.tv/{0}/seen/{1}".format(action, config.trakt_key)
+	url = "http://api.trakt.tv/{0}/scrobble/{1}".format(action, config.trakt_key)
 	logger.info("Sending infos for {0} \"{1}\" to trakt".format(dict["type"], dict["name"]))
 	logger.debug("Sending infos to trakt: URL: {0}, Data: {1}".format(url, postdata))
 
