@@ -89,12 +89,8 @@ def scrobble(dict):
 			"title": dict["name"],
 			#"year": dict["year"],
 			"progress": dict["process"],
-			"episodes": [
-				{
-					"season": dict["season"],
-					"episode": dict["episode"]
-				}
-			]
+			"season": dict["season"],
+			"episode": dict["episode"]
 		}
 	if dict["type"]=="movie":
 		action="movie"
@@ -102,16 +98,12 @@ def scrobble(dict):
 		postdata={
 			"username": config.trakt_user,
 			"password": sha1hash,
-			"movies": [
-					{
-							"imdb_id": dict["imdb_id"],
-							"title": dict["name"],
-							"year": dict["year"],
-							# "plays": 1,
-							"progress": dict["process"],
-							#"last_played": dict["lastviewedstamp"]
-					}
-			]
+			"imdb_id": dict["imdb_id"],
+			"title": dict["name"],
+			"year": dict["year"],
+			# "plays": 1,
+			"progress": dict["process"],
+			#"last_played": dict["lastviewedstamp"]
 		}
 
 		
