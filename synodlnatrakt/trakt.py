@@ -123,15 +123,17 @@ def scrobble(dict):
 	except urllib2.URLError, e:
 		return {'status' : 'failure', 'error' : e.reason[0]}
 
-	if response['status'] == 'success':
-		#marking the id as scrobbled inside the database...
-		if config.use_database:
-			helper.markScrobbled(dict["id"])
-		if dict['type'] == 'series':
-			logger.info('Trakt responded with: %s' % response['message'])
-		else:
-			logger.info('Trakt responded with: %s' % response['status'])
-	else:
-		logger.info('Trakt responded with: %s' % response['error'])
+	# if response['status'] == 'success':
+	# 	#marking the id as scrobbled inside the database...
+	# 	if config.use_database:
+	# 		helper.markScrobbled(dict["id"])
+	# 	# if dict['type'] == 'series':
+	# 	# 	logger.info('Trakt responded with: %s' % response['message'])
+	# 	# else:
+	# 	# 	logger.info('Trakt responded with: %s' % response['status'])
+	# 	logger.info('Trakt responded with: %s' % response['message'])
+	# else:
+	# 	logger.info('Trakt responded with: %s' % response['error'])
+	logger.info('Trakt responded with: %s' % response['status'])
 
 	
