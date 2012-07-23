@@ -78,38 +78,125 @@ responses = {
 
 sha1hash=hashlib.sha1(config.trakt_pass).hexdigest()
 
-def scrobble(dict):
-	if dict["type"]=="series":
-		action="show"
-		
-		postdata={
-			"username": config.trakt_user,
-			"password": sha1hash,
-			"tvdb_id": dict["tvdb_id"],
-			"title": dict["name"],
-			#"year": dict["year"],
-			"progress": dict["process"],
-			"season": dict["season"],
-			"episode": dict["episode"]
-		}
-	if dict["type"]=="movie":
-		action="movie"
+def sendRequest(mediaelement):
+	if mediaelement["process"] < 80:
+		response = watching(mediaelement)
+	else:
+		response = scrobble(mediaelement)
+		if not response:
+			logger.debug("Scrobble failed, trying to mark as seen manually...")
+			response = seen(mediaelement)
+	return response
+
+def seen(mediaelement):
+	if mediaelement["type"]=="series":
+		action="show/episode/seen"
 
 		postdata={
 			"username": config.trakt_user,
 			"password": sha1hash,
-			"imdb_id": dict["imdb_id"],
-			"title": dict["name"],
-			"year": dict["year"],
+			"tvdb_id": mediaelement["tvdb_id"],
+			"title": mediaelement["name"],
+			#"year": dict["year"],
+			"episodes": [
+        		{
+            		"season": mediaelement["season"],
+            		"episode": mediaelement["episode"]
+        		}
+   			]
+		}
+
+	if mediaelement["type"]=="movie":
+		action="movie/seen"
+
+		postdata={
+    		"username": config.trakt_user,
+    		"password": sha1hash,
+    		"movies": [
+        		{
+            		"imdb_id": mediaelement["imdb_id"],
+            		"title": mediaelement["name"],
+            		"year": mediaelement["year"],
+            		#"plays": 1,
+            		#"last_played": mediaelement["lastviewedstamp"]
+        		}
+    		]
+		}
+	return send(action, postdata, mediaelement)
+
+def watching(mediaelement):
+	if mediaelement["type"]=="series":
+		action="show/watching"
+		postdata={
+    		"username": config.trakt_user,
+    		"password": sha1hash,
+    		#"imdb_id": "tt1520211",
+    		"tvdb_id": mediaelement["tvdb_id"],
+    		"title": mediaelement["name"],
+    		#"year": 2010,
+    		"season": mediaelement["season"],
+    		"episode": mediaelement["episode"],
+    		#"duration": 60,
+    		"progress": mediaelement["process"]
+    		#"plugin_version": "1.0",
+    		#"media_center_version": "10.0",
+    		#"media_center_date": "Dec 17 2010"
+		}
+
+	if mediaelement["type"]=="movie":
+		action="movie/watching"
+
+		postdata={
+    		"username": config.trakt_user,
+    		"password": sha1hash,
+    		"imdb_id": mediaelement["imdb_id"],
+    		"title": mediaelement["name"],
+    		"year": mediaelement["year"],
+    		#"duration": 141,
+    		"progress": mediaelement["process"]
+    		#"plugin_version": "1.0",
+    		#"media_center_version": "10.0",
+    		#"media_center_date": "Dec 17 2010"
+		}
+
+	return send(action, postdata, mediaelement)
+
+def scrobble(mediaelement):
+	if mediaelement["type"]=="series":
+		action="show/scrobble"
+		
+		postdata={
+			"username": config.trakt_user,
+			"password": sha1hash,
+			"tvdb_id": mediaelement["tvdb_id"],
+			"title": mediaelement["name"],
+			#"year": dict["year"],
+			"progress": mediaelement["process"],
+			"season": mediaelement["season"],
+			"episode": mediaelement["episode"]
+		}
+
+	if mediaelement["type"]=="movie":
+		action="movie/scrobble"
+
+		postdata={
+			"username": config.trakt_user,
+			"password": sha1hash,
+			"imdb_id": mediaelement["imdb_id"],
+			"title": mediaelement["name"],
+			"year": mediaelement["year"],
 			# "plays": 1,
-			"progress": dict["process"],
+			"progress": mediaelement["process"],
 			#"last_played": dict["lastviewedstamp"]
 		}
-
+	return send(action, postdata, mediaelement)
 		
 
-	url = "http://api.trakt.tv/{0}/scrobble/{1}".format(action, config.trakt_key)
-	logger.info("Sending infos for {0} \"{1}\" to trakt".format(dict["type"], dict["name"]))
+
+	
+def send(action, postdata, mediaelement):
+	url = "http://api.trakt.tv/{0}/{1}".format(action, config.trakt_key)
+	logger.info("Sending infos for {0} \"{1}\" to trakt".format(mediaelement["type"], mediaelement["name"]))
 	logger.debug("Sending infos to trakt: URL: {0}, Data: {1}".format(url, postdata))
 
 	try:
@@ -117,23 +204,19 @@ def scrobble(dict):
 		response = urllib2.urlopen(request)
 		response = response.read()
 		response = json.loads(response)
-		logger.debug("response: {0}".format(response))
+		
 	except urllib2.HTTPError, e:
-		result = {'status' : 'failure', 'error' : responses[e.code][1]}
+		response = {'status' : 'failure', 'error' : responses[e.code][1]}
+		#return None
 	except urllib2.URLError, e:
-		return {'status' : 'failure', 'error' : e.reason[0]}
-
-	# if response['status'] == 'success':
-	# 	#marking the id as scrobbled inside the database...
-	# 	if config.use_database:
-	# 		helper.markScrobbled(dict["id"])
-	# 	# if dict['type'] == 'series':
-	# 	# 	logger.info('Trakt responded with: %s' % response['message'])
-	# 	# else:
-	# 	# 	logger.info('Trakt responded with: %s' % response['status'])
-	# 	logger.info('Trakt responded with: %s' % response['message'])
-	# else:
-	# 	logger.info('Trakt responded with: %s' % response['error'])
-	logger.info('Trakt responded with: %s' % response['status'])
-
-	
+		response = {'status' : 'failure', 'error' : e.reason[0]}
+		#return None
+	logger.debug("response: {0}".format(response))
+	if response['status'] == 'success':
+		#marking the id as scrobbled inside the database...
+		# if config.use_database:
+		# 	helper.markScrobbled(mediaelement["id"])
+		
+		return True
+	else:
+		return None

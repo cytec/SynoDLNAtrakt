@@ -180,15 +180,15 @@ if os.path.getsize(config.accesslog) > 0:
 				if not isinDB:
 					scrobbledict = buildMediaElement(mediaelement, key)
 					if scrobbledict:
-						trakt.scrobble(scrobbledict)
-						scrobblers = scrobblers + 1
+						if trakt.sendRequest(scrobbledict):
+							scrobblers = scrobblers + 1
 				else:
 					logger.info(u"File with id: \"{0}\" is already in Database and scrobbled to trakt. Skipping it".format(key))
 			else:
 				scrobbledict = buildMediaElement(mediaelement, key)
 				if scrobbledict:
-					trakt.scrobble(scrobbledict)
-					scrobblers = scrobblers + 1
+					if trakt.sendRequest(scrobbledict):
+						scrobblers = scrobblers + 1
 	
 	#send boxcar notifications if activated
 	if config.use_boxcar:
