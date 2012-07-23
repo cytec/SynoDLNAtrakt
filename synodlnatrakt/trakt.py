@@ -142,7 +142,7 @@ def watching(mediaelement):
     		"season": mediaelement["season"],
     		"episode": mediaelement["episode"],
     		"progress": mediaelement["process"],
-    		"duration": mediaelement["duration"] / 60
+    		"duration": int(mediaelement["duration"]) / 60
     		#"plugin_version": "1.0",
     		#"media_center_version": "10.0",
     		#"media_center_date": "Dec 17 2010"
@@ -159,7 +159,7 @@ def watching(mediaelement):
     		"year": mediaelement["year"],
     		#"duration": 141,
     		"progress": mediaelement["process"],
-    		"duration": mediaelement["duration"] / 60
+    		"duration": int(mediaelement["duration"]) / 60
     		#"plugin_version": "1.0",
     		#"media_center_version": "10.0",
     		#"media_center_date": "Dec 17 2010"
@@ -180,7 +180,7 @@ def scrobble(mediaelement):
 			"progress": mediaelement["process"],
 			"season": mediaelement["season"],
 			"episode": mediaelement["episode"],
-			"duration": mediaelement["duration"] / 60
+			"duration": int(mediaelement["duration"]) / 60
 		}
 
 	if mediaelement["type"]=="movie":
@@ -194,7 +194,7 @@ def scrobble(mediaelement):
 			"year": mediaelement["year"],
 			# "plays": 1,
 			"progress": mediaelement["process"],
-			"duration": mediaelement["duration"] / 60
+			"duration": int(mediaelement["duration"]) / 60
 			#"last_played": dict["lastviewedstamp"]
 		}
 	return send(action, postdata, mediaelement)
