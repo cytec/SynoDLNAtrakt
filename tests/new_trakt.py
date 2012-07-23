@@ -3,6 +3,8 @@
 #
 # This file is part of SynoDLNAtrakt.
 from synodlnatrakt import trakt
+import urllib2
+import json
 
 # scrobbledict = {
 # 	"type": "series",
@@ -14,18 +16,19 @@ from synodlnatrakt import trakt
 #     "process": 100,
 # }
 
-scrobbledict = {
+postdata = {
 	"type": "movie",
     "imdb_id": "tt0372784",
     "name": "Batman Begins",
     "year": 2005,
-    "duration": 141,
-    "process": 40,
+    "duration": 8400,
+    "progress": 85,
+    "process": 85,
 }
 
-if trakt.sendRequest(scrobbledict):
-	print "jeah"
+if trakt.sendRequest(postdata):
+ 	print "jeah"
 else:
-	print "oh noes!"
+ 	print "oh noes!"
 
-						
+ 						

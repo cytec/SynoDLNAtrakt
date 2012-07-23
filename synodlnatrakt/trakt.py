@@ -3,7 +3,10 @@
 #
 # This file is part of SynoDLNAtrakt.
 
-import urllib2, simplejson, hashlib, json
+import urllib2
+import simplejson
+import hashlib
+import json
 from synodlnatrakt import config
 from synodlnatrakt import helper
 from synodlnatrakt.logger import logger
@@ -88,6 +91,8 @@ def sendRequest(mediaelement):
 			response = seen(mediaelement)
 	return response
 
+
+
 def seen(mediaelement):
 	if mediaelement["type"]=="series":
 		action="show/episode/seen"
@@ -136,8 +141,8 @@ def watching(mediaelement):
     		#"year": 2010,
     		"season": mediaelement["season"],
     		"episode": mediaelement["episode"],
-    		#"duration": 60,
-    		"progress": mediaelement["process"]
+    		"progress": mediaelement["process"],
+    		"duration": mediaelement["duration"] / 60
     		#"plugin_version": "1.0",
     		#"media_center_version": "10.0",
     		#"media_center_date": "Dec 17 2010"
@@ -153,7 +158,8 @@ def watching(mediaelement):
     		"title": mediaelement["name"],
     		"year": mediaelement["year"],
     		#"duration": 141,
-    		"progress": mediaelement["process"]
+    		"progress": mediaelement["process"],
+    		"duration": mediaelement["duration"] / 60
     		#"plugin_version": "1.0",
     		#"media_center_version": "10.0",
     		#"media_center_date": "Dec 17 2010"
@@ -173,7 +179,8 @@ def scrobble(mediaelement):
 			#"year": dict["year"],
 			"progress": mediaelement["process"],
 			"season": mediaelement["season"],
-			"episode": mediaelement["episode"]
+			"episode": mediaelement["episode"],
+			"duration": mediaelement["duration"] / 60
 		}
 
 	if mediaelement["type"]=="movie":
@@ -187,6 +194,7 @@ def scrobble(mediaelement):
 			"year": mediaelement["year"],
 			# "plays": 1,
 			"progress": mediaelement["process"],
+			"duration": mediaelement["duration"] / 60
 			#"last_played": dict["lastviewedstamp"]
 		}
 	return send(action, postdata, mediaelement)
