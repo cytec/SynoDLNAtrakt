@@ -118,7 +118,7 @@ def FileInDB(theid):
 	db.checkDB()
 	myDB = db.DBConnection()
 	response = myDB.select("SELECT scrobbled from scrobble WHERE id = {0}".format(theid))
-	return response
+	return response[0]["scrobbled"]
 
 def checkNFO(filepath, nfotype):
 	#check the nfo for the needed id stuff...

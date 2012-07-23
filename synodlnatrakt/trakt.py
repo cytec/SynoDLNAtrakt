@@ -222,8 +222,9 @@ def send(action, postdata, mediaelement):
 	logger.debug("response: {0}".format(response))
 	if response['status'] == 'success':
 		#marking the id as scrobbled inside the database...
-		# if config.use_database:
-		# 	helper.markScrobbled(mediaelement["id"])
+		if not action.split("/")[-1] == "watching":
+			if config.use_database:
+				helper.markScrobbled(mediaelement["id"])
 		
 		return True
 	else:
