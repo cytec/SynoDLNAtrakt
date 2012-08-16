@@ -205,10 +205,10 @@ def scrobble(mediaelement):
 def send(action, postdata, mediaelement):
 	url = "http://api.trakt.tv/{0}/{1}".format(action, config.trakt_key)
 	try:
-		logger.info("Sending infos for {0} \"{1}\" to trakt".format(mediaelement["type"], mediaelement["name"]))
+		logger.info(u"Sending infos for {0} \"{1}\" to trakt".format(mediaelement["type"], mediaelement["name"]))
 	except:
-		logger.info("Sending infos to trakt")
-	logger.debug("Sending infos to trakt: URL: {0}, Data: {1}".format(url, postdata))
+		logger.info(u"Sending infos to trakt")
+	logger.debug(u"Sending infos to trakt: URL: {0}, Data: {1}".format(url, postdata))
 
 	try:
 		request = urllib2.Request(url, json.dumps(postdata))
