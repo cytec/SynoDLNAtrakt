@@ -205,7 +205,7 @@ def checkNFO(filepath, nfotype):
 			nametag = dom.getElementsByTagName('title')[0].toxml()
 			name=nametag.replace('<title>','').replace('</title>','')
 			if name[:4].lower() in config.the_srings:
-				name = name[4:] + ', ' + name[:4]
+				name = name[4:] + ', ' + name[:4].strip()
 			yeartag = dom.getElementsByTagName('year')[0].toxml()
 			year=yeartag.replace('<year>','').replace('</year>','')
 			logger.info(u'Movie info -> Name: {0}, Year: {1}, imdb_id: {2}'.format(name, year, tvdb_id))
@@ -222,7 +222,7 @@ def checkNFO(filepath, nfotype):
 					p = re.match(movieregex, moviename)
 					name = p.group("name").replace("."," ").replace("-"," ").strip()
 					if name[:4].lower() in config.the_srings:
-						name = name[4:] + ', ' + name[:4]
+						name = name[4:] + ', ' + name[:4].strip()
 					year = p.group("year")
 					searchstring = "{0} ({1})".format(name, year)
 				except:
