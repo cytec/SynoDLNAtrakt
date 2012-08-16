@@ -22,6 +22,9 @@ removejunk = ["BR-Rip","DVDRip"]
 
 trakt_key = "860f1d1eda847c3b934a2d942eef110e13d21b12"
 
+the_srings = ["the ","der ","die ","das "]
+
+
 try:
     locale.setlocale(locale.LC_ALL, "")
     SYS_ENCODING = locale.getpreferredencoding()
