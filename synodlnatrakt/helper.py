@@ -74,6 +74,8 @@ def getProcess(length, viewed):
 	viewed = durationStamps(viewed)
 	percent = int(viewed) / (int(length) / 100)
 	logger.debug(u"Duration: {0}s, Viewed: {1}s = {2}% watched".format(length, viewed, percent))
+	if percent > 100:
+		percent=100
 	return percent
 
 def getDurationFromLog(id):
