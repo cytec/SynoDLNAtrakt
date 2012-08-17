@@ -209,7 +209,7 @@ def checkNFO(filepath, nfotype):
 			yeartag = dom.getElementsByTagName('year')[0].toxml()
 			year=yeartag.replace('<year>','').replace('</year>','')
 			logger.info(u'Movie info -> Name: {0}, Year: {1}, imdb_id: {2}'.format(name, year, tvdb_id))
-			return season, episode
+			return name, tvdb_id, year
 		except:
 			logger.error(u"Cant find/open file: {0}".format(nfofile))
 			if config.try_guessing:
@@ -250,6 +250,47 @@ def checkNFO(filepath, nfotype):
 			else:
 				logger.error(u"Please enable try_guessing in settings or create an .nfo for: {0}".format(filepath))
 				return 0
+
+def checktmdb(filename):
+	filename = filename + ".tmdb"
+	if os.path.exist(filename):
+		f = open(filename, "r")
+		tmdb_id = f.read()
+		f.close()
+		logger.info(u"found a tmdb file with the ID: {0}".format(tmdb_id))
+		return tmdb_id
+	else:
+		return None
+
+def makeNFO(mediaelement):
+	nfopath = os.path.splitext(mediaelement["thepath"])[0] + ".nfo"
+	doc = Document()
+	synodlnatrakt = doc.createElement("SynoDLNAtrakt")
+	doc.appendChild(synodlnatrakt)
+	#the id
+	id = doc.createElement("id")
+	idtext = doc.createTextNode(mediaelement["imdb_id"])
+	id.appendChild(idtext)
+	#the title of the movie
+	title = doc.createElement("title")
+	titletext = doc.createTextNode(mediaelement["name"])
+	title.append(titletext)
+
+	year = doc.createElement("year")
+	yeartext = doc.createTextNode(mediaelement["year"])
+	year.append(yeartext)
+
+	synodlnatrakt.append(id)
+	synodlnatrakt.append(title)
+	synodlnatrakt.append(year)
+	try:
+		f = open(nfopath,"w")
+		f.write(doc.toprettyxml(indent="  "))
+		f.close()
+		logger.info(u"nfo file for {0} created".format(mediaelement["name"]))
+	except:
+		logger.error(u"unable to create nfo for {0}".format(mediaelement["name"]))
+
 
 def processWatched(mediaelement):
 	if config.delete_from_index:
