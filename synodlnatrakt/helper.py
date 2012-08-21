@@ -299,11 +299,12 @@ def processWatched(mediaelement):
 		subprocess.call('synoindex','-d', mediaelement["thepath"])
 		logger.info(u"Deleted {0} from the synoindex database".format(mediaelement["thepath"]))
 	if mediaelement["type"] == "movie" and config.move_watched_movies:
-		dirname, filename = os.path.dirname(mediaelement["thepath"])
-		path, foldername = os.path.split(dirname)
-		newpath = os.path.join(backupfolder, foldername)
-		os.rename(dirname, newpath)
-		newfullpath = os.path.join(newpath, filename)
+		dirname = os.path.dirname(mediaelement["thepath"])
+		path, filename = os.path.split(dirname)
+		#newpath = os.path.join(config.move_movies_to_dir, foldername)
+		#os.rename(dirname, newpath)
+		shutil.move(dirname, config.move_movies_to_dir)
+		newfullpath = os.path.join(config.move_movies_to_dir, filename)
 		logger.info(u"Moved {0} to {1}".format(mediaelement["thepath"], newfullpath))
 		if config.update_synoindex:
 			subprocess.call('synoindex','-N', newfullpath, mediaelement["thepath"])
@@ -312,3 +313,6 @@ def processWatched(mediaelement):
 	if mediaelement["type"] == "series" and config.move_watched_series:
 		pass
 		#move it to the new movie dir...
+
+	if config.move_watched_series:
+		if mediaelement["type"] == mo
