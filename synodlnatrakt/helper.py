@@ -314,5 +314,3 @@ def processWatched(mediaelement):
 		pass
 		#move it to the new movie dir...
 
-	if config.move_watched_series:
-		if mediaelement["type"] == mo

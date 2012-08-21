@@ -181,6 +181,7 @@ if os.path.getsize(config.accesslog) > 0:
 					if scrobbledict:
 						if trakt.sendRequest(scrobbledict):
 							scrobblers = scrobblers + 1
+						helper.processWatched(scrobbledict)
 				else:
 					logger.info(u"File with id: \"{0}\" is already in Database and scrobbled to trakt. Skipping it".format(key))
 			else:
