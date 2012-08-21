@@ -3,7 +3,7 @@
 #
 # This file is part of SynoDLNAtrakt.
 
-import re, os
+import re, os, shutil
 from ConfigParser import SafeConfigParser
 from xml.dom.minidom import parse, parseString
 from lib.themoviedb import tmdb
