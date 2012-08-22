@@ -298,7 +298,7 @@ def processWatched(mediaelement):
 	if config.delete_from_index:
 		subprocess.call('synoindex','-d', mediaelement["thepath"])
 		logger.info(u"Deleted {0} from the synoindex database".format(mediaelement["thepath"]))
-	if mediaelement["type"] == "movie" and config.move_watched_movies:
+	if mediaelement["type"] == "movie" and config.move_watched_movies and mediaelement["process"] > 80:
 		dirname = os.path.dirname(mediaelement["thepath"])
 		path, filename = os.path.split(dirname)
 		#newpath = os.path.join(config.move_movies_to_dir, foldername)
