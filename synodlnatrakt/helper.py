@@ -307,7 +307,10 @@ def processWatched(mediaelement):
 		newfullpath = os.path.join(config.move_movies_to_dir, filename)
 		logger.info(u"Moved {0} to {1}".format(mediaelement["thepath"], newfullpath))
 		if config.update_synoindex:
-			subprocess.call('synoindex','-N', newfullpath, mediaelement["thepath"])
+			try:
+				subprocess.call('synoindex','-N', newfullpath, mediaelement["thepath"])
+			except:
+				subprocess.call('synoindex','-d', mediaelement["thepath"])
 			logger.info(u"Updated synoindex for {0} with {1}".format(mediaelement["thepath"], newfullpath))
 
 	if mediaelement["type"] == "series" and config.move_watched_series:
