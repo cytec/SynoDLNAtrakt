@@ -303,15 +303,18 @@ def processWatched(mediaelement):
 		path, filename = os.path.split(dirname)
 		#newpath = os.path.join(config.move_movies_to_dir, foldername)
 		#os.rename(dirname, newpath)
-		shutil.move(dirname, config.move_movies_to_dir)
 		newfullpath = os.path.join(config.move_movies_to_dir, filename)
-		logger.info(u"Moved {0} to {1}".format(mediaelement["thepath"], newfullpath))
-		if config.update_synoindex:
-			try:
-				subprocess.call('synoindex','-N', newfullpath, mediaelement["thepath"])
-			except:
-				subprocess.call('synoindex','-d', mediaelement["thepath"])
-			logger.info(u"Updated synoindex for {0} with {1}".format(mediaelement["thepath"], newfullpath))
+		if os.path.exist(mediaelement["thepath"]) and not os.path.exist(newfullpath):
+			shutil.move(dirname, config.move_movies_to_dir)
+			logger.info(u"Moved {0} to {1}".format(mediaelement["thepath"], newfullpath))
+			if config.update_synoindex:
+				try:
+					subprocess.call('synoindex','-N', newfullpath, mediaelement["thepath"])
+				except:
+					subprocess.call('synoindex','-d', mediaelement["thepath"])
+				logger.info(u"Updated synoindex for {0} with {1}".format(mediaelement["thepath"], newfullpath))
+		else:
+			logger.info(u"Directory already exists")
 
 	if mediaelement["type"] == "series" and config.move_watched_series:
 		pass
