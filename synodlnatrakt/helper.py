@@ -304,7 +304,7 @@ def processWatched(mediaelement):
 		#newpath = os.path.join(config.move_movies_to_dir, foldername)
 		#os.rename(dirname, newpath)
 		newfullpath = os.path.join(config.move_movies_to_dir, filename)
-		if os.path.exist(mediaelement["thepath"]) and not os.path.exist(newfullpath):
+		if os.path.exists(mediaelement["thepath"]) and not os.path.exists(newfullpath):
 			shutil.move(dirname, config.move_movies_to_dir)
 			logger.info(u"Moved {0} to {1}".format(mediaelement["thepath"], newfullpath))
 			if config.update_synoindex:
