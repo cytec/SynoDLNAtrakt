@@ -69,10 +69,12 @@ def durationStamps(time):
 	return timestamp
 
 def getProcess(length, viewed):
-	minpercent = 80
 	length = durationStamps(length)
 	viewed = durationStamps(viewed)
-	percent = int(viewed) / (int(length) / 100)
+	try:
+		percent = int(viewed) / (int(length) / 100)
+	except:
+		percent = 0
 	logger.debug(u"Duration: {0}s, Viewed: {1}s = {2}% watched".format(length, viewed, percent))
 	if percent > 100:
 		percent=100
@@ -114,7 +116,7 @@ def mediaelementFromDatabase(theid):
 	db.checkDB()
 	myDB = db.DBConnection()
 	response = myDB.select("SELECT * from scrobble WHERE id = {0}".format(theid))
-	return response
+	return response[0]
 
 def FileInDB(theid):
 	db.checkDB()
@@ -238,29 +240,54 @@ def checkNFO(filepath, nfotype):
 				logger.debug(u"Type: {3}, Name: {0}, Year: {1}, Searchstring: {2}".format(name, year, searchstring, nfotype))
 				#we need imdb id for scrobbleing to trakt, so lets make a moviedb lookup here to get these infos (especially if there is no year in the name....)
 				#this ALWAYS uses the first resault that comes from tmdb...
-				results = tmdb.search(searchstring)
-				if results:
-					firstresult = results[0]
-					movieinfo = firstresult.info()
-					imdb_id = movieinfo["imdb_id"]
-					#logger.debug("tmdb gave the following keys: {0}".format(movieinfo.keys()))
-					title = movieinfo["original_name"]
-					logger.info(u"Found result for {0} -> Fullname: {1} imdb_id: {2}".format(searchstring, title, imdb_id))
-					return title, imdb_id, year
-				else:
-					logger.error(u"Can't find any matches for {0}: {1}".format(nfotype, searchstring))
+
+				title, imdb_id = tmdbsearch(searchstring)
+				return title, imdb_id:
+					
+				# results = tmdb.search(searchstring)
+				# if results:
+				# 	firstresult = results[0]
+				# 	movieinfo = firstresult.info()
+				# 	imdb_id = movieinfo["imdb_id"]
+				# 	#logger.debug("tmdb gave the following keys: {0}".format(movieinfo.keys()))
+				# 	title = movieinfo["original_name"]
+				# 	logger.info(u"Found result for {0} -> Fullname: {1} imdb_id: {2}".format(searchstring, title, imdb_id))
+				# 	return title, imdb_id, year
+				# else:
+				# 	logger.error(u"Can't find any matches for {0}: {1}".format(nfotype, searchstring))
+
 			else:
 				logger.error(u"Please enable try_guessing in settings or create an .nfo for: {0}".format(filepath))
 				return 0
 
-def checktmdb(filename):
-	filename = filename + ".tmdb"
+def tmdbsearch(searchstring):
+	if searchstring[:2] == "tt":
+		movieinfo = tmdb.getMovieInfo('{0}'.format(searchstring))
+	else:
+		results = tmdb.search(searchstring)
+		if results:
+			firstresult = results[0]
+			movieinfo = firstresult.info()
+		else:
+			logger.error(u"Can't find any matches for {0}: {1}".format(nfotype, searchstring))
+	imdb_id = movieinfo["imdb_id"]
+	title = movieinfo["original_name"]
+	logger.info(u"Found result for {0} -> Fullname: {1} imdb_id: {2}".format(searchstring, title, imdb_id))
+	return title, imdb_id
+
+
+def checkIMDB(filename):
+	filename = filename + ".imdb"
 	if os.path.exist(filename):
 		f = open(filename, "r")
-		tmdb_id = f.read()
+		imdb_id = f.read()
 		f.close()
-		logger.info(u"found a tmdb file with the ID: {0}".format(tmdb_id))
-		return tmdb_id
+		logger.info(u"found a imdb file with the ID: {0}".format(imdb_id))
+		return imdb_id
+		#
+		movieinfo = tmdb.getMovieInfo('{0}'.format(imdb_id))
+		imdb_id = movieinfo["imdb_id"]
+		title = movieinfo["original_name"]
 	else:
 		return None
 
@@ -295,6 +322,9 @@ def makeNFO(mediaelement):
 
 
 def processWatched(mediaelement):
+	'''INFO: synoindex -N doesn't seem to work here, i wasnt able to figure out why, but it seems like
+		-N is just a shortcut for -d and -a.
+		So the id in the database gets updated to, and this is kinda useless... may just delete it and re add it manually?'''
 	if config.delete_from_index:
 		subprocess.call('synoindex','-d', mediaelement["thepath"])
 		logger.info(u"Deleted {0} from the synoindex database".format(mediaelement["thepath"]))
