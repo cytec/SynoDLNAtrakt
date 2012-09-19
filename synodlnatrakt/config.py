@@ -18,7 +18,8 @@ medialist = [ "avi","mkv","mov","mp4","m4v","ts","hdmov","wmv","mpg","mpeg","xvi
 #regex for getting the id and extension from access.log
 logregex = "[^0-9]*(?P<theid>\d{4,5})\.(?P<ext>\w{3,5})"
 
-removejunk = ["BR-Rip","DVDRip"]
+#remove this trash from filename before trying to guess it... ex: My.Movie.German.2012.UNCUT.720p.AC3.mkv will become My.Movie.2012.mkv
+removejunk = ["BR-Rip","DVDRip","German","Dubbed","uncut","extendet","complete","bluray","720p","1080p","hdtv","PAL","DL","AC3"]
 
 trakt_key = "860f1d1eda847c3b934a2d942eef110e13d21b12"
 
