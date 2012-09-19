@@ -131,7 +131,7 @@ def checkNFO(filepath, nfotype):
 	if nfotype == "series":
 		directory = os.path.dirname(filepath)
 		directory = re.sub(r'Staffel \d{2}|Season \d{2}', '', directory)
-		nfofile = directory + "tvshow.nfo"
+		nfofile = os.path.join(directory, "tvshow.nfo")
 		try:
 			dom = parse(nfofile)
 			seriesidTag = dom.getElementsByTagName('id')[0].toxml()
