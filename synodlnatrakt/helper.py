@@ -279,7 +279,13 @@ def tmdbsearch(searchstring):
 			firstresult = results[0]
 			movieinfo = firstresult.info()
 		else:
-			logger.error(u"Can't find any matches for {0}: {1}".format(nfotype, searchstring))
+			searchstring = re.sub(" \([0-9]{4}\)", "", searchstring)
+			results = tmdb.search(searchstring)
+			if results:
+				firstresult = results[0]
+				movieinfo = firstresult.info()
+			else:
+				logger.error(u"Can't find any matches for {0}: {1}".format(nfotype, searchstring))
 	imdb_id = movieinfo["imdb_id"]
 	title = movieinfo["original_name"]
 	logger.info(u"Found result for {0} -> Fullname: {1} imdb_id: {2}".format(searchstring, title, imdb_id))
