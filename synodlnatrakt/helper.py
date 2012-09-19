@@ -216,9 +216,12 @@ def checkNFO(filepath, nfotype):
 			return name, tvdb_id, year
 		except:
 			logger.error(u"Cant find/open file: {0}".format(nfofile))
-			if config.try_guessing:
+			imdbcheck = checkIMDB(filename)
+			if imdbcheck:
+				searchstring = imdbcheck
+
+			if config.try_guessing and not searchstring:
 				logger.info(u"try to guess infos from Filename...")
-				
 				try:
 					moviename = os.path.basename(filepath)
 					for junk in config.removejunk:
@@ -231,6 +234,8 @@ def checkNFO(filepath, nfotype):
 					searchstring = "{0} ({1})".format(name, year)
 				except:
 					moviename = os.path.dirname(filepath)
+					for junk in config.removejunk:
+						moviename = moviename.replace(junk,'')
 					directory, moviename = os.path.split(moviename)
 					p = re.match(movieregex, moviename)
 					name = p.group("name").replace("."," ").strip()
@@ -241,8 +246,11 @@ def checkNFO(filepath, nfotype):
 				#we need imdb id for scrobbleing to trakt, so lets make a moviedb lookup here to get these infos (especially if there is no year in the name....)
 				#this ALWAYS uses the first resault that comes from tmdb...
 
+			if searchstring:
 				title, imdb_id = tmdbsearch(searchstring)
-				return title, imdb_id:
+				return title, imdb_id
+			else:
+				logger.error(u"Something went terrible wrong here...")
 					
 				# results = tmdb.search(searchstring)
 				# if results:
