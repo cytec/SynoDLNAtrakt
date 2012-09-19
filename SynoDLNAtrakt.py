@@ -117,6 +117,7 @@ def buildMediaElement(mediaelement, theid):
 
 
 logger.info(u"Starting SynoDLNAtrakt...")
+helper.cleanDB()
 
 #check for accesslog and exit if not found
 if not os.path.exists(config.accesslog):

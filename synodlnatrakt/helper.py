@@ -3,7 +3,7 @@
 #
 # This file is part of SynoDLNAtrakt.
 
-import re, os, shutil, subprocess
+import re, os, shutil, subprocess, datetime
 from ConfigParser import SafeConfigParser
 from xml.dom.minidom import parse, parseString
 from lib.themoviedb import tmdb
@@ -247,28 +247,17 @@ def checkNFO(filepath, nfotype):
 				logger.debug(u"Type: {3}, Name: {0}, Year: {1}, Searchstring: {2}".format(name, year, searchstring, nfotype))
 				#we need imdb id for scrobbleing to trakt, so lets make a moviedb lookup here to get these infos (especially if there is no year in the name....)
 				#this ALWAYS uses the first resault that comes from tmdb...
+			else:
+				logger.error(u"Please enable try_guessing in settings or create an .nfo for: {0}".format(filepath))
+				return 0
 
 			if searchstring:
 				title, imdb_id = tmdbsearch(searchstring)
 				return title, imdb_id
 			else:
 				logger.error(u"Something went terrible wrong here...")
-					
-				# results = tmdb.search(searchstring)
-				# if results:
-				# 	firstresult = results[0]
-				# 	movieinfo = firstresult.info()
-				# 	imdb_id = movieinfo["imdb_id"]
-				# 	#logger.debug("tmdb gave the following keys: {0}".format(movieinfo.keys()))
-				# 	title = movieinfo["original_name"]
-				# 	logger.info(u"Found result for {0} -> Fullname: {1} imdb_id: {2}".format(searchstring, title, imdb_id))
-				# 	return title, imdb_id, year
-				# else:
-				# 	logger.error(u"Can't find any matches for {0}: {1}".format(nfotype, searchstring))
-
-			else:
-				logger.error(u"Please enable try_guessing in settings or create an .nfo for: {0}".format(filepath))
 				return 0
+			
 
 def tmdbsearch(searchstring):
 	if searchstring[:2] == "tt":
@@ -279,6 +268,7 @@ def tmdbsearch(searchstring):
 			firstresult = results[0]
 			movieinfo = firstresult.info()
 		else:
+			#search again for movie without the year
 			searchstring = re.sub(" \([0-9]{4}\)", "", searchstring)
 			results = tmdb.search(searchstring)
 			if results:
@@ -362,3 +352,29 @@ def processWatched(mediaelement):
 		pass
 		#move it to the new movie dir...
 
+def cleanDB():
+	if config.use_database:
+		logger.info(u"Cleaning database...")
+		db.checkDB()
+		myDB = db.DBConnection()
+		
+		if config.clean_uncomplete_only:
+			reslut = myDB.select("SELECT * from scrobble where process < {0}".format(config.min_progress))
+		else:
+			reslut = myDB.select("SELECT * from scrobble")
+
+		if reslut:
+			counter=0
+			for item in reslut:
+				filename = os.path.split(item["thepath"])[1]
+				thedate = datetime.datetime.fromtimestamp(float(item["lastviewed"]))
+		
+				timedelta = thedate + datetime.timedelta(weeks=8)
+				if timedelta < datetime.datetime.now():
+					counter=counter+1
+					logger.debug(u"Deleting {0} from database because lastviewed more than 8 weeks ago".format(filename))
+					myDB.action("DELETE from scrobble where id = {0}".format(item["id"]))
+			logger.info(u"removed {0} old entrys from databse".format(counter))
+		else:
+			logger.info(u"no need to clean database for now")
+		
