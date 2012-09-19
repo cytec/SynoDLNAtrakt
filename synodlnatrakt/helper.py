@@ -200,6 +200,7 @@ def checkNFO(filepath, nfotype):
 			return 0
 
 	if nfotype == "movie":
+		#order of use: .nfo, .imdb, try_guessing
 		filename, extension = os.path.splitext(filepath)
 		nfofile = filename + ".nfo"
 		try:
@@ -220,6 +221,7 @@ def checkNFO(filepath, nfotype):
 			if imdbcheck:
 				searchstring = imdbcheck
 
+			#only use try_guessing if there was no imdb file...
 			if config.try_guessing and not searchstring:
 				logger.info(u"try to guess infos from Filename...")
 				try:
@@ -292,10 +294,6 @@ def checkIMDB(filename):
 		f.close()
 		logger.info(u"found a imdb file with the ID: {0}".format(imdb_id))
 		return imdb_id
-		#
-		movieinfo = tmdb.getMovieInfo('{0}'.format(imdb_id))
-		imdb_id = movieinfo["imdb_id"]
-		title = movieinfo["original_name"]
 	else:
 		return None
 
