@@ -82,7 +82,7 @@ responses = {
 sha1hash=hashlib.sha1(config.trakt_pass).hexdigest()
 
 def sendRequest(mediaelement):
-	if mediaelement["process"] < 80:
+	if mediaelement["process"] < 80 and mediaelement["process"] > 2:
 		response = watching(mediaelement)
 	else:
 		response = scrobble(mediaelement)
