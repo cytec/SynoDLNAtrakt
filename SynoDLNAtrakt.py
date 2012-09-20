@@ -99,7 +99,7 @@ def buildMediaElement(mediaelement, theid):
 		#handling for mediatype movies
 		if mediaelement["type"] == "movie":
 			try:
-				mediaelement["name"], mediaelement["imdb_id"], mediaelement["year"] = helper.checkNFO(mediaelement["thepath"], "movie")
+				mediaelement["name"], mediaelement["imdb_id"], mediaelement["year"], mediaelement["hasnfo"] = helper.checkNFO(mediaelement["thepath"], "movie")
 			except:
 				logger.error(u"Could not create {0} MediaElement".format(mediaelement["type"]))
 				return None

@@ -128,12 +128,15 @@ def FileInDB(theid):
 		return None
 
 def checkNFO(filepath, nfotype):
+	hasnfo = False
 	#check the nfo for the needed id stuff...
 	#check if there is an nfo file... if not, fuck it and try to get infos from tvdb...
 	if nfotype == "series":
 		directory = os.path.dirname(filepath)
 		directory = re.sub(r'Staffel \d{2}|Season \d{2}', '', directory)
 		nfofile = os.path.join(directory, "tvshow.nfo")
+		if os.path.exists(nfofile):
+			hasnfo = True
 		try:
 			dom = parse(nfofile)
 			seriesidTag = dom.getElementsByTagName('id')[0].toxml()
@@ -174,6 +177,8 @@ def checkNFO(filepath, nfotype):
 	if nfotype == "episode":
 		filename, extension = os.path.splitext(filepath)
 		nfofile = filename + ".nfo"
+		if os.path.exists(nfofile):
+			hasnfo = True
 		try:
 			dom = parse(nfofile)
 			episodeTag = dom.getElementsByTagName('episode')[0].toxml()
@@ -203,6 +208,8 @@ def checkNFO(filepath, nfotype):
 		#order of use: .nfo, .imdb, try_guessing
 		filename, extension = os.path.splitext(filepath)
 		nfofile = filename + ".nfo"
+		if os.path.exists(nfofile):
+			hasnfo = True
 		try:
 			dom = parse(nfofile)
 			tvdb_idtag = dom.getElementsByTagName('id')[0].toxml()
@@ -253,7 +260,7 @@ def checkNFO(filepath, nfotype):
 
 			if searchstring:
 				title, imdb_id = tmdbsearch(searchstring)
-				return title, imdb_id
+				return title, imdb_id, year, hasnfo
 			else:
 				logger.error(u"Something went terrible wrong here...")
 				return 0

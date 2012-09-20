@@ -225,7 +225,9 @@ def send(action, postdata, mediaelement):
 	logger.debug("response: {0}".format(response))
 	if response['status'] == 'success':
 		#create an nfo file for later use...
-		helper.makeNFO(mediaelement)
+		# if not mediaelement["hasnfo"]:
+		# 	helper.makeNFO(mediaelement)
+			
 		#marking the id as scrobbled inside the database...
 		if not action.split("/")[-1] == "watching":
 			if config.use_database:
