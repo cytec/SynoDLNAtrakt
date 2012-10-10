@@ -155,7 +155,7 @@ def tmdbsearch(searchstring):
 
 def checkIMDB(filename):
 	filename = filename + ".imdb"
-	if os.path.exist(filename):
+	if os.path.exists(filename):
 		f = open(filename, "r")
 		imdb_id = f.read()
 		f.close()
