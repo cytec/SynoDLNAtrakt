@@ -95,6 +95,8 @@ def buildMediaElement(mediaelement, theid):
 				mediaelement["season"], mediaelement["episode"] = helper.checkNFO(mediaelement["thepath"], "episode")
 			except:
 				logger.error(u"Could not create {0} MediaElement".format(mediaelement["type"]))
+				logger.debug(u"{0}".format(helper.checkNFO(mediaelement["thepath"], "series")))
+				logger.debug(u"{0}".format(helper.checkNFO(mediaelement["thepath"], "episode")))
 				return None
 		#handling for mediatype movies
 		if mediaelement["type"] == "movie":
@@ -102,7 +104,6 @@ def buildMediaElement(mediaelement, theid):
 				mediaelement["name"], mediaelement["imdb_id"], mediaelement["year"], mediaelement["hasnfo"] = helper.checkNFO(mediaelement["thepath"], "movie")
 			except:
 				logger.error(u"Could not create {0} MediaElement".format(mediaelement["type"]))
-				logger.debug(u"{0}".format(helper.checkNFO(mediaelement["thepath"], "movie")))
 				return None
 		#log the created mediaobject in debug mode
 		logger.debug(u"MediaElement successfully created: {0}".format(mediaelement))
