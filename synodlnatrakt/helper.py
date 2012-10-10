@@ -354,6 +354,12 @@ def processWatched(mediaelement):
 				except:
 					subprocess.call('synoindex','-d', mediaelement["thepath"])
 				logger.info(u"Updated synoindex for {0} with {1}".format(mediaelement["thepath"], newfullpath))
+			if config.delete_from_index:
+				try:
+					subprocess.call('synoindex','-d', mediaelement["thepath"])
+					logger.info(u"Deleted {0} from synoindex {1}".format(mediaelement["thepath"]))
+				except:
+					logger.error(u"Cant delete {0} from synoindex {1}".format(mediaelement["thepath"]))
 		else:
 			logger.info(u"Directory already exists")
 

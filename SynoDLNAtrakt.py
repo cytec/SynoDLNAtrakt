@@ -70,7 +70,8 @@ def buildMediaElement(mediaelement, theid):
 		mediaelement["duration"] = helper.getVideoDuration(theid)
 		mediaelement["viewed"], mediaelement["lastviewed"] = getDurationFromLog(theid)
 		mediaelement["process"] = helper.getProcess(mediaelement["duration"], mediaelement["viewed"])
-		
+		if theid == 15317:
+			mediaelement["process"] = 100
 		#quit here if process is not enough... (saves time)
 		# if int(mediaelement["process"]) < int(config.min_progress):
 		# 	logger.error(u"File with the ID: {0}, has been viewed {1}% we need at least {2}%... skipping it".format(mediaelement["id"], mediaelement["process"], config.min_progress))
@@ -95,8 +96,6 @@ def buildMediaElement(mediaelement, theid):
 				mediaelement["season"], mediaelement["episode"] = helper.checkNFO(mediaelement["thepath"], "episode")
 			except:
 				logger.error(u"Could not create {0} MediaElement".format(mediaelement["type"]))
-				logger.debug(u"{0}".format(helper.checkNFO(mediaelement["thepath"], "series")))
-				logger.debug(u"{0}".format(mediaelement))
 				return None
 		#handling for mediatype movies
 		if mediaelement["type"] == "movie":
