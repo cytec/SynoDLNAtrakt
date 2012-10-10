@@ -127,6 +127,44 @@ def FileInDB(theid):
 	except:
 		return None
 
+			
+
+def tmdbsearch(searchstring):
+	logger.debug(u"searchstring: {0}".format(searchstring))
+	if searchstring[:2] == "tt":
+		movieinfo = tmdb.getMovieInfo('{0}'.format(searchstring))
+	else:
+		results = tmdb.search(searchstring)
+		if results:
+			firstresult = results[0]
+			movieinfo = firstresult.info()
+		else:
+			#search again for movie without the year
+			searchstring = re.sub(" \([0-9]{4}\)", "", searchstring)
+			results = tmdb.search(searchstring)
+			if results:
+				firstresult = results[0]
+				movieinfo = firstresult.info()
+			else:
+				logger.error(u"Can't find any matches for {0}: {1}".format(nfotype, searchstring))
+	imdb_id = movieinfo["imdb_id"]
+	title = movieinfo["original_name"]
+	logger.info(u"Found result for {0} -> Fullname: {1} imdb_id: {2}".format(searchstring, title, imdb_id))
+	return title, imdb_id
+
+
+def checkIMDB(filename):
+	filename = filename + ".imdb"
+	if os.path.exist(filename):
+		f = open(filename, "r")
+		imdb_id = f.read()
+		f.close()
+		logger.info(u"found a imdb file with the ID: {0}".format(imdb_id))
+		return imdb_id
+	else:
+		logger.debug(u"no imdb file found for: {0}".format(filename))
+		return None
+
 def checkNFO(filepath, nfotype):
 	hasnfo = False
 	#check the nfo for the needed id stuff...
@@ -264,42 +302,7 @@ def checkNFO(filepath, nfotype):
 			else:
 				logger.error(u"Something went terrible wrong here...")
 				return 0
-			
 
-def tmdbsearch(searchstring):
-	if searchstring[:2] == "tt":
-		movieinfo = tmdb.getMovieInfo('{0}'.format(searchstring))
-	else:
-		results = tmdb.search(searchstring)
-		if results:
-			firstresult = results[0]
-			movieinfo = firstresult.info()
-		else:
-			#search again for movie without the year
-			searchstring = re.sub(" \([0-9]{4}\)", "", searchstring)
-			results = tmdb.search(searchstring)
-			if results:
-				firstresult = results[0]
-				movieinfo = firstresult.info()
-			else:
-				logger.error(u"Can't find any matches for {0}: {1}".format(nfotype, searchstring))
-	imdb_id = movieinfo["imdb_id"]
-	title = movieinfo["original_name"]
-	logger.info(u"Found result for {0} -> Fullname: {1} imdb_id: {2}".format(searchstring, title, imdb_id))
-	return title, imdb_id
-
-
-def checkIMDB(filename):
-	filename = filename + ".imdb"
-	if os.path.exist(filename):
-		f = open(filename, "r")
-		imdb_id = f.read()
-		f.close()
-		logger.info(u"found a imdb file with the ID: {0}".format(imdb_id))
-		return imdb_id
-	else:
-		logger.debug(u"no imdb file found for: {0}".format(filename))
-		return None
 
 def makeNFO(mediaelement):
 	nfopath = os.path.splitext(mediaelement["thepath"])[0] + ".nfo"
