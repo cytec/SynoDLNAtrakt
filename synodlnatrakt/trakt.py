@@ -86,6 +86,7 @@ def sendRequest(mediaelement):
 		response = watching(mediaelement)
 	elif mediaelement["process"] < 7:
 		logger.info(u"not scrobbleing because progress is lower than 7%")
+		response = "not scrobbleing because progress is lower than 7%"
 	else:
 		response = scrobble(mediaelement)
 		if not response:
