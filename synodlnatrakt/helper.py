@@ -265,6 +265,8 @@ def checkNFO(filepath, nfotype):
 			imdbcheck = checkIMDB(filename)
 			if imdbcheck:
 				searchstring = imdbcheck
+			else:
+				searchstring = None
 
 			#only use try_guessing if there was no imdb file...
 			if config.try_guessing and not searchstring:
