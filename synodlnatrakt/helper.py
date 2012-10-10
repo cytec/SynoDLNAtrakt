@@ -337,8 +337,11 @@ def processWatched(mediaelement):
 		-N is just a shortcut for -d and -a.
 		So the id in the database gets updated to, and this is kinda useless... may just delete it and re add it manually?'''
 	if config.delete_from_index:
-		subprocess.call(['synoindex','-d', '{0}'.format(mediaelement["thepath"])])
-		logger.info(u"Deleted {0} from the synoindex database".format(mediaelement["thepath"]))
+		check = subprocess.call(['synoindex','-d', '{0}'.format(mediaelement["thepath"])])
+		if check == 0:
+			logger.info(u"Deleted {0} from the synoindex database".format(mediaelement["thepath"]))
+		else:
+			logger.error(u"Cant delete from synoindex... exit code: {0}".format(check))
 	if mediaelement["type"] == "movie" and config.move_watched_movies and mediaelement["process"] > 80:
 		dirname = os.path.dirname(mediaelement["thepath"])
 		path, filename = os.path.split(dirname)
