@@ -84,10 +84,12 @@ sha1hash=hashlib.sha1(config.trakt_pass).hexdigest()
 def sendRequest(mediaelement):
 	if mediaelement["process"] < config.min_progress and mediaelement["process"] > 7:
 		response = watching(mediaelement)
+	elif mediaelement["process"] < 7:
+		logger.info(u"not scrobbleing because progress is lower than 7%")
 	else:
 		response = scrobble(mediaelement)
 		if not response:
-			logger.debug("Scrobble failed, trying to mark as seen manually...")
+			logger.debug(u"Scrobble failed, trying to mark as seen manually...")
 			response = seen(mediaelement)
 	return response
 

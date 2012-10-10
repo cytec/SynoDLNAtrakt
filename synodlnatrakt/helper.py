@@ -298,6 +298,7 @@ def checkIMDB(filename):
 		logger.info(u"found a imdb file with the ID: {0}".format(imdb_id))
 		return imdb_id
 	else:
+		logger.debug(u"no imdb file found for: {0}".format(filename))
 		return None
 
 def makeNFO(mediaelement):
