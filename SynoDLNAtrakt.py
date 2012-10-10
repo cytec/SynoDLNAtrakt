@@ -70,8 +70,6 @@ def buildMediaElement(mediaelement, theid):
 		mediaelement["duration"] = helper.getVideoDuration(theid)
 		mediaelement["viewed"], mediaelement["lastviewed"] = getDurationFromLog(theid)
 		mediaelement["process"] = helper.getProcess(mediaelement["duration"], mediaelement["viewed"])
-		if theid == 15317:
-			mediaelement["process"] = 100
 		#quit here if process is not enough... (saves time)
 		# if int(mediaelement["process"]) < int(config.min_progress):
 		# 	logger.error(u"File with the ID: {0}, has been viewed {1}% we need at least {2}%... skipping it".format(mediaelement["id"], mediaelement["process"], config.min_progress))
