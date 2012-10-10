@@ -337,7 +337,7 @@ def processWatched(mediaelement):
 		-N is just a shortcut for -d and -a.
 		So the id in the database gets updated to, and this is kinda useless... may just delete it and re add it manually?'''
 	if config.delete_from_index:
-		subprocess.call(['synoindex','-d', '{0}'].format(mediaelement["thepath"]))
+		subprocess.call(['synoindex','-d', '{0}'.format(mediaelement["thepath"])])
 		logger.info(u"Deleted {0} from the synoindex database".format(mediaelement["thepath"]))
 	if mediaelement["type"] == "movie" and config.move_watched_movies and mediaelement["process"] > 80:
 		dirname = os.path.dirname(mediaelement["thepath"])
@@ -350,9 +350,9 @@ def processWatched(mediaelement):
 			logger.info(u"Moved {0} to {1}".format(mediaelement["thepath"], newfullpath))
 			if config.update_synoindex:
 				try:
-					subprocess.call(['synoindex','-N', '{0}', '{1}'].format(newfullpath, mediaelement["thepath"]))
+					subprocess.call(['synoindex','-N', '{0}', '{1}'.format(newfullpath, mediaelement["thepath"])])
 				except:
-					subprocess.call(['synoindex','-d', '{0}'].format(mediaelement["thepath"]))
+					subprocess.call(['synoindex','-d', '{0}'.format(mediaelement["thepath"])])
 				logger.info(u"Updated synoindex for {0} with {1}".format(mediaelement["thepath"], newfullpath))
 		else:
 			logger.info(u"Directory already exists")
