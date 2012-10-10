@@ -96,7 +96,7 @@ def buildMediaElement(mediaelement, theid):
 			except:
 				logger.error(u"Could not create {0} MediaElement".format(mediaelement["type"]))
 				logger.debug(u"{0}".format(helper.checkNFO(mediaelement["thepath"], "series")))
-				logger.debug(u"{0}".format(mediaelement)
+				logger.debug(u"{0}".format(mediaelement))
 				return None
 		#handling for mediatype movies
 		if mediaelement["type"] == "movie":
