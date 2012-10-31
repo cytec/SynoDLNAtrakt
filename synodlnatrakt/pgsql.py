@@ -7,7 +7,7 @@ print sys.getdefaultencoding()
 
 #ipgk install py26-psycopg2
 
-engine = create_engine('postgresql://admin@localhost/mediaserver', client_encoding='utf-8', encoding='ascii', convert_unicode=True, echo=False)
+engine = create_engine('postgresql://admin:933461@192.168.0.55/mediaserver', client_encoding='utf-8', encoding='ascii', convert_unicode=True, echo=False)
 metadata = MetaData()
 
 
@@ -87,11 +87,11 @@ Session = sessionmaker()
 Session.configure(bind=engine)
 session = Session()
 
-result = (
-	session.query(Video)
-		.order_by(desc(Video.date))
-		.all()
-	)
+# result = (
+# 	session.query(Video)
+# 		.order_by(desc(Video.date))
+# 		.all()
+# 	)
 
-for videofile in result:
-	print videofile.path
+# for videofile in result:
+# 	print videofile.path

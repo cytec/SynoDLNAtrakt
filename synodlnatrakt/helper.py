@@ -10,31 +10,46 @@ from lib.themoviedb import tmdb
 from lib.tvdb_api import tvdb_api
 from synodlnatrakt import config
 from synodlnatrakt import db
+from synodlnatrakt import pgsql
 from synodlnatrakt.logger import logger
-from synodlnatrakt import encodingKludge as ek
 
 
 seriesregex = "(?P<name>.*).?[sS](?P<season>\d{1,2})[eE|xX|epEP|\.|-]?(?P<episode>\d{1,2})"
 movieregex = "(?P<name>.*).?\(?(?P<year>\d{4})\)?"
 
 
+def getVideoInfo(theid):
+	result = (
+		pgsql.session.query(pgsql.Video)
+			.filter(pgsql.Video.id == theid)
+			.first()
+		)
+	return result
+
 def getVideoPath(theid):
-	#/usr/syno/pgsql/bin/psql mediaserver admin -tA -c "select path from video where id = theid"
-	thepath = os.popen('{0} mediaserver admin -tA -c "select path from video where id = {1}"'.format(config.psql, theid)).read().strip()
-	#get it as utf-8
-	#thepath = os.popen('{0} mediaserver admin -tA -c "select path from video where id = {1}"'.format(config.psql, theid)).read().strip().decode('utf-8')
-	return unicode(thepath, 'utf-8')
+	result = (
+		pgsql.session.query(pgsql.Video)
+			.filter(pgsql.Video.id == theid)
+			.first()
+		)
+	return result.path
 
 def getVideoDuration(theid):
-	#/usr/syno/pgsql/bin/psql mediaserver admin -tA -c "select duration from video where id = 13282"
-	duration = os.popen('{0} mediaserver admin -tA -c "select duration from video where id = {1}"'.format(config.psql, theid)).read().strip()
-	return u"{0}".format(duration)
+	result = (
+		pgsql.session.query(pgsql.Video)
+			.filter(pgsql.Video.id == theid)
+			.first()
+		)
+	return result.duration
 
 def isMediaType(theid):
 	response = {}
-	thepath = os.popen('{0} mediaserver admin -tA -c "select path from video where id = {1}"'.format(config.psql, theid)).read().strip()
-	#thepath = ek.ek(os.path.abspath, thepath)
-	thepath = unicode(thepath, 'utf-8')
+	result = (
+		pgsql.session.query(pgsql.Video)
+			.filter(pgsql.Video.id == theid)
+			.first()
+		)
+	thepath = result.path
 	if thepath:
 		for curdir in config.seriesdir:
 			if curdir in thepath:
@@ -108,23 +123,20 @@ def mediaelementToDatabase(mediaelement):
 		myDB.upsert("scrobble",{'imdb_id': mediaelement["imdb_id"], 'year':mediaelement["year"]},{'id': mediaelement["id"]})
 
 def markScrobbled(theid):
-	db.checkDB()
-	myDB = db.DBConnection()
-	myDB.upsert("scrobble",{'scrobbled': 1},{'id': theid})
+	result = db.session.query(db.Scrobble).filter(db.Scrobble.id == theid).first()
+	result.scrobbled = 1
+	db.session.add(result)
+	db.session.commit()
 
 def mediaelementFromDatabase(theid):
-	db.checkDB()
-	myDB = db.DBConnection()
-	response = myDB.select("SELECT * from scrobble WHERE id = {0}".format(theid))
-	return response[0]
+	result = db.session.query(db.Scrobble).filter(db.Scrobble.id == theid).first()
+	return result
 
 def FileInDB(theid):
-	db.checkDB()
-	myDB = db.DBConnection()
-	response = myDB.select("SELECT scrobbled from scrobble WHERE id = {0}".format(theid))
-	try:
-		return response[0]["scrobbled"]
-	except:
+	result = db.session.query(db.Scrobble).filter(db.Scrobble.id == theid).first()
+	if result:
+		return result.scrobbled
+	else:
 		return None
 
 			

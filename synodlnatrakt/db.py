@@ -2,9 +2,10 @@ from sqlalchemy import *
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import *
 from synodlnatrakt import config
+from os import path
 
 
-dbpath = os.path.join(config.BASEPATH, "SynoDLNAtrakt.db")
+dbpath = path.join(config.BASEPATH, "SynoDLNAtrakt.db")
 engine = create_engine('sqlite:///{0}'.format(dbpath), echo=False)
 
 Base = declarative_base()
