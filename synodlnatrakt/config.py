@@ -11,6 +11,7 @@ from lib.configobj import ConfigObj
 CFG = ConfigObj("SynoDLNAtrakt.ini")
 CONFIG_FILE = "SynoDLNAtrakt.ini"
 SYS_ENCODING = ''
+BASEPATH = os.getcwd()
 
 #list of mediafile extensions
 medialist = [ "avi","mkv","mov","mp4","m4v","ts","hdmov","wmv","mpg","mpeg","xvid"]
