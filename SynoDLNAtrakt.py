@@ -14,7 +14,7 @@ from synodlnatrakt import config
 from synodlnatrakt import trakt
 
 p = apachelog.parser(apachelog.formats['lighttpd'])
-time_format = "[%d/%b/%Y:%H:%M:%S +0200]"
+time_format = "[%d/%b/%Y:%H:%M:%S]"
 
 idtimes = {}
 
@@ -143,6 +143,7 @@ if os.path.getsize(config.accesslog) > 0:
 				continue
 			
 			#calculate the actual date from the log (for timedelta calculations)
+			data["%t"] = re.sub(" \+[0-9]*", "", data["%t"])
 			thedate = datetime.datetime.fromtimestamp(time.mktime(time.strptime(data["%t"], time_format)))
 			try:
 				if not idtimes.has_key(theid):
