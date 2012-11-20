@@ -23,6 +23,9 @@ removejunk = ["BR-Rip","DVDRip","German","Dubbed","uncut","extendet","complete",
 
 trakt_key = "860f1d1eda847c3b934a2d942eef110e13d21b12"
 
+the_srings = ["the ","der ","die ","das "]
+
+
 try:
     locale.setlocale(locale.LC_ALL, "")
     SYS_ENCODING = locale.getpreferredencoding()
@@ -94,6 +97,7 @@ delete_logs = bool(check_setting_int(CFG, 'General', 'delete_logs', 0))
 scrobble_series = bool(check_setting_int(CFG, 'General', 'scrobble_series', 1))
 use_database = bool(check_setting_int(CFG, 'General', 'use_database', 1))
 scrobble_movies = bool(check_setting_int(CFG, 'General', 'scrobble_movies', 1))
+clean_uncomplete_only = bool(check_setting_int(CFG, 'General', 'clean_uncomplete_only', 1))
 
 #adcanced
 logtoconsole = bool(check_setting_int(CFG, 'Advanced', 'logtoconsole', 0))
@@ -133,6 +137,8 @@ def save_config():
     new_config['General']['scrobble_series'] = int(scrobble_series)
     new_config['General']['use_database'] = int(use_database)
     new_config['General']['scrobble_movies'] = int(scrobble_movies)
+    new_config['General']['clean_uncomplete_only'] = int(clean_uncomplete_only)
+
 
     new_config['Advanced'] = {}
     new_config['Advanced']['logtoconsole'] = int(logtoconsole)

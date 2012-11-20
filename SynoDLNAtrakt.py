@@ -70,15 +70,14 @@ def buildMediaElement(mediaelement, theid):
 		mediaelement["duration"] = helper.getVideoDuration(theid)
 		mediaelement["viewed"], mediaelement["lastviewed"] = getDurationFromLog(theid)
 		mediaelement["process"] = helper.getProcess(mediaelement["duration"], mediaelement["viewed"])
-		
 		#quit here if process is not enough... (saves time)
-		if int(mediaelement["process"]) < int(config.min_progress):
-			logger.error(u"File with the ID: {0}, has been viewed {1}% we need at least {2}%... skipping it".format(mediaelement["id"], mediaelement["process"], config.min_progress))
-			return None
-		else:
+		# if int(mediaelement["process"]) < int(config.min_progress):
+		# 	logger.error(u"File with the ID: {0}, has been viewed {1}% we need at least {2}%... skipping it".format(mediaelement["id"], mediaelement["process"], config.min_progress))
+		# 	return None
+		# else:
 			#currently only used for movies... idk if its possible to scrobble this for series.
 			#mediaelement["lastviewedstamp"] = calendar.timegm(mediaelement["lastviewed"].timetuple())
-			mediaelement["lastviewedstamp"] = time.mktime(mediaelement["lastviewed"].timetuple())
+		mediaelement["lastviewedstamp"] = time.mktime(mediaelement["lastviewed"].timetuple())
 			#generate timestamp from lastviewed (datetime obj)
 			#d = datetime.datetime.now()
 			#calendar.timegm(d.timetuple())
@@ -89,35 +88,35 @@ def buildMediaElement(mediaelement, theid):
 			#datetime.datetime.utcfromtimestamp(1341237828)
 			
 			#handling for mediatype series
-			if mediaelement["type"] == "series":
-				try:
-					mediaelement["tvdb_id"], mediaelement["name"] = helper.checkNFO(mediaelement["thepath"], "series")
-					mediaelement["season"], mediaelement["episode"] = helper.checkNFO(mediaelement["thepath"], "episode")
-				except:
-					logger.error(u"Could not create {0} MediaElement".format(mediaelement["type"]))
-					return None
-			#handling for mediatype movies
-			if mediaelement["type"] == "movie":
-				try:
-					mediaelement["name"], mediaelement["imdb_id"], mediaelement["year"] = helper.checkNFO(mediaelement["thepath"], "movie")
-				except:
-					logger.error(u"Could not create {0} MediaElement".format(mediaelement["type"]))
-					return None
-
-			#log the created mediaobject in debug mode
-			logger.debug(u"MediaElement successfully created: {0}".format(mediaelement))
+		if mediaelement["type"] == "series":
+			try:
+				mediaelement["tvdb_id"], mediaelement["name"] = helper.checkNFO(mediaelement["thepath"], "series")
+				mediaelement["season"], mediaelement["episode"] = helper.checkNFO(mediaelement["thepath"], "episode")
+			except:
+				logger.error(u"Could not create {0} MediaElement".format(mediaelement["type"]))
+				return None
+		#handling for mediatype movies
+		if mediaelement["type"] == "movie":
+			try:
+				mediaelement["name"], mediaelement["imdb_id"], mediaelement["year"], mediaelement["hasnfo"] = helper.checkNFO(mediaelement["thepath"], "movie")
+			except:
+				logger.error(u"Could not create {0} MediaElement".format(mediaelement["type"]))
+				return None
+		#log the created mediaobject in debug mode
+		logger.debug(u"MediaElement successfully created: {0}".format(mediaelement))
+		
+		#insert created infos in database if activated
+		if config.use_database:
+			helper.mediaelementToDatabase(mediaelement)
 			
-			#insert created infos in database if activated
-			if config.use_database:
-				helper.mediaelementToDatabase(mediaelement)
-				
-			return mediaelement
+		return mediaelement
 	else:
 		logger.error(u"File with the ID: {0} seems not to be a media file that i currently support")
 		return None
 
 
 logger.info(u"Starting SynoDLNAtrakt...")
+#helper.cleanDB()
 
 #check for accesslog and exit if not found
 if not os.path.exists(config.accesslog):
@@ -181,15 +180,16 @@ if os.path.getsize(config.accesslog) > 0:
 				if not isinDB:
 					scrobbledict = buildMediaElement(mediaelement, key)
 					if scrobbledict:
-						trakt.scrobble(scrobbledict)
-						scrobblers = scrobblers + 1
+						if trakt.sendRequest(scrobbledict):
+							scrobblers = scrobblers + 1
+						helper.processWatched(scrobbledict)
 				else:
 					logger.info(u"File with id: \"{0}\" is already in Database and scrobbled to trakt. Skipping it".format(key))
 			else:
 				scrobbledict = buildMediaElement(mediaelement, key)
 				if scrobbledict:
-					trakt.scrobble(scrobbledict)
-					scrobblers = scrobblers + 1
+					if trakt.sendRequest(scrobbledict):
+						scrobblers = scrobblers + 1
 	
 	#send boxcar notifications if activated
 	if config.use_boxcar:

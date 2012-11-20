@@ -3,7 +3,7 @@
 #
 # This file is part of SynoDLNAtrakt.
 
-import re, os
+import re, os, shutil, subprocess, datetime
 from ConfigParser import SafeConfigParser
 from xml.dom.minidom import parse, parseString
 from lib.themoviedb import tmdb
@@ -69,11 +69,15 @@ def durationStamps(time):
 	return timestamp
 
 def getProcess(length, viewed):
-	minpercent = 80
 	length = durationStamps(length)
 	viewed = durationStamps(viewed)
-	percent = int(viewed) / (int(length) / 100)
+	try:
+		percent = int(viewed) / (int(length) / 100)
+	except:
+		percent = 0
 	logger.debug(u"Duration: {0}s, Viewed: {1}s = {2}% watched".format(length, viewed, percent))
+	if percent > 100:
+		percent=100
 	return percent
 
 def getDurationFromLog(id):
@@ -112,15 +116,57 @@ def mediaelementFromDatabase(theid):
 	db.checkDB()
 	myDB = db.DBConnection()
 	response = myDB.select("SELECT * from scrobble WHERE id = {0}".format(theid))
-	return response
+	return response[0]
 
 def FileInDB(theid):
 	db.checkDB()
 	myDB = db.DBConnection()
 	response = myDB.select("SELECT scrobbled from scrobble WHERE id = {0}".format(theid))
-	return response
+	try:
+		return response[0]["scrobbled"]
+	except:
+		return None
+
+			
+
+def tmdbsearch(searchstring):
+	logger.debug(u"searchstring: {0}".format(searchstring))
+	if searchstring[:2] == "tt":
+		movieinfo = tmdb.getMovieInfo('{0}'.format(searchstring))
+	else:
+		results = tmdb.search(searchstring)
+		if results:
+			firstresult = results[0]
+			movieinfo = firstresult.info()
+		else:
+			#search again for movie without the year
+			searchstring = re.sub(" \([0-9]{4}\)", "", searchstring)
+			results = tmdb.search(searchstring)
+			if results:
+				firstresult = results[0]
+				movieinfo = firstresult.info()
+			else:
+				logger.error(u"Can't find any matches for {0}: {1}".format(nfotype, searchstring))
+	imdb_id = movieinfo["imdb_id"]
+	title = movieinfo["original_name"]
+	logger.info(u"Found result for {0} -> Fullname: {1} imdb_id: {2}".format(searchstring, title, imdb_id))
+	return title, imdb_id
+
+
+def checkIMDB(filename):
+	filename = filename + ".imdb"
+	if os.path.exists(filename):
+		f = open(filename, "r")
+		imdb_id = f.read()
+		f.close()
+		logger.info(u"found a imdb file with the ID: {0}".format(imdb_id))
+		return imdb_id
+	else:
+		logger.debug(u"no imdb file found for: {0}".format(filename))
+		return None
 
 def checkNFO(filepath, nfotype):
+	hasnfo = False
 	#check the nfo for the needed id stuff...
 	#check if there is an nfo file... if not, fuck it and try to get infos from tvdb...
 	if nfotype == "series":
@@ -193,33 +239,48 @@ def checkNFO(filepath, nfotype):
 			return 0
 
 	if nfotype == "movie":
+		#order of use: .nfo, .imdb, try_guessing
 		filename, extension = os.path.splitext(filepath)
 		nfofile = filename + ".nfo"
+		if os.path.exists(nfofile):
+			hasnfo = True
 		try:
 			dom = parse(nfofile)
 			tvdb_idtag = dom.getElementsByTagName('id')[0].toxml()
 			tvdb_id=tvdb_idtag.replace('<id>','').replace('</id>','')
 			nametag = dom.getElementsByTagName('title')[0].toxml()
 			name=nametag.replace('<title>','').replace('</title>','')
+			if name[:4].lower() in config.the_srings:
+				name = name[4:] + ', ' + name[:4].strip()
 			yeartag = dom.getElementsByTagName('year')[0].toxml()
 			year=yeartag.replace('<year>','').replace('</year>','')
 			logger.info(u'Movie info -> Name: {0}, Year: {1}, imdb_id: {2}'.format(name, year, tvdb_id))
-			return season, episode
+			return name, tvdb_id, year
 		except:
 			logger.error(u"Cant find/open file: {0}".format(nfofile))
-			if config.try_guessing:
+			imdbcheck = checkIMDB(filename)
+			if imdbcheck:
+				searchstring = imdbcheck
+			else:
+				searchstring = None
+
+			#only use try_guessing if there was no imdb file...
+			if config.try_guessing and not searchstring:
 				logger.info(u"try to guess infos from Filename...")
-				
 				try:
 					moviename = os.path.basename(filepath)
 					for junk in config.removejunk:
 						moviename = moviename.replace(junk,'')
 					p = re.match(movieregex, moviename)
 					name = p.group("name").replace("."," ").replace("-"," ").strip()
+					if name[:4].lower() in config.the_srings:
+						name = name[4:] + ', ' + name[:4].strip()
 					year = p.group("year")
 					searchstring = "{0} ({1})".format(name, year)
 				except:
 					moviename = os.path.dirname(filepath)
+					for junk in config.removejunk:
+						moviename = moviename.replace(junk,'')
 					directory, moviename = os.path.split(moviename)
 					p = re.match(movieregex, moviename)
 					name = p.group("name").replace("."," ").strip()
@@ -229,36 +290,103 @@ def checkNFO(filepath, nfotype):
 				logger.debug(u"Type: {3}, Name: {0}, Year: {1}, Searchstring: {2}".format(name, year, searchstring, nfotype))
 				#we need imdb id for scrobbleing to trakt, so lets make a moviedb lookup here to get these infos (especially if there is no year in the name....)
 				#this ALWAYS uses the first resault that comes from tmdb...
-				results = tmdb.search(searchstring)
-				if results:
-					firstresult = results[0]
-					movieinfo = firstresult.info()
-					imdb_id = movieinfo["imdb_id"]
-					#logger.debug("tmdb gave the following keys: {0}".format(movieinfo.keys()))
-					title = movieinfo["original_name"]
-					logger.info(u"Found result for {0} -> Fullname: {1} imdb_id: {2}".format(searchstring, title, imdb_id))
-					return title, imdb_id, year
-				else:
-					logger.error(u"Can't find any matches for {0}: {1}".format(nfotype, searchstring))
 			else:
 				logger.error(u"Please enable try_guessing in settings or create an .nfo for: {0}".format(filepath))
 				return 0
 
+			if searchstring:
+				title, imdb_id = tmdbsearch(searchstring)
+				return title, imdb_id, year, hasnfo
+			else:
+				logger.error(u"Something went terrible wrong here...")
+				return 0
+
+
+def makeNFO(mediaelement):
+	nfopath = os.path.splitext(mediaelement["thepath"])[0] + ".nfo"
+	doc = Document()
+	synodlnatrakt = doc.createElement("SynoDLNAtrakt")
+	doc.appendChild(synodlnatrakt)
+	#the id
+	id = doc.createElement("id")
+	idtext = doc.createTextNode(mediaelement["imdb_id"])
+	id.appendChild(idtext)
+	#the title of the movie
+	title = doc.createElement("title")
+	titletext = doc.createTextNode(mediaelement["name"])
+	title.append(titletext)
+
+	year = doc.createElement("year")
+	yeartext = doc.createTextNode(mediaelement["year"])
+	year.append(yeartext)
+
+	synodlnatrakt.append(id)
+	synodlnatrakt.append(title)
+	synodlnatrakt.append(year)
+	try:
+		f = open(nfopath,"w")
+		f.write(doc.toprettyxml(indent="  "))
+		f.close()
+		logger.info(u"nfo file for {0} created".format(mediaelement["name"]))
+	except:
+		logger.error(u"unable to create nfo for {0}".format(mediaelement["name"]))
+
+
 def processWatched(mediaelement):
+	'''INFO: synoindex -N doesn't seem to work here, i wasnt able to figure out why, but it seems like
+		-N is just a shortcut for -d and -a.
+		So the id in the database gets updated to, and this is kinda useless... may just delete it and re add it manually?'''
 	if config.delete_from_index:
-		subprocess.call('synoindex','-d', mediaelement["thepath"])
-		logger.info(u"Deleted {0} from the synoindex database".format(mediaelement["thepath"]))
-	if mediaelement["type"] == "movie" and config.move_watched_movies:
-		dirname, filename = os.path.dirname(mediaelement["thepath"])
-		path, foldername = os.path.split(dirname)
-		newpath = os.path.join(backupfolder, foldername)
-		os.rename(dirname, newpath)
-		newfullpath = os.path.join(newpath, filename)
-		logger.info(u"Moved {0} to {1}".format(mediaelement["thepath"], newfullpath))
-		if config.update_synoindex:
-			subprocess.call('synoindex','-N', newfullpath, mediaelement["thepath"])
-			logger.info(u"Updated synoindex for {0} with {1}".format(mediaelement["thepath"], newfullpath))
+		check = subprocess.call(['synoindex','-d', '{0}'.format(mediaelement["thepath"])])
+		if check == 0:
+			logger.info(u"Deleted {0} from the synoindex database".format(mediaelement["thepath"]))
+		else:
+			logger.error(u"Cant delete from synoindex... exit code: {0}".format(check))
+	if mediaelement["type"] == "movie" and config.move_watched_movies and mediaelement["process"] > 80:
+		dirname = os.path.dirname(mediaelement["thepath"])
+		path, filename = os.path.split(dirname)
+		#newpath = os.path.join(config.move_movies_to_dir, foldername)
+		#os.rename(dirname, newpath)
+		newfullpath = os.path.join(config.move_movies_to_dir, filename)
+		if os.path.exists(mediaelement["thepath"]) and not os.path.exists(newfullpath):
+			shutil.move(dirname, config.move_movies_to_dir)
+			logger.info(u"Moved {0} to {1}".format(mediaelement["thepath"], newfullpath))
+			if config.update_synoindex:
+				try:
+					subprocess.call(['synoindex','-N', '{0}', '{1}'.format(newfullpath, mediaelement["thepath"])])
+				except:
+					subprocess.call(['synoindex','-d', '{0}'.format(mediaelement["thepath"])])
+				logger.info(u"Updated synoindex for {0} with {1}".format(mediaelement["thepath"], newfullpath))
+		else:
+			logger.info(u"Directory already exists")
 
 	if mediaelement["type"] == "series" and config.move_watched_series:
 		pass
 		#move it to the new movie dir...
+
+def cleanDB():
+	if config.use_database:
+		logger.info(u"Cleaning database...")
+		db.checkDB()
+		myDB = db.DBConnection()
+		
+		if config.clean_uncomplete_only:
+			reslut = myDB.select("SELECT * from scrobble where process < {0}".format(config.min_progress))
+		else:
+			reslut = myDB.select("SELECT * from scrobble")
+
+		if reslut:
+			counter=0
+			for item in reslut:
+				filename = os.path.split(item["thepath"])[1]
+				thedate = datetime.datetime.fromtimestamp(float(item["lastviewed"]))
+		
+				timedelta = thedate + datetime.timedelta(weeks=8)
+				if timedelta < datetime.datetime.now():
+					counter=counter+1
+					logger.debug(u"Deleting {0} from database because lastviewed more than 8 weeks ago".format(filename))
+					myDB.action("DELETE from scrobble where id = {0}".format(item["id"]))
+			logger.info(u"removed {0} old entrys from databse".format(counter))
+		else:
+			logger.info(u"no need to clean database for now")
+		
