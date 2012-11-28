@@ -1,5 +1,4 @@
-* add language support for tvdb and tmdb
-* optimize web views
+* optimize web views (needs more testing)
 * integrate user auth systhem
 * fix streaming
 * improve speed (image manipulation)
