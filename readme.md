@@ -1,3 +1,5 @@
+## This version is not maintained anymore... please use [v2.0 instead](https://github.com/cytec/SynoDLNAtrakt/tree/2.0)
+
 This is still in alpha/beta state.
 
 SynoDLNAtrakt is a trakt.tv plugin for Synology DiskStations. If your running the default Synology MediaServer and watching stuff over UPNP or DLNA directly on your Device but want to keep your trakt.tv account up to date, this is the right thing for you.
