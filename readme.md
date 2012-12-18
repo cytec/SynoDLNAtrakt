@@ -17,8 +17,12 @@ Some new stuff:
 
 some screenshots can be viewed here [BETA Screenshots](http://imgur.com/a/Y4bO1)
 
+#SPK Installation
 
-#Installation
+just add http://cytec.us/spk/ to your Package Center Source list, and you should be ready to install it over the Package Center
+
+
+#Manual Installation
 
 1.	Make sure you have ipkg installed on your Diskstation [How to install ipkg](http://forum.synology.com/wiki/index.php/Overview_on_modifying_the_Synology_Server,_bootstrap,_ipkg_etc#Installing_compiled.2Fbinary_programs_using_ipkg)
 2.	install python2.6
@@ -27,7 +31,7 @@ some screenshots can be viewed here [BETA Screenshots](http://imgur.com/a/Y4bO1)
 5.	git clone //URLHERE//
 6.	change to the SynoDLNAtrakt directory
 7.	change the config file if needed
-8.	start SynoDLNAtrakt (python SynoDLNAtrakt.py)
+8.	start SynoDLNAtrakt (python SynoDLNAtrakt.py start)
 
 now you can access SynoDLNAtrakt through your browser: http://YOURIP:1337
 
