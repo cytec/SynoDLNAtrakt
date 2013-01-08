@@ -1,0 +1,150 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>SynoDLNAtrakt › Documentation</title>
+	<link rel="stylesheet" href="css/install.css" type="text/css" />
+</head>
+<body>
+<h1 id="logo" style="text-align: center">
+	SynoDLNAtrakt
+	
+</h1>
+<p style="text-align: center">Documentation</p>
+
+<h1>First Things First</h1>
+
+<p>Please take the time to read through the instructions and take notice of the instructions listed here, as <strong>many support related questions can be answered simply by re-reading these instructions</strong>.</p>
+<p>If you still have any problems please come and visit the <a target="_blank" href="http://cytec.us/forum">support Forum</a></p>
+<p style="text-align: right;">&#8212; cytec </p>
+<p style="text-align: right;">&nbsp;</p>
+<h1><a name="top"></a>Table of Content </h1>
+<ol>
+  <li><a href="#1">Requiptments & Installation</a></li>
+  <li><a href="#2">Configuration</a></li>
+  <li><a href="#3">More Information</a></li>
+</ol>
+<p>&nbsp;</p>
+<h1><a name="1"></a>1. Requiptments & Installation</h1>
+<p><strong>Please make sure you install all the needed Requiptments!</strong></p>
+
+<p>This Documentation assumes that you already have installed ipkg on your Synology DiskStation, if you dont have ipkg installed you may read this first:
+<a href="http://forum.synology.com/wiki/index.php/Overview_on_modifying_the_Synology_Server,_bootstrap,_ipkg_etc#Installing_compiled.2Fbinary_programs_using_ipkg" targe="_blank">How to install ipkg</a></p>
+<ol>
+  <li>use ipkg to install <strong>libjpg, python2.6, py26-psycopg2, py26-setuptools, git</strong></li>
+  <li>use easy_install or pip to install <strong>PIL</strong></li>
+  <li>clone the SynoDLNAtrakt repo via git from this repo (git clone http://github.com/cytec/SynoDLNAtrakt)</li>
+  <li>Start SynoDLNAtrakt and point your Browser to <strong>http://yourip:1337/settings</strong> so setup everything</li>
+</ol>
+<p>&nbsp;</p>
+<p><a class="top" href="#top">back to top</a></p>
+<p>&nbsp;</p>
+<h1><a name="2"></a>2. Configuration</h1>
+<h2>a) Basic Settings </h2>
+<p>Mainly the Default Settings will be good for you but you NEED to change Basic Settings to reflect your systhem</p>
+<ol>
+  <li><strong>Movie directorys</strong> <br />
+    The Main directorys where you store your movies, if you have more than one, seperate them by "," (without qoutes)<br />
+    example: if your movies are named like this: "/volume1/Movies/Man in Black/Man in Black.avi" the main dir is "/volume1/Movies/"<br />
+      <br />
+  </li>
+
+  <li><strong>Series directorys</strong> <br />
+    The Main directorys where you store your series, if you have more than one, seperate them by "," (without qoutes)<br />
+    example: if your series are named like this: "/volume1/Series/Dexter/Season 01/dexter.s01e01.avi" the main dir is "/volume1/Series/"<br />
+      <br />
+  </li>
+
+  <li><strong>Trakt.tv Username</strong><br />
+  your username for trakt.tv<br />
+    <br />
+  </li>
+  
+  <li><strong>Trakt.tv Password</strong><br />
+  your password for trakt.tv<br />
+    <br />
+  </li>
+  
+  <li><strong>Min Progress</strong><br />
+    how much (in percent) of a movie/series must be watched before scrobbleing it to trakt.tv<br />
+    <br />
+
+  </li>
+</ol>
+<p>&nbsp;</p>
+<h2>b) Webserver Settings </h2>
+<ol><li><strong>Port   </strong> - The Port on which SynoDLNAtrakt should listen for connections</li>
+  <li><strong>Username</strong> - If you like to protect your Library with a user/pass</li>
+   <li><strong>Password</strong> - If you like to protect your Library with a user/pass</li>
+   <li><strong>hide watched</strong> - hide watched episodes/movies in the webfrontend instead of showing a overlay</li>
+</ol>
+<p>&nbsp;</p>
+<h2>b) Advanced Settings </h2>
+<p>The defaults are good to go, but if you like to change something...</p>
+<ol><li><strong>Language</strong> - the ISO language code for tvdb and tmdb api requests (movie and series informations)</li>
+  <li><strong>Scan Interval</strong> - Interval to scan the log for played stuff to scrobble (in minutes)</li>
+   <li><strong>Try Guessing</strong> - by default SynoDLNAtrakt assumes you have XBMC styled .nfo Files for you mediafiles, if you dont use .nfo files, you can use this to enable guessing based on the filename/foldername... <a href="#filenames">more on this here</a></li>
+   <li><strong>delete logs</strong> - should be enabled unless you are debugging something. this deletes the log file after reading it</li>
+   <li><strong>absolute EP for Animes</strong> - this will display absolute anime ep numbers infront of the episode name (animes only)</li>
+   <li><strong>log to console</strong> - by default this is off, if you like output to the console, enable this</li>
+   <li><strong>debugmode</strong> - should be always on, unless your not interessted in support or debug logs</li>
+</ol>
+<p>&nbsp;</p>
+<p><a class="top" href="#top">back to top</a></p>
+<p>&nbsp;</p>
+<h1><a name="3" id="3"></a>3. More Information</h1>
+<p>SynoDLNAtrakt assumes a few things...</p>
+<h2 id="filenames">Filenames:</h2>
+<p>
+  By default SynDLNAtrakt assumes you use XBMC like .nfo files for all of you media. If you dont use nfo files, you can enable the <strong>try guessing</strong> settings under advanced settings. This allows SynoDLNAtrakt to try to figure out the needed informations from the file or foldername.
+</p>
+<p>
+  <strong>How it works:</strong><br />
+  First SynoDLNAtrakt checks for an nfo, if none is found it will try the filename and if thats not working the foldername.
+</p>
+<p>
+  This are names which are known to work with this:
+  <ul>
+    <li><strong>/volume1/Movies/Avatar/Avatar.avi</strong><br />just the moviename</li>
+    <li><strong>/volume1/Movies/Avatar 2009/Avatar.2009.avi</strong><br />movie name with year (more accurate)</li>
+  </ul>
+</p>
+
+<p>
+
+If you use names like this it will most likely fail:
+  <ul>
+    <li><strong>/volume1/Movies/AvatarBR-Rip2009.avi</strong></li>
+  </ul>
+</p>
+<p>
+  If SynoDLNAtrakt fails to get informations from the filename it will write the path to that file in a txt file called error.txt<br /><br />
+  In this case you can use the .nfo files inside the nfo_templates folder to create a minimalistic nfo for this movie:<br />
+  copy the movie.nfo to /volume1/Movies/AvatarBR-Rip2009.nfo, open it with an text editor and change the values...<br />
+  go to imdb search for the movie and note down the imdb_id (starts with "tt")<br /><br />
+  <strong>id</strong> this is the imdbid for the movie<br />
+  <strong>year</strong> release year<br />
+  <strong>name</strong> the name of the movie <br/>
+  <br />
+  if you done this, go back to settings -> force and run a force import now the movie should be recognized without any errors
+  </p>
+<p>&nbsp;</p>
+<h2 id="filenames">Force Options:</h2>
+<p>
+  By default SynDLNAtrakt scans your Mediaserver index database for the last 20 new entrys. if you like to reimport some older files you can use the "settings -> force" menu
+</p>
+
+<p>
+  If you dont want to whait just hit one of the buttons to start the force of the process. 
+</p>
+
+<p>
+  <strong>Advanced Settings</strong> are for "Force Import" onyl. here you can select a folder and change the amount of entrys to load.
+  you can for example load the last 50 entrys from your first movie folder, or the last 10 from your 2nd Series folder. you also can import the last x entrys from only one type of media (series/movie folders only). This is mostly if you like to have more than the last 20 mediafiles in your database.
+</p>
+
+<p>&nbsp;</p>
+<p><a class="top" href="#top">back to top</a></p>
+
+</body>
+</html>

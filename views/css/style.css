@@ -1,0 +1,382 @@
+/* =============================================================================
+   Chrome Frame Prompt
+   ========================================================================== */
+
+.chromeframe { margin: 0.2em 0; background: #ccc; color: black; padding: 0.2em 0; }
+
+
+/* ==|== primary styles =====================================================
+   Author:
+   ========================================================================== */
+
+.row{
+  margin-top: 10px;
+  margin-bottom: 10px;
+  xborder-radius: 10px;
+  position: relative;
+  xborder-top-right-radius: 20px;
+  xborder-bottom-left-radius: 20px;
+}
+
+.text{
+  background: rgba(255,255,255,0.5);
+  padding: 10px
+}
+
+
+.actionbar{
+
+xwidth: 68px;
+background: rgba(0,0,0,0.8);
+height: 100%;
+top: 0;
+right: 0;
+position: absolute;
+xborder-radius: 10px;
+border-top-right-radius: 20px;
+xborder-bottom-right-radius: 10px;
+padding: 0 10px;
+}
+
+.scrobble, .stream, .delete{
+  cursor: pointer;
+}
+
+.actionbar i{
+  margin: 10px 0;
+  font-weight: lighter;
+}
+
+table .progress{
+  margin-bottom: 0
+}
+
+.list-background{
+  padding-top: 40px;
+  padding-bottom: 40px;
+  display: table;
+}
+
+.movie-list h1{
+  font-weight: bold;
+  font-size: 80px;
+  line-height: 80px;
+  margin: 0;
+  padding: 40px 20px;
+  text-transform: uppercase;
+  font-family: "Helvetica Neue";
+  display: table-cell;
+  text-shadow: 1px 1px 30px #444;
+  -moz-hyphens: auto;
+   -o-hyphens: auto;
+   -webkit-hyphens: auto;
+   -ms-hyphens: auto;
+   -hyphens: auto;
+   text-align: center;
+   color: #fff !important
+}
+
+.series-list h1{
+  font-weight: bold;
+  font-size: 80px;
+  line-height: 80px;
+  margin: 0 0 0 5px;
+  padding: 40px 20px;
+  text-transform: uppercase;
+  font-family: "Helvetica Neue";
+  display: table-cell;
+  text-shadow: 1px 1px 30px #444;
+  -moz-hyphens: auto;
+   -o-hyphens: auto;
+   -webkit-hyphens: auto;
+   -ms-hyphens: auto;
+   -hyphens: auto;
+   color: #fff !important,
+}
+
+
+.media-element{
+  padding: 40px 20px;
+  display: table;
+  width: 100%;
+  background: rgba(0,0,0,0.2)
+}
+
+.media-element h1, .media-element h2{
+  padding: 0 !important;
+  margin: 0 !important
+}
+
+.seen .media-element{
+  background: rgba(255,255,255,0.4) url(../img/seen.png) top right no-repeat ;
+}
+
+
+
+.movie-list .span12, .series-list .span12{
+  display: block;
+  background-position: center center; 
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+}
+.movie .span12{
+  display: table;
+}
+
+
+.movie-list h1 a, .series-list h1 a{
+  color: #fff
+}
+
+.movie-list h1 a:hover, .series-list h1 a:hover{
+  color: #ccc;
+  text-decoration: none
+}
+
+a, a:hover{
+  color: #fff;
+  text-decoration: none
+}
+
+#searchResults a{
+  color: #444
+}
+
+#searchResults a:hover{
+  color: #000;
+  text-decoration: underline;
+}
+
+.banner-top{
+  border-radius: 0 !important;
+  text-align: center; 
+  height: 500px; 
+  padding: 0 !important;
+  margin: 0 0 20px 0!important;
+  box-shadow: inset 0 0 37px #444;
+  display: table;
+  background-size: cover;
+  color: #fff;
+  width: 100%;
+  overflow: hidden;
+  background-position: center center; 
+  background-repeat: no-repeat;
+  /*xbackground-size: auto;*/
+  background-attachment: fixed;
+}
+
+.navbar{
+  margin-bottom: 0
+}
+
+.banner-top h1{
+  font-weight: bold;
+  font-size: 100px;
+  line-height: 100px;
+  margin: 0;
+  padding: 0;
+  text-transform: uppercase;
+  font-family: "Helvetica Neue";
+  display: table-cell;
+  vertical-align: middle;
+  text-shadow: 1px 1px 30px #444;
+  -moz-hyphens: auto;
+   -o-hyphens: auto;
+   -webkit-hyphens: auto;
+   -ms-hyphens: auto;
+   -hyphens: auto;
+}
+
+.series-list h2{
+  color: #fff;
+  line-height: 30px;
+  text-align: right;
+  padding-right: 20px
+}
+
+.inline li{
+  display: inline-block;
+  text-align: center;
+  width: 40px
+}
+
+.tabbable a{
+  color: #444
+}
+
+.center-text{
+	text-align: center !important;
+}
+
+
+
+/*
+mobile .list-background { display: block;}
+*/
+@media (max-width: 979px) {
+
+  .banner-top{
+    height: 300px;
+    background-position: center center; 
+    background-repeat: no-repeat;
+    /*xbackground-size: auto;*/
+    background-attachment: scroll;
+  }
+
+  .movie-list .span12, .series-list .span12, .banner-top{
+    background-position: center center; 
+    background-repeat: no-repeat;
+    /*xbackground-size: auto;*/
+    background-attachment: scroll;
+  }
+
+  .banner-top h1, .movie-list h1, .series-list h1{
+    font-size: 60px;
+    line-height: 60px;
+  }
+
+}
+
+@media (max-width: 767px) {
+  body {
+padding-right: 0;
+padding-left: 0px;
+}
+  p {
+    padding: 0 10px
+  }
+
+  #star {
+    margin-bottom: 20px;
+    margin-top: 0
+  }
+  .banner-top h1, .movie-list h1, .series-list h1{
+    font-size: 30px;
+    line-height: 30px;
+    padding: 20px
+  }
+
+  .row{
+    margin-top: 5px;
+    margin-bottom: 5px
+  }
+
+  .banner-top{
+    height: 100px;
+    background-position: center center; 
+    background-repeat: no-repeat;
+    /*xbackground-size: auto;*/
+    background-attachment: scroll;
+  }
+
+  .movie-list .span12, .series-list .span12, .banner-top{
+    display: table;
+    background-position: center center; 
+    background-repeat: no-repeat;
+    /*xbackground-size: auto;*/
+    background-attachment: scroll;
+  }
+
+  .series-list h1{
+    display: block;
+    padding-bottom: 0
+  }
+
+  .series-list h2{
+    display: block;
+    text-align: left;
+    padding: 0 20px;
+    font-size: 20px;
+    line-height: 20px;
+    color: #fff
+  }
+
+  #notifications{
+    width: 300px;
+    margin-left: -150px;
+  }
+
+  .notification .right{
+    width: 250px;
+  }
+
+  .movie.container{
+    padding: 0 20px
+  }
+
+  #star{
+    width: 300px !important;
+    float: none
+  }
+
+  /* display settings as list and hide the tabs */
+
+  .nav-tabs{
+    display: none !important
+  }
+
+  .tab-pane{
+    display: block !important;
+  }
+
+}
+
+/* ==|== media queries ======================================================
+   EXAMPLE Media Query for Responsive Design.
+   This example overrides the primary ('mobile first') styles
+   Modify as content requires.
+   ========================================================================== */
+
+@media only screen and (min-width: 35em) {
+  /* Style adjustments for viewports that meet the condition */
+}
+
+
+
+/* ==|== non-semantic helper classes ========================================
+   Please define your styles before this section.
+   ========================================================================== */
+
+/* For image replacement */
+.ir { display: block; border: 0; text-indent: -999em; overflow: hidden; background-color: transparent; background-repeat: no-repeat; text-align: left; direction: ltr; *line-height: 0; }
+.ir br { display: none; }
+
+/* Hide from both screenreaders and browsers: h5bp.com/u */
+.hidden { display: none !important; visibility: hidden; }
+
+/* Hide only visually, but have it available for screenreaders: h5bp.com/v */
+.visuallyhidden { border: 0; clip: rect(0 0 0 0); height: 1px; margin: -1px; overflow: hidden; padding: 0; position: absolute; width: 1px; }
+
+/* Extends the .visuallyhidden class to allow the element to be focusable when navigated to via the keyboard: h5bp.com/p */
+.visuallyhidden.focusable:active, .visuallyhidden.focusable:focus { clip: auto; height: auto; margin: 0; overflow: visible; position: static; width: auto; }
+
+/* Hide visually and from screenreaders, but maintain layout */
+.invisible { visibility: hidden; }
+
+/* Contain floats: h5bp.com/q */
+.clearfix:before, .clearfix:after { content: ""; display: table; }
+.clearfix:after { clear: both; }
+.clearfix { *zoom: 1; }
+
+
+
+/* ==|== print styles =======================================================
+   Print styles.
+   Inlined to avoid required HTTP connection: h5bp.com/r
+   ========================================================================== */
+
+@media print {
+  * { background: transparent !important; color: black !important; box-shadow:none !important; text-shadow: none !important; filter:none !important; -ms-filter: none !important; } /* Black prints faster: h5bp.com/s */
+  a, a:visited { text-decoration: underline; }
+  a[href]:after { content: " (" attr(href) ")"; }
+  abbr[title]:after { content: " (" attr(title) ")"; }
+  .ir a:after, a[href^="javascript:"]:after, a[href^="#"]:after { content: ""; }  /* Don't show links for images, or javascript/internal links */
+  pre, blockquote { border: 1px solid #999; page-break-inside: avoid; }
+  thead { display: table-header-group; } /* h5bp.com/t */
+  tr, img { page-break-inside: avoid; }
+  img { max-width: 100% !important; }
+  @page { margin: 0.5cm; }
+  p, h2, h3 { orphans: 3; widows: 3; }
+  h2, h3 { page-break-after: avoid; }
+}

@@ -17,37 +17,19 @@ Some new stuff:
 
 some screenshots can be viewed here [BETA Screenshots](http://imgur.com/a/Y4bO1)
 
-#SPK Installation
+#SPK Installation (recommendet)
 
-just add http://cytec.us/spk/ to your Package Center Source list, and you should be ready to install it over the Package Center
+just add http://cytec.us/spk/ to your Packagemanager Sources and install SynoDLNAtrakt.
 
 
-#Manual Installation
+#Source Installation
 
 1.	Make sure you have ipkg installed on your Diskstation [How to install ipkg](http://forum.synology.com/wiki/index.php/Overview_on_modifying_the_Synology_Server,_bootstrap,_ipkg_etc#Installing_compiled.2Fbinary_programs_using_ipkg)
 2.	install python2.6
-3.	install py26-psycopg2
-4.	install git
-5.	git clone //URLHERE//
-6.	change to the SynoDLNAtrakt directory
-7.	change the config file if needed
-8.	start SynoDLNAtrakt (python SynoDLNAtrakt.py start)
+3.	install git
+4.	git clone //URLHERE//
+5.	change to the SynoDLNAtrakt directory
+6.	change the config file if needed
+7.	start SynoDLNAtrakt (python SynoDLNAtrakt.py start)
 
 now you can access SynoDLNAtrakt through your browser: http://YOURIP:1337
-
-###Optional
-if you like to run SynoDLNAtrakt as a daemon you can do this by useing a screen session:
-
-First make sure you have installed "screen" over ipkg successfully, than simply start SynoDLNAtrakt like this
-
-    screen -dmS synodlnatrakt sh -c 'python SynoDLNAtrakt.py
-
-to reattach to that screen session you can simply type in:
-
-	screen -r synodlnatrakt
-
-and close your ssh window if your done (the screen session will continue running)
-
-to kill the session get reattached and hit ctrl+c OR run
-
-	screen -X -S synodlnatrakt kill
