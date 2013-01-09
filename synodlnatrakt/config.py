@@ -20,7 +20,7 @@ BASEPATH = os.getcwd()
 medialist = ["avi","mkv","mov","mp4","m4v","ts","hdmov","wmv","mpg","mpeg","xvid"]
 
 #regex for getting the id and extension from access.log
-logregex = ".*/(?P<theid>\d{3,5})\.(?P<ext>\w{3,5}).*"
+logregex = ".*/(?P<theid>\d{2,5})\.(?P<ext>\w{3,5}).*"
 seriesregex = "(?P<name>.*).?[sS](?P<season>\d{1,2})[eE|xX|epEP|\.|-]?(?P<episode>\d{1,2})"
 movieregex = "(?P<name>[^()]*)\.?\(?(?P<year>\d{4})\)?"
 
