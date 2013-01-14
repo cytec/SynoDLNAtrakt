@@ -20,7 +20,7 @@ from synodlnatrakt import config
 from synodlnatrakt.logger import logger
 
 user = "cytec"
-branch = "master"
+branch = "2.0"
 
 def runGit(args):
     

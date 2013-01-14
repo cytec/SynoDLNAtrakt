@@ -252,6 +252,9 @@ def index():
 	mediatype = request.forms.get('mediatype')
 
 	exec_date = datetime.now() + timedelta(seconds=2)
+	
+	if max_entrys == 0:
+		max_entrys = 99999
 
 	if not max_entrys:
 		max_entrys = 20
