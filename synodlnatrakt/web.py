@@ -311,9 +311,10 @@ def logs(loglevel):
 
 	data = []
 
-	if os.path.isfile(os.path.join(config.datadir,  "logs/SynoDLNAtrakt.log")):
-		f = open(os.path.join(config.datadir, "logs/SynoDLNAtrakt.log"))
+	if os.path.isfile(logger.LOG_FILENAME):
+		f = open(logger.LOG_FILENAME)
 		data = f.readlines()
+
 		f.close()
 
 	finalData = []
@@ -326,7 +327,6 @@ def logs(loglevel):
                 u'WARNING': logger.logging.WARNING,
                 u'INFO': logger.logging.INFO,
                 u'DEBUG': logger.logging.DEBUG}
-
 
 
 	for x in reversed(data):
@@ -358,6 +358,8 @@ def logs(loglevel):
 			break
 
 	result = "".join(finalData)
+
+	
 
 	return template('logs', result=result, topmenu=u"logs", title=u"Logs - {0}".format(loglevel))
 

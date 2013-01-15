@@ -5,7 +5,7 @@
     <div class="row">
       <div class="span12">
         <pre>
-          {{result}}
+{{result}}
         </pre>
       
     </div>

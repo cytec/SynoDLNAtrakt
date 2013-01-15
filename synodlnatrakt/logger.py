@@ -4,6 +4,7 @@
 # This file is part of SynoDLNAtrakt.
 
 import logging
+import logging.handlers
 from synodlnatrakt import config
 from os import path, makedirs
 
@@ -15,20 +16,21 @@ WARNING = logging.WARNING
 MESSAGE = logging.INFO
 DEBUG = logging.DEBUG
 
-logger = logging.getLogger("SynoDLNAtrakt")
+LOG_FILENAME=path.join(config.datadir, "logs/SynoDLNAtrakt.log")
 
-hdlr = logging.FileHandler(path.join(config.datadir, "logs/SynoDLNAtrakt.log"))
+logger = logging.getLogger("SynoDLNAtrakt")
 formatter = logging.Formatter('%(asctime)s %(levelname)-8s: %(message)s','%d.%m.%Y %H:%M:%S')
-hdlr.setFormatter(formatter)
-logger.addHandler(hdlr) 
+
+rotation = logging.handlers.RotatingFileHandler(LOG_FILENAME, maxBytes=5 * 1024 * 1024, backupCount=5)
+rotation.setFormatter(formatter)
+logger.addHandler(rotation)
+
 
 #log to console:
 if config.logtoconsole:
 	console = logging.StreamHandler()
 	console.setFormatter(formatter)
 	logger.addHandler(console) 
-
-logger.addHandler(hdlr)
 
 if config.debugmode:
 	logger.setLevel(logging.DEBUG)
