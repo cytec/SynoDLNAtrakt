@@ -1,5 +1,5 @@
 <!doctype html>
-%from synodlnatrakt import db
+%from synodlnatrakt import db, config
 %moviecount = db.session.query(db.Movies).count()
 %seriescount = db.session.query(db.TVShows).count()
 <html class="no-js" lang="de">
@@ -29,7 +29,8 @@
   </script>
 
 </head>
-<body>
+<body>  
+
   <header>
     <div class="navbar">
       <div class="navbar-inner">
@@ -106,6 +107,11 @@
       </div>
     </div>
   </header>
+  %if config.commits_behind >= 1:
+  <div id="update">
+      <p class="alert alert-info">there is an newer version available you are <b>{{config.commits_behind}}</b> commits behind <a href="/settings/force/update">update now</a></p>
+  </div>
+  %end if
   <div id="back_to_top" style="border-radius: 10px; width: 40px; height: 40px; position:fixed; right: 40px; bottom:40px; background-color: #000; z-index: 10">
     <a href="#">back to top</a>
   </div>

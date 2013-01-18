@@ -8,7 +8,7 @@ from apscheduler.scheduler import Scheduler
 import json
 from lib.themoviedb import tmdb
 import os, re
-from synodlnatrakt import ui
+from synodlnatrakt import ui, versioncheck
 from math import ceil
 import logging
 
@@ -253,7 +253,7 @@ def index():
 
 	exec_date = datetime.now() + timedelta(seconds=2)
 	
-	if max_entrys == 0:
+	if int(max_entrys) == 0:
 		max_entrys = 99999
 
 	if not max_entrys:
@@ -283,6 +283,19 @@ def index():
 		answer = {'status':'success','message':'force import of {0} elements from folder \"{1}\"'.format(max_entrys, folder)}
 
 	return answer
+
+@route('/settings/force/update')
+@requires_auth
+def index():
+	a = versioncheck.getVersion()
+	b = versioncheck.checkGithub()
+	if config.commits_behind >= 1:
+		versioncheck.update()
+	else:
+		versioncheck.getVersion()
+		versioncheck.checkGithub()
+		if config.commits_behind >= 1:
+			versioncheck.update()
 
 @post('/settings/force/sync')
 @requires_auth

@@ -209,6 +209,13 @@ a, a:hover{
 	text-align: center !important;
 }
 
+  #update{
+    text-align: center;
+  }
+
+  #update a{
+    color: #444 !important
+  }
 
 
 /*
@@ -235,6 +242,8 @@ mobile .list-background { display: block;}
     font-size: 60px;
     line-height: 60px;
   }
+
+
 
 }
 

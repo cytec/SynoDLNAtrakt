@@ -16,11 +16,14 @@ class MyDaemon(Daemon):
 	
 	def run(self):
 		from synodlnatrakt import web
-		from synodlnatrakt import main
+		from synodlnatrakt import main, versioncheck
 		from lib.bottle import TEMPLATE_PATH
 
 		config.initialize()
 		config.save_config()
+
+		versioncheck.getVersion()
+		versioncheck.checkGithub()
 		
 		parse_logs_int = int(config.interval)
 		mediaserver_int = int(config.interval)
