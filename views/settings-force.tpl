@@ -9,7 +9,7 @@
       <div class="span12">
         <div class="span6 offset3">
           <div class="well">
-            <p><i class="icon-wrench"> Advanced Settings</i></p>
+            <p><i class="btn btn-inverse icon-wrench"> Toggle Advanced Settings</i></p>
 
           <p><button id="sync" class="btn btn-large btn-block" type="button">Force trakt.tv sync</button></p>
           <p><button id="scrobble" class="btn btn-large btn-block" type="button">Force Scrobble</button></p>
