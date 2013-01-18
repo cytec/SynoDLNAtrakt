@@ -47,7 +47,7 @@ cachedir = os.path.join(datadir,"cache")
 
 latest_version = None
 current_version = None
-commits_behing = None
+commits_behind = 0
 
 accesslog = None
 moviedir = ""
