@@ -21,7 +21,7 @@
     <div class="row {{addclass}}">
 
       %showname = db.session.query(db.TVShows).filter(db.TVShows.tvdb_id == entry.show_id).first()
-      <div class="span12" style="background-image: url(/static/cache/fanart/{{entry.show_id}}.jpg)">
+      <div class="span12" style="background-image: url(/cache/fanart/{{entry.show_id}}.jpg)">
         <a href="/series/view/{{entry.show_id}}" class="media-element">
           <h1>{{showname.name}}</h1>
           <h2>{{entry.season}}x{{entry.episode}} {{entry.name}}</h2>
