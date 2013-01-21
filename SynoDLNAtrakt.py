@@ -45,7 +45,7 @@ class MyDaemon(Daemon):
 		    main.update_movies()
 
 		@sched.interval_schedule(minutes=trakt_sync_int)
-		def sync_trakt():
+		def update_checker():
 		    main.checkupdate()
 		
 		
