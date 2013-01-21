@@ -130,9 +130,9 @@ def parseLog():
 		logger.info(u"Parsing: {0} gave {1} entry(s)".format(config.accesslog, len(idtimes)))
 	
 		if config.delete_logs and len(idtimes) > 0:
-			if not os.path.exists(config.basedir + "/accesslog-backups/"):
-				os.makedirs(config.basedir + "/accesslog-backups/")
-			newlogpath = config.basedir + "/accesslog-backups/{0}-access.log".format(datetime.datetime.now().strftime('%y%m%d-%H%M%S'))
+			if not os.path.exists(config.datadir + "/accesslog-backups/"):
+				os.makedirs(config.datadir + "/accesslog-backups/")
+			newlogpath = config.datadir + "/accesslog-backups/{0}-access.log".format(datetime.datetime.now().strftime('%y%m%d-%H%M%S'))
 			
 			shutil.copy(config.accesslog, newlogpath)
 	
