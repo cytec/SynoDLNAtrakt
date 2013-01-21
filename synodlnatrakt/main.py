@@ -1,6 +1,6 @@
 from synodlnatrakt import helper, config
 from synodlnatrakt.mediaelement import Episode, Movie
-from synodlnatrakt import pgsql, trakt, db, pgsql, trakt, ui
+from synodlnatrakt import pgsql, trakt, db, pgsql, trakt, ui, versioncheck
 
 import datetime 
 
@@ -9,6 +9,10 @@ from synodlnatrakt.logger import logger
 def setup():
 	#create directorys...
 	pass
+
+def checkupdate():
+	versioncheck.getVersion()
+	versioncheck.checkGithub()
 
 def scanlogs(force=False):
 	if force:
@@ -27,6 +31,8 @@ def scanlogs(force=False):
 				logger.info(u"generate new Mediaelement for: {0}".format(key))
 				m.generate()
 				if m.progress > config.min_progress:
+					if config.watched_flags:
+						helper.createWatchedFile(m)
 					scrobble = trakt.sendRequest(m)
 					if scrobble:
 						m.scrobbled = 1
@@ -42,6 +48,8 @@ def scanlogs(force=False):
 				if m.progress > config.min_progress and m.scrobbled != 1:
 					logger.info(u"loaded Mediaelement from db: {0}".format(key))
 					scrobble = trakt.sendRequest(m)
+					if config.watched_flags:
+						helper.createWatchedFile(m)
 					if scrobble:
 						m.scrobbled = 1
 					m.to_database()

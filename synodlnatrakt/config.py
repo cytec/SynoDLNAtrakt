@@ -77,6 +77,7 @@ move_series_to_dir = None
 update_synoindex = 0
 delete_from_index = 0
 delete_from_disk = 0
+watched_flags = 1
 CFG = "aa"
 
 
@@ -156,6 +157,7 @@ def initialize():
     username = check_setting_str(CFG, 'Advanced', 'username', '')
     password = check_setting_str(CFG, 'Advanced', 'password', '')
     page_limit = check_setting_str(CFG, 'Advanced', 'page_limit', 50)
+    watched_flags = check_setting_str(CFG, 'Advanced', 'watched_flags', 1)
     
     #trakt
     trakt_pass = check_setting_str(CFG, 'Trakt', 'trakt_pass', '')
@@ -214,6 +216,7 @@ def save_config():
     new_config['Advanced']['username'] = username
     new_config['Advanced']['password'] = password
     new_config['Advanced']['page_limit'] = int(page_limit)
+    new_config['Advanced']['watched_flags'] = int(watched_flags)
 
     new_config['Trakt'] = {}
     new_config['Trakt']['trakt_pass'] = trakt_pass
