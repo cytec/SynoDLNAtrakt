@@ -12,7 +12,7 @@ def setup():
 
 def restart():
 	logger.info(u"restarting SynoDLNAtrakt...")
-	args = [sys.executable, os.path.join(config.basedir, "SynoDLNAtrakt.py"), "restart"]
+	args = [sys.executable, os.path.join(config.basedir, "SynoDLNAtrakt.py"), "restart" "--config={0}".format(config.cfg_path)]
 	logger.debug(u"restart args: {0}".format(args))
 	#/var/packages/synodlnatrakt/scripts/start-stop-status start
 	#maybe ill shoud use the spk python?
