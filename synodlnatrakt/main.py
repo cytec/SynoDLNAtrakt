@@ -12,6 +12,7 @@ def setup():
 
 def restart():
 	logger.info(u"restarting SynoDLNAtrakt...")
+	logger.debug(u"restart args: {0}".format(args))
 	args = [sys.executable, os.path.join(config.basedir, "SynoDLNAtrakt.py"), "restart"]
 	os.execv(sys.executable, args)
 
