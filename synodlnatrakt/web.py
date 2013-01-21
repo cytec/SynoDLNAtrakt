@@ -392,6 +392,7 @@ def saveConfig():
 	config.hide_watched = False
 	config.logtoconsole = False
 	config.debugmode = False
+	config.watched_flags = False
 
 
 	#print config.moviedir

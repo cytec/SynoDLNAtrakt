@@ -220,6 +220,19 @@
                       </label>
                     </div>
                   </div>
+
+                  <div class="control-group">
+                    <div class="controls">
+                      <label class="checkbox">
+                        %if config.watched_flags:
+                          <input name="watched_flags" type="checkbox" checked> Watched Flags
+                        %else:
+                          <input name="watched_flags" type="checkbox"> Watched Flags
+                        %end if
+                        <span class="help-block">Watched Flags for YAMJ/Popcorn Hour</span>
+                      </label>
+                    </div>
+                  </div>
      
                   <div class="form-actions">
                     <button type="submit" class="btn btn-primary">Save changes</button>
