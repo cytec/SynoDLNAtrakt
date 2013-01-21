@@ -287,15 +287,15 @@ def index():
 @route('/settings/force/update')
 @requires_auth
 def index():
-	a = versioncheck.getVersion()
-	b = versioncheck.checkGithub()
 	if config.commits_behind >= 1:
 		versioncheck.update()
+		main.restart()
 	else:
 		versioncheck.getVersion()
 		versioncheck.checkGithub()
 		if config.commits_behind >= 1:
 			versioncheck.update()
+			main.restart()
 
 @post('/settings/force/sync')
 @requires_auth

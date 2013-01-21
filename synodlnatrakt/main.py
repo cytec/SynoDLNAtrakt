@@ -2,13 +2,18 @@ from synodlnatrakt import helper, config
 from synodlnatrakt.mediaelement import Episode, Movie
 from synodlnatrakt import pgsql, trakt, db, pgsql, trakt, ui, versioncheck
 
-import datetime 
+import datetime, sys, os
 
 from synodlnatrakt.logger import logger
 
 def setup():
 	#create directorys...
 	pass
+
+def restart():
+	logger.info(u"restarting SynoDLNAtrakt...")
+	args = [sys.executable, os.path.join(config.basedir, "SynoDLNAtrakt.py"), "restart"]
+	os.execv(sys.executable, args)
 
 def checkupdate():
 	versioncheck.getVersion()
@@ -55,11 +60,14 @@ def scanlogs(force=False):
 					m.to_database()
 	logger.info(u"READLOG FINISHED")
 
+	
 	response = {
 		'status': 'success',
 		'message': 'added {0} series/movies to synodlnatrakt'.format(len(logelement))
 	}
-	ui.notifications.success("Yeah",'added {0} series/movies to synodlnatrakt'.format(len(logelement)))
+
+	if len(logelement) > 0:
+		ui.notifications.success("Yeah",'parsed {0} series/movies from log'.format(len(logelement)))
 	
 	return response
 

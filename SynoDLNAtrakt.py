@@ -43,6 +43,10 @@ class MyDaemon(Daemon):
 		@sched.interval_schedule(minutes=trakt_sync_int, start_date=starttime+timedelta(minutes=2))
 		def sync_trakt():
 		    main.update_movies()
+
+		@sched.interval_schedule(minutes=trakt_sync_int)
+		def sync_trakt():
+		    main.checkupdate()
 		
 		
 		sched.start()
@@ -51,7 +55,8 @@ class MyDaemon(Daemon):
 		TEMPLATE_PATH.insert(0,config.templatedir)
 		
 		web.run(host='0.0.0.0', port=config.port, debug=True)
-		
+
+	
 		while True:
 			pass
 
