@@ -75,7 +75,7 @@ def startupCheck():
 def createWatchedFile(mediaelement):
 	path = os.path.splitext(mediaelement.path)[0]
 	watched = u"{0}.watched".format(path)
-	if not isfile(watched):
+	if not os.path.isfile(watched):
 		f = open(watched, 'w')
 		f.close()
 		logger.debug(u"Created watched file for {0}".format(mediaelement.path))
