@@ -73,12 +73,11 @@ def startupCheck():
 	logger.info(u"Starting SynoDLNAtrakt...")
 
 def createWatchedFile(mediaelement):
-	path = os.path.splitext(mediaelement.path)[0]
-	watched = u"{0}.watched".format(path)
+	watched = u"{0}.watched".format(mediaelement.path)
 	if not os.path.isfile(watched):
 		f = open(watched, 'w')
 		f.close()
-		logger.debug(u"Created watched file for {0}".format(mediaelement.path))
+		logger.debug(u"Created watched file: {0}".format(watched))
 
 def parseLog():
 	idtimes = {}
