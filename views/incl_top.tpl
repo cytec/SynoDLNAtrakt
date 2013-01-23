@@ -109,7 +109,7 @@
   </header>
   %if config.commits_behind >= 1:
   <div id="update">
-      <p class="alert alert-info">there is a <a href="http://github.com/cytec/SynoDLNAtrakt/compare/{{config.current_version}}...{{config.latest_version}}" target="_blank">newer version available</a> (you are <b>{{config.commits_behind}} commits behind</b> - <a href="/settings/force/update">update now</a></p>
+      <p class="alert alert-info">there is a <a href="http://github.com/cytec/SynoDLNAtrakt/compare/{{config.current_version}}...{{config.latest_version}}" target="_blank">newer version available</a> (you are <b>{{config.commits_behind}} commits behind</b>) - <a href="/settings/force/update">update now</a></p>
   </div>
   %end if
   <div id="back_to_top" style="border-radius: 10px; width: 40px; height: 40px; position:fixed; right: 40px; bottom:40px; background-color: #000; z-index: 10">
