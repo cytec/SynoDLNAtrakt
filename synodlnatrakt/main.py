@@ -44,6 +44,7 @@ def scanlogs(force=False):
 					scrobble = trakt.sendRequest(m)
 					if scrobble:
 						m.scrobbled = 1
+						m.progress = 100
 				m.to_database()
 			else:
 				if m.progress > config.min_progress and m.scrobbled == 1:
@@ -60,6 +61,7 @@ def scanlogs(force=False):
 						helper.createWatchedFile(m)
 					if scrobble:
 						m.scrobbled = 1
+						m.progress = 100
 					m.to_database()
 	logger.info(u"READLOG FINISHED")
 
@@ -96,6 +98,7 @@ def import_mediaserver(force=False, max_entrys=20):
 					scrobble = trakt.sendRequest(m)
 					if scrobble:
 						m.scrobbled = 1
+						m.progress = 100
 				m.to_database()
 				counter = counter + 1
 			else:
@@ -106,6 +109,7 @@ def import_mediaserver(force=False, max_entrys=20):
 					scrobble = trakt.sendRequest(m)
 					if scrobble:
 						m.scrobbled = 1
+						m.progress = 100
 					m.to_database()
 				else:
 					#m._calc_runtime()
@@ -135,7 +139,7 @@ def update_movies(force=False):
 		movielist.append(a["imdb_id"])
 	
 	
-	allmovies = db.session.query(db.Movies).filter(db.Movies.scrobbled != 1).all()
+	allmovies = db.session.query(db.Movies).filter(db.Movies.scrobbled == 0).all()
 	
 	for movie in allmovies:
 		if movie.imdb_id in movielist:
@@ -194,7 +198,7 @@ def update_series():
 					db.session.query(db.TVEpisodes)
 						.filter(db.TVEpisodes.show_id == show["tvdb_id"])
 						.filter(db.TVEpisodes.season == season["season"])
-						.filter(db.TVEpisodes.scrobbled != 1).all()
+						.filter(db.TVEpisodes.scrobbled == 0).all()
 					)
 
 				if result:
@@ -206,7 +210,7 @@ def update_series():
 						a.scrobbled = 1
 						a.lastseen = datetime.datetime(2000,1,1).strftime('%Y-%m-%d %H:%M:%S')
 						db.session.merge(a)
-						logger.debug(u"marked {0}: {2}x{3} \"{1}\" as watched".format(show["title"], a.name, a.season, a.episode))
+						logger.info(u"marked {0}: {2}x{3} \"{1}\" as watched".format(show["title"], a.name, a.season, a.episode))
 				db.session.commit()
 
 	traktseries = trakt.getRatings("series")
