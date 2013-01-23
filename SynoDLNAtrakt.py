@@ -44,7 +44,7 @@ class MyDaemon(Daemon):
 		def sync_trakt():
 		    main.update_movies()
 
-		@sched.interval_schedule(minutes=trakt_sync_int)
+		@sched.interval_schedule(minutes=trakt_sync_int, start_date=starttime+timedelta(minutes=1))
 		def update_checker():
 		    main.checkupdate()
 		
