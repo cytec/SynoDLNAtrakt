@@ -209,10 +209,10 @@ def save_config():
     new_config['Advanced'] = {}
     new_config['Advanced']['logtoconsole'] = int(logtoconsole)
     new_config['Advanced']['debugmode'] = int(debugmode)
-    new_config['Advanced']['min_progress'] = min_progress
-    new_config['Advanced']['interval'] = interval
+    new_config['Advanced']['min_progress'] = int(min_progress)
+    new_config['Advanced']['interval'] = int(interval)
     new_config['Advanced']['language'] = language
-    new_config['Advanced']['port'] = port
+    new_config['Advanced']['port'] = int(port)
     new_config['Advanced']['username'] = username
     new_config['Advanced']['password'] = password
     new_config['Advanced']['page_limit'] = int(page_limit)
