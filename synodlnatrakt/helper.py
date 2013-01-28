@@ -9,7 +9,7 @@ from xml.dom.minidom import parse, parseString
 from lib.apachelog import apachelog as apachelog
 from lib.themoviedb import tmdb
 from lib.tvdb_api import tvdb_api
-from synodlnatrakt import config, db, pgsql, images
+from synodlnatrakt import config, db, pgsql, images, ui
 from synodlnatrakt.logger import logger
 from synodlnatrakt.name_parser import parser
 
@@ -20,15 +20,22 @@ def updateMovie(synoindex, imdb_id):
 	result = db.session.query(db.Movies).filter(db.Movies.synoindex == synoindex).first()
 	if result:
 		oldname = result.name
+		oldyear = result.year
 		result.name = movie["name"]
 		result.description = movie["overview"]
 		result.imdb_id = movie["imdb_id"]
 		result.tmdb_id = movie["id"]
+		result.year = movie["released"].split("-")[0]
+		result.rating = 0
+		result.lastseen = ""
+		result.progress = 0
+		result.scrobbled = 0
 	db.session.merge(result)
 	db.session.commit()
 	images.get_images(imdb_id, "movie")
-	answer = {u"status":u"success", u"message": u"updated {0} with {1}".format(oldname, movie["name"]), u"title": movie["name"]}
-	return answer
+	ui.notifications.success(movie["name"],'updated {0} ({1}) with {2} ({3})'.format(oldname, oldyear, movie["name"], movie["released"].split("-")[0]))
+	#answer = {u"status":u"success", u"message": u"updated {0} with {1}".format(oldname, movie["name"]), u"title": movie["name"]}
+	#return answer
 
 def get_media_type(theid):
 	mediatype = None
