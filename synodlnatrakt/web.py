@@ -253,11 +253,11 @@ def index():
 
 	exec_date = datetime.now() + timedelta(seconds=2)
 	
-	if int(max_entrys) == 0:
-		max_entrys = 99999
-
 	if not max_entrys:
 		max_entrys = 20
+
+	if int(max_entrys) == 0:
+		max_entrys = 99999
 	
 	answer = {'status':'error','message':'Something went wrong while forceing this action'}
 
