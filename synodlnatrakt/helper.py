@@ -242,14 +242,23 @@ def checkNFO(filepath, nfotype):
 				season = parsed.season_number
 				episode = parsed.episode_numbers[0]
 				logger.debug(u"Type: {3}, Name: {0}, Season: {1}, Episode: {2}".format(name, season, episode, nfotype))
-				t = tvdb_api.Tvdb(language=config.language)
-				showinfo = t[name]	
-				tvdb_id = showinfo["id"]
-				realname = showinfo["seriesname"]
-				year = showinfo["firstaired"]
-				#logger.debug("tvdb gave the following keys: {0}".format(showinfo.data.keys()))
-				logger.info(u"Found result for {0} -> Fullname: {1}, tvdb_id: {2}, Year: {3}".format(name, realname, tvdb_id, year))
-				return tvdb_id, realname
+				#strip out and, &
+				andstrings = ["and", "&"]
+				for string in andstrings:
+					if string in name:
+						name = name.replace(string, "")
+				try:
+					t = tvdb_api.Tvdb(language=config.language)
+					showinfo = t[name]	
+					tvdb_id = showinfo["id"]
+					realname = showinfo["seriesname"]
+					year = showinfo["firstaired"]
+					#logger.debug("tvdb gave the following keys: {0}".format(showinfo.data.keys()))
+					logger.info(u"Found result for {0} -> Fullname: {1}, tvdb_id: {2}, Year: {3}".format(name, realname, tvdb_id, year))
+					return tvdb_id, realname
+				except tvdb_api.tvdb_shownotfound:
+					logger.error(u"Unable to find {0} on tvdb".format(name))
+					return 0
 			else:
 				logger.error(u"Please enable try_guessing in settings or create an tvshow.nfo for: {0}".format(directory))
 			return 0
