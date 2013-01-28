@@ -3,7 +3,7 @@ import ImageFilter
 from lib.tvdb_api import tvdb_api
 from lib.themoviedb import tmdb
 import os
-import urllib
+import requests
 
 from synodlnatrakt.logger import logger
 from synodlnatrakt import config
@@ -48,8 +48,13 @@ def get_images(theid, thetype):
 		
 		if not os.path.exists(coverpath):
 			try:
-				urllib.urlretrieve(show["poster"], coverpath)
-				logger.debug(u"Downloading Poster for {0}".format(theid))
+				#urllib.urlretrieve(show["poster"], coverpath)
+				r = requests.get(show["poster"])
+				if r.status_code == 200 and "image" in r.headers["content-type"]:
+					f = open(coverpath, "w")
+					f.write(r.content)
+					f.close()
+					logger.debug(u"Downloading Poster for {0}".format(theid))
 			except:
 				logger.debug(u"Unable to Download Poster for {0}".format(theid))
 			
@@ -65,8 +70,12 @@ def get_images(theid, thetype):
 		
 		if not os.path.exists(fanartpath):
 			try:
-				urllib.urlretrieve(show["fanart"], fanartpath)
-				logger.debug(u"Downloading Fanart for {0}".format(theid))
+				r = requests.get(show["fanart"])
+				if r.status_code == 200 and "image" in r.headers["content-type"]:
+					f = open(fanartpath, "w")
+					f.write(r.content)
+					f.close()
+					logger.debug(u"Downloading Fanart for {0}".format(theid))
 			except:
 				logger.debug(u"Unable to Download Fanart for {0}".format(theid))
 			
@@ -91,8 +100,13 @@ def get_images(theid, thetype):
 		movieinfo = tmdb.getMovieInfo(theid, lang=config.language)
 		if not os.path.exists(coverpath):
 			try:
-				urllib.urlretrieve(movieinfo["images"][0]["original"], coverpath)
-				logger.debug(u"Downloading Poster for {0}".format(theid))
+				r = requests.get(movieinfo["images"][0]["original"])
+
+				if r.status_code == 200 and "image" in r.headers["content-type"]:
+					f = open(coverpath, "w")
+					f.write(r.content)
+					f.close()
+					logger.debug(u"Downloading Poster for {0}".format(theid))
 			except:
 				logger.debug(u"Unable to Download Poster for {0}".format(theid))
 
@@ -108,8 +122,12 @@ def get_images(theid, thetype):
 
 		if not os.path.exists(fanartpath):
 			try:
-				urllib.urlretrieve(movieinfo["images"][-1]["original"], fanartpath)
-				logger.debug(u"Downloading Fanart for {0}".format(theid))
+				r = requests.get(movieinfo["images"][-1]["original"])
+				if r.status_code == 200 and "image" in r.headers["content-type"]:
+					f = open(fanartpath, "w")
+					f.write(r.content)
+					f.close()
+					logger.debug(u"Downloading Fanart for {0}".format(theid))
 			except:
 				logger.debug(u"Unable to Download Fanart for {0}".format(theid))
 
