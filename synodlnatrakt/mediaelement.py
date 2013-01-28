@@ -206,38 +206,39 @@ class Episode(object):
 		return self
 
 	def to_database(self):
-		insert = db.TVEpisodes(
-			show_id = self.show_id,
-			tvdb_id = self.tvdb_id,
-			name = self.name,
-			season = self.season,
-			episode = self.episode,
-			description = self.description,
-			path = self.path,
-			duration = self.duration,
-			progress = self.progress,
-			scrobbled = self.scrobbled,
-			rating = self.rating,
-			lastseen = self.lastseen,
-			added = self.added,
-			synoindex = self.synoindex,
-			abs_ep = self.abs_ep,
-			is_anime = self.is_anime
-			)
-
-		result = db.session.query(db.TVShows).filter(db.TVShows.tvdb_id == self.show_id).first()
-		if not result:
-			insert2 = db.TVShows(
-					tvdb_id = self.show_id,
-					location = self.location,
-					name = self.showname,
-					is_anime = self.is_anime
+		if self.tvdb_id:
+			insert = db.TVEpisodes(
+				show_id = self.show_id,
+				tvdb_id = self.tvdb_id,
+				name = self.name,
+				season = self.season,
+				episode = self.episode,
+				description = self.description,
+				path = self.path,
+				duration = self.duration,
+				progress = self.progress,
+				scrobbled = self.scrobbled,
+				rating = self.rating,
+				lastseen = self.lastseen,
+				added = self.added,
+				synoindex = self.synoindex,
+				abs_ep = self.abs_ep,
+				is_anime = self.is_anime
 				)
-			db.session.merge(insert2)
-
-		db.session.merge(insert)
-		
-		db.session.commit()
+	
+			result = db.session.query(db.TVShows).filter(db.TVShows.tvdb_id == self.show_id).first()
+			if not result:
+				insert2 = db.TVShows(
+						tvdb_id = self.show_id,
+						location = self.location,
+						name = self.showname,
+						is_anime = self.is_anime
+					)
+				db.session.merge(insert2)
+	
+			db.session.merge(insert)
+			
+			db.session.commit()
 
 	def generate(self):
 		dbresult = pgsql.session.query(pgsql.Video).filter(pgsql.Video.id == self.synoindex).first()
@@ -253,19 +254,20 @@ class Episode(object):
 				self.mediatype = "series"
 				self.location = curdir
 
-		t = tvdb_api.Tvdb(language=config.language)
-		#series = t[self.show_id]
-		series = t[int(self.show_id)]
-		self.tvdb_id = series[int(self.season)][int(self.episode)]["id"]
-		self.name = series[int(self.season)][int(self.episode)]["episodename"]
-		self.description = series[int(self.season)][int(self.episode)]["overview"]
-
-		if "Animation" in series["genre"]:
-			self.is_anime = 1
-			self.abs_ep = series[int(self.season)][int(self.episode)]["absolute_number"]
-
-		if self._log:
-			self._calc_runtime()
-
 		if self.show_id:
-			images.get_images(self.show_id, "series")
+			t = tvdb_api.Tvdb(language=config.language)
+			#series = t[self.show_id]
+			series = t[int(self.show_id)]
+			self.tvdb_id = series[int(self.season)][int(self.episode)]["id"]
+			self.name = series[int(self.season)][int(self.episode)]["episodename"]
+			self.description = series[int(self.season)][int(self.episode)]["overview"]
+	
+			if "Animation" in series["genre"]:
+				self.is_anime = 1
+				self.abs_ep = series[int(self.season)][int(self.episode)]["absolute_number"]
+	
+			if self._log:
+				self._calc_runtime()
+	
+			if self.show_id:
+				images.get_images(self.show_id, "series")
