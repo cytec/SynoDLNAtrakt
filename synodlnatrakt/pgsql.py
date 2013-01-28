@@ -3,7 +3,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, scoped_session
 
 
-engine = create_engine('postgresql+pg8000://admin@localhost/mediaserver', encoding='utf-8', convert_unicode=True, echo=False)
+engine = create_engine('postgresql+pg8000://admin@localhost/mediaserver', encoding='utf-8', convert_unicode=True, echo=False, pool_recycle=3600)
 metadata = MetaData()
 
 Base = declarative_base()
