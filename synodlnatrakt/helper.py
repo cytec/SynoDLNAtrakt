@@ -243,10 +243,10 @@ def checkNFO(filepath, nfotype):
 				episode = parsed.episode_numbers[0]
 				logger.debug(u"Type: {3}, Name: {0}, Season: {1}, Episode: {2}".format(name, season, episode, nfotype))
 				#strip out and, &
-				andstrings = ["and", "&"]
+				andstrings = [" and ", " & "]
 				for string in andstrings:
 					if string in name:
-						name = name.replace(string, "")
+						name = name.replace(string, " ")
 				try:
 					t = tvdb_api.Tvdb(language=config.language)
 					showinfo = t[name]	
@@ -257,11 +257,11 @@ def checkNFO(filepath, nfotype):
 					logger.info(u"Found result for {0} -> Fullname: {1}, tvdb_id: {2}, Year: {3}".format(name, realname, tvdb_id, year))
 					return tvdb_id, realname
 				except tvdb_api.tvdb_shownotfound:
-					logger.error(u"Unable to find {0} on tvdb".format(name))
-					return 0
+					logger.error(u"Unable to find {0} on thetvdb.com".format(name))
+					return 0, None
 			else:
 				logger.error(u"Please enable try_guessing in settings or create an tvshow.nfo for: {0}".format(directory))
-			return 0
+			return 0, None
 
 		
 
@@ -296,7 +296,7 @@ def checkNFO(filepath, nfotype):
 				return season, episode
 			else:
 				logger.error(u"Please enable try_guessing in settings or create an .nfo for: {0}".format(directory))
-			return 0
+			return 0, 0
 
 	if nfotype == "movie":
 		#order of use: .nfo, .imdb, try_guessing
