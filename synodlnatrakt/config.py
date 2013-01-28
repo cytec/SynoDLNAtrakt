@@ -5,6 +5,7 @@
 
 import os
 from lib.configobj import ConfigObj
+import hashlib
 
 basedir = os.path.dirname(os.path.dirname(os.path.abspath( __file__ )))
 
@@ -79,6 +80,9 @@ delete_from_index = 0
 delete_from_disk = 0
 watched_flags = 1
 CFG = "aa"
+sha1hash=None
+
+
 
 
 def CheckSection(sec):
@@ -127,7 +131,7 @@ def initialize():
     absolute_ep_anime, hide_watched, datadir, logtoconsole, debugmode, min_progress, interval, \
     language, port,page_limit, trakt_user, trakt_pass, use_boxcar, boxcar_username, \
     move_watched_movies, move_watched_series, move_movies_to_dir, move_series_to_dir, update_synoindex, \
-    delete_from_index, delete_from_disk, cachedir, datadir, dbpath
+    delete_from_index, delete_from_disk, cachedir, datadir, dbpath, sha1hash
 
     CFG = ConfigObj(cfg_path)
     
@@ -179,6 +183,8 @@ def initialize():
     cachedir = os.path.join(datadir,"cache")
     
     save_config()
+
+    sha1hash = hashlib.sha1(trakt_pass).hexdigest()
 	
     dbpath = os.path.join(datadir, "SynoDLNAtrakt.db")
     
@@ -236,4 +242,4 @@ def save_config():
     new_config['Postprocessing']['delete_from_disk'] = int(delete_from_disk)
 
     new_config.write()
-
+    sha1hash = hashlib.sha1(trakt_pass).hexdigest()

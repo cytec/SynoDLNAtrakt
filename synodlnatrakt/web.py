@@ -485,9 +485,11 @@ def rating():
 	rating = request.forms.get('score')
 
 	if mediatype == "series":
-		content = db.session.query(db.Series).filter(db.Series.synoindex == synoindex).first()
+		content = db.session.query(db.TVEpisodes).filter(db.TVEpisodes.synoindex == synoindex).first()
+		content.type = "series"
 	elif mediatype == "movie":
 		content = db.session.query(db.Movies).filter(db.Movies.synoindex == synoindex).first()
+		content.type = "movie"
 
 	content.rating = rating
 	db.session.merge(content)

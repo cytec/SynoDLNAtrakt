@@ -7,10 +7,9 @@
 from synodlnatrakt import config
 from synodlnatrakt.logger import logger
 from lib import requests
-import hashlib
 import json
 
-sha1hash=hashlib.sha1(config.trakt_pass).hexdigest()
+#config.sha1hash=hashlib.sha1(config.trakt_pass).hexdigest()
 
 
 def sendRequest(mediaelement, returnStatus=False):
@@ -33,7 +32,7 @@ def seen(mediaelement, returnStatus=False):
 
 		args={
 			"username": config.trakt_user,
-			"password": sha1hash,
+			"password": config.sha1hash,
 			"tvdb_id": mediaelement.show_id,
 			"title": mediaelement.name,
 			#"year": dict["year"],
@@ -50,7 +49,7 @@ def seen(mediaelement, returnStatus=False):
 
 		args={
     		"username": config.trakt_user,
-    		"password": sha1hash,
+    		"password": config.sha1hash,
     		"movies": [
         		{
             		"imdb_id": mediaelement.imdb_id,
@@ -68,7 +67,7 @@ def watching(mediaelement, returnStatus=False):
 		req="/show/watching/%%API_KEY%%"
 		args={
     		"username": config.trakt_user,
-    		"password": sha1hash,
+    		"password": config.sha1hash,
     		#"imdb_id": "tt1520211",
     		"tvdb_id": mediaelement.show_id,
     		"title": mediaelement.name,
@@ -87,7 +86,7 @@ def watching(mediaelement, returnStatus=False):
 
 		args={
     		"username": config.trakt_user,
-    		"password": sha1hash,
+    		"password": config.sha1hash,
     		"imdb_id": mediaelement.imdb_id,
     		"title": mediaelement.name,
     		"year": mediaelement.year,
@@ -107,7 +106,7 @@ def scrobble(mediaelement, returnStatus=False):
 		
 		args={
 			"username": config.trakt_user,
-			"password": sha1hash,
+			"password": config.sha1hash,
 			"tvdb_id": mediaelement.show_id,
 			"title": mediaelement.name,
 			#"year": dict["year"],
@@ -122,7 +121,7 @@ def scrobble(mediaelement, returnStatus=False):
 
 		args={
 			"username": config.trakt_user,
-			"password": sha1hash,
+			"password": config.sha1hash,
 			"imdb_id": mediaelement.imdb_id,
 			"title": mediaelement.name,
 			"year": mediaelement.year,
@@ -140,7 +139,7 @@ def addList(listname="Syno Stuff", description="Stuff i have to view", private="
 	req = "/lists/add/%%API_KEY%%"
 	args={
 			"username": config.trakt_user,
-			"password": sha1hash,
+			"password": config.sha1hash,
     		"name": listname,
     		"description": description,
     		"privacy": private,
@@ -154,7 +153,7 @@ def add_to_list(mediaelement, listname="syno-stuff", returnStatus=False):
 	if mediaelement.mediatype == "series":
 		args = {
 			"username": config.trakt_user,
-    		"password": sha1hash,
+    		"password": config.sha1hash,
     		"slug": listname,
     		"items": [
     			{
@@ -170,15 +169,29 @@ def add_to_list(mediaelement, listname="syno-stuff", returnStatus=False):
 	
 def rate(mediaelement, rating, returnStatus=False):
 	'''rate an episode/movie'''
-	req = "/rate/movie/%%API_KEY%%"
-	args = {
-	    "username": config.trakt_user,
-    	"password": sha1hash,
-    	"imdb_id": mediaelement.imdb_id,
-    	"title": mediaelement.name,
-    	"year": mediaelement.year,
-    	"rating": rating
-	}
+
+	if mediaelement.type == "series":
+		req = "/rate/episode/%%API_KEY%%"
+		args = {
+			"username": config.trakt_user,
+			"password": config.sha1hash,
+			"tvdb_id": mediaelement.show_id,
+			#"title": mediaelement.showname,
+			#"year": mediaelement.year,
+			"season": mediaelement.season,
+			"episode": mediaelement.episode,
+			"rating": rating
+		}
+	if mediaelement.type == "movie":
+		req = "/rate/movie/%%API_KEY%%"
+		args = {
+			"username": config.trakt_user,
+			"password": config.sha1hash,
+			"imdb_id": mediaelement.imdb_id,
+			"title": mediaelement.name,
+			"year": mediaelement.year,
+			"rating": rating
+		}
 
 	return send("POST", req, args, returnStatus)
 

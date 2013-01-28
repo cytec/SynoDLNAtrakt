@@ -26,6 +26,7 @@ class Movie(object):
 		self.synoindex = synoindex
 		self.mediatype = "movie"
 		self.tmdb_id = 0
+		self.type = "movie"
 		self._log = loglist
 
 		if database:
@@ -151,6 +152,7 @@ class Episode(object):
 		self._log = loglist
 		self.is_anime = 0
 		self.abs_ep = 0
+		self.type = "series"
 		if database:
 			self = self.from_database()
 		else:
