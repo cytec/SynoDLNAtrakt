@@ -28,7 +28,7 @@ TITLE_SPLIT_KEYWORDS = [
     "[", "]", "~", "(", ")", "dvdscr", "dvdrip", "dvd-rip", "dvdr", "vcd",
     "divx", "xvid", "ac3", "r5", "pal", "readnfo", "uncut", "cd1", "cd2",
     "dvdiso", "md", "bdrip", "german", "french", "hdrip", "extended", "br-ripdvd",
-    "complete", "720p", "1080p", "hdtv", "dl", "br-rip", "dubbed"
+    "complete", "720p", "1080p", "hdtv", "br-rip", "dubbed"
     ]
 
     # Title strip items
