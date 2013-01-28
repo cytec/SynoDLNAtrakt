@@ -230,8 +230,10 @@ def index():
 def update():
 	synoindex = request.forms.get('synoindex')
 	imdb_id = request.forms.get('imdb_id')
-	result = helper.updateMovie(synoindex, imdb_id)
-	return result
+	exec_date = datetime.now() + timedelta(seconds=2)
+	sched.add_date_job(helper.updateMovie, exec_date, [synoindex, imdb_id])
+	myresponse = {'status':'success','message':'staring movie update...','title':imdb_id}
+	return myresponse
 
 @route('/settings')
 @requires_auth
