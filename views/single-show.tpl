@@ -9,6 +9,35 @@
 	<div class="container">
     <div class="row">
       <div class="span12">
+        <ul class="unstyled pull-right inline">
+          <li class="edit"><i class="icon-pencil"></i></li>
+        </ul>
+        
+      </div>
+      <div class="span12" style="display: none;" id="edit">
+        <b>Name:</b> {{show.name}}<br />
+        <b>TVDBID:</b> {{show.tvdb_id}}<br />
+        <b>Location:</b> {{show.location}}<br />
+        <b>Anime:</b> {{bool(show.is_anime)}}<br />
+        <!-- <form id="addShowForm">
+          <fieldset>
+            <legend>Edit</legend>
+            <label>Series Name</label>
+            <input type="text" id="nameToSearch" name="name" placeholder="Search TVDB" value="{{show.name}}">
+            <span class="help-block">Enter a new Series name to search on tvdb</span>
+            <input type="button" id="searchName" value="Search" class="btn"></input>
+          </fieldset>
+
+            <div id="searchResults">
+            </div>
+            <button type="button" id="submit" value="Submit" class="btn btn-success hidden">Submit</button>
+         
+        </form> -->
+      </div>
+    </div>
+    <div class="row">
+      <div id="star" class="pull-right">asdas</div>
+      <div class="span12">
         %curseason = -1
         %for entry in content:
         
@@ -33,10 +62,10 @@
       
     
 
-        <tr ep-name="{{entry.name}}" syno-id="{{entry.synoindex}}">
+        <tr season="{{entry.season}}" episode="{{entry.episode}}" ep-name="{{entry.name}}" syno-id="{{entry.synoindex}}" rating="{{entry.rating}}" rel="popover" data-placement="top" data-content="{{entry.description}}" data-original-title="{{entry.name}}" data-trigger="hover">
           <td class="episode">{{entry.episode}}</td>
           %if entry.is_anime and entry.abs_ep:
-            <td class="name hidden-phone">{{entry.abs_ep}} : {{entry.name}}</td>
+            <td class="name hidden-phone" rel="popover" data-placement="top" data-content="{{entry.description}}" data-original-title="{{entry.name}}">{{entry.abs_ep}} : {{entry.name}}</td>
           %else:
             <td class="name hidden-phone">{{entry.name}}</td>
           %end if
@@ -85,6 +114,8 @@
   <script src="/static/js/bootstrap.min.js"></script>
   <script src="/static/js/plugins.js"></script>
   <script src="/static/js/script.js"></script>  
+    <script src="/static/js/jquery.raty.min.js"></script>   
+
   <script src="/static/js/shadowbox.js"></script>  
   <script type="text/javascript">
 
@@ -160,6 +191,86 @@
      });
     });
 
+    $('tr').hover(function(){
+      $(this).popover("toggle")
+    })
+
+    $('.edit').click(function(){
+      $('#edit').slideToggle()
+    })
+
+    var synoindex
+    var element
+    var season
+    var episode
+
+    $('tr').click(function(){
+      console.log($(this).attr("syno-id"))
+      synoindex = $(this).attr("syno-id")
+      showPopover($(this).attr("rating"))
+      element = $(this)
+      season = $(this).attr("season")
+      episode = $(this).attr("episode")
+    })
+
+    //implement episode rating here!
+    function updateRating(score){
+      //alert(score)
+      if (score == null) {
+        score = 0
+      }
+
+      args = {
+        'type': 'series',
+        'synoindex': synoindex,
+        'score': score
+      }
+
+      scorevals = {
+        0: "no rating",
+        1: "weak sause :(",
+        2: "Terrible",
+        3: "Bad",
+        4: "Poor",
+        5: "Meh",
+        6: "Fair",
+        7: "Good",
+        8: "Great",
+        9: "Superb",
+        10: "Totally Ninja!"
+      }
+
+      $.post("/rate", args, function(data){
+        console.log(data)
+        if (data["status"] == "success") {
+          addNotification("success", "{{show.name}}", season+"x"+episode+" reated: \"" +scorevals[score]+"\"")
+          element.attr("rating", score)
+        } else {
+          addNotification("error", "Unable", "to update rating")
+        }
+      });    
+
+    }
+
+
+    function showPopover(myscore) {
+      $('#star').raty({
+        cancel: true,
+        size: 30,
+        number: 10,
+        path: "/static/img/",
+        starOn  : 'star-on-big.png',
+        starOff  : 'star-off-big.png',
+        cancelOff : 'cancel-off-big.png',
+        cancelOn  : 'cancel-on-big.png',
+        hints: ["weak sauce :(","Terrible","Bad","Poor","Meh","Fair","Good","Great","Superb","Totally Ninja!"],
+        score: myscore,
+        click: function(score, evt) {
+          updateRating(score);
+        }
+      })
+    }
+    
 
   </script>
   <!-- end scripts -->
