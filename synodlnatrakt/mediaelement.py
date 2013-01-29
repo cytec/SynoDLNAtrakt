@@ -276,3 +276,6 @@ class Episode(object):
 	
 			if self.show_id:
 				images.get_images(self.show_id, "series")
+
+				if config.add_to_list:
+					trakt.add_to_list(self, listname=config.list_name)

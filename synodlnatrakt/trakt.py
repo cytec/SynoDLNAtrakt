@@ -133,8 +133,7 @@ def scrobble(mediaelement, returnStatus=False):
 	return send("POST", req, args, returnStatus)
 		
 #additional stuff (add to list, create list, get ratings)
-
-def addList(listname="Syno Stuff", description="Stuff i have to view", private="private", show_numbers=True, returnStatus=False):
+def addList(listname="SynoDLNAtrakt", description="Stuff i have to view", private="private", show_numbers=True, returnStatus=False):
 	'''list can be private, friends, or public default is private'''
 	req = "/lists/add/%%API_KEY%%"
 	args={
@@ -148,8 +147,10 @@ def addList(listname="Syno Stuff", description="Stuff i have to view", private="
 	}
 	return send("POST", req, args, returnStatus)
 
-def add_to_list(mediaelement, listname="syno-stuff", returnStatus=False):
-	
+def add_to_list(mediaelement, listname="synodlnatrakt", returnStatus=False):
+	oldlist = listname
+	listname = listname.lower()
+	listname = listname.replace(" ", "-")
 	if mediaelement.mediatype == "series" and listname != "watchlist":
 		req = "/lists/items/add/%%API_KEY%%"
 		args = {
@@ -158,11 +159,26 @@ def add_to_list(mediaelement, listname="syno-stuff", returnStatus=False):
     		"slug": listname,
     		"items": [
     			{
-    	        	"type": "episode",
-    	        	"tvdb_id": mediaelement.tvdb_id,
+    	        	"type": "show",
+    	        	"tvdb_id": mediaelement.show_id,
+    	        	"title": mediaelement.showname,
+    	    	}
+    		]
+		}
+
+	if mediaelement.mediatype == "movie" and listname != "watchlist":
+		addList(oldlist)
+		req = "/lists/items/add/%%API_KEY%%"
+		args = {
+			"username": config.trakt_user,
+    		"password": config.sha1hash,
+    		"slug": listname,
+    		"items": [
+    			{
+    	        	"type": "movie",
+    	        	"imdb_id": mediaelement.imdb_id,
     	        	"title": mediaelement.name,
-    	        	"season": mediaelement.season,
-    	        	"episode": mediaelement.episode
+    	        	"year": mediaelement.year,
     	    	}
     		]
 		}
