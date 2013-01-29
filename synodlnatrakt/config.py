@@ -81,7 +81,8 @@ delete_from_disk = 0
 watched_flags = 1
 CFG = "aa"
 sha1hash=None
-
+add_to_list=0
+list_name="watchlist"
 
 
 
@@ -131,7 +132,7 @@ def initialize():
     absolute_ep_anime, hide_watched, datadir, logtoconsole, debugmode, min_progress, interval, \
     language, port,page_limit, trakt_user, trakt_pass, use_boxcar, boxcar_username, \
     move_watched_movies, move_watched_series, move_movies_to_dir, move_series_to_dir, update_synoindex, \
-    delete_from_index, delete_from_disk, cachedir, datadir, dbpath, sha1hash
+    delete_from_index, delete_from_disk, cachedir, datadir, dbpath, sha1hash, add_to_list, list_name
 
     CFG = ConfigObj(cfg_path)
     
@@ -166,6 +167,8 @@ def initialize():
     #trakt
     trakt_pass = check_setting_str(CFG, 'Trakt', 'trakt_pass', '')
     trakt_user = check_setting_str(CFG, 'Trakt', 'trakt_user', '')
+    add_to_list = bool(check_setting_int(CFG, 'Trakt', 'add_to_list', 0))
+    list_name = check_setting_str(CFG, 'Trakt', 'list_name', 'watchlist')
     
     #boxcar
     use_boxcar = bool(check_setting_int(CFG, 'Boxcar', 'use_boxcar', 0))
@@ -227,6 +230,8 @@ def save_config():
     new_config['Trakt'] = {}
     new_config['Trakt']['trakt_pass'] = trakt_pass
     new_config['Trakt']['trakt_user'] = trakt_user
+    new_config['Trakt']['add_to_list'] = int(add_to_list)
+    new_config['Trakt']['list_name'] = list_name
 
     new_config['Boxcar'] = {}
     new_config['Boxcar']['use_boxcar'] = int(use_boxcar)

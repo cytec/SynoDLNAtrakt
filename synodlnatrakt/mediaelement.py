@@ -1,7 +1,7 @@
 import os
 import re
 
-from synodlnatrakt import pgsql, config, db, helper, images
+from synodlnatrakt import pgsql, config, db, helper, images, trakt
 from synodlnatrakt.logger import logger
 
 from lib.tvdb_api import tvdb_api
@@ -122,6 +122,9 @@ class Movie(object):
 			self.description = movie["overview"]
 			self.tmdb_id = movie["id"]
 			images.get_images(self.imdb_id, "movie")
+
+			if config.add_to_list:
+				trakt.add_to_list(self, listname=config.list_name)
 
 	def postprocess(self):
 		if config.delete_from_disk and self.progress == 100:

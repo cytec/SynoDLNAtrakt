@@ -149,8 +149,9 @@ def addList(listname="Syno Stuff", description="Stuff i have to view", private="
 	return send("POST", req, args, returnStatus)
 
 def add_to_list(mediaelement, listname="syno-stuff", returnStatus=False):
-	req = "/lists/items/add/%%API_KEY%%"
-	if mediaelement.mediatype == "series":
+	
+	if mediaelement.mediatype == "series" and listname != "watchlist":
+		req = "/lists/items/add/%%API_KEY%%"
 		args = {
 			"username": config.trakt_user,
     		"password": config.sha1hash,
@@ -162,6 +163,19 @@ def add_to_list(mediaelement, listname="syno-stuff", returnStatus=False):
     	        	"title": mediaelement.name,
     	        	"season": mediaelement.season,
     	        	"episode": mediaelement.episode
+    	    	}
+    		]
+		}
+	if mediaelement.mediatype == "movie" and listname == "watchlist":
+		req = "/movie/watchlist/%%API_KEY%%"
+		args = {
+			"username": config.trakt_user,
+    		"password": config.sha1hash,
+    		"movies": [
+    			{
+    	        	"imdb_id": mediaelement.imdb_id,
+    	        	"title": mediaelement.name,
+    	        	"year": mediaelement.year,
     	    	}
     		]
 		}
