@@ -233,7 +233,33 @@
                       </label>
                     </div>
                   </div>
-     
+
+                  <div class="control-group">
+                    <div class="controls">
+                      <label class="checkbox">
+                        %if config.add_to_list:
+                          <input id="add_to_list" name="add_to_list" type="checkbox" checked> Add Movies to trakt.tv list
+                        %else:
+                          <input id="add_to_list" name="add_to_list" type="checkbox"> Add Movies to trakt.tv list
+                        %end if
+                        <span class="help-block">Add Movies to trakt.tv list on import</span>
+                      </label>
+                    </div>
+                  </div>
+
+                  %if config.add_to_list:
+                  <div id="list_name" class="control-group">
+                  %else:
+                  <div id="list_name" class="control-group hidden">
+                  %end if
+                    <label class="control-label" for="list_name">List Name</label>
+                    <div class="controls">
+                      <input type="text" id="list_name" name="list_name" placeholder="{{config.list_name}}">
+                      <span class="help-block">Name of the List you want to add the movies to (default: watchlist)</span>
+                    </div>
+                  </div>
+                  
+
                   <div class="form-actions">
                     <button type="submit" class="btn btn-primary">Save changes</button>
                     <button type="button" class="btn cancel">Cancel</button>
@@ -306,6 +332,9 @@
       clearForm($(this).parent().parent())
     })
 
+    $('#add_to_list').click( function(){
+      $('#list_name').toggleClass("hidden")
+    })
 
   </script>
   <!-- end scripts -->
