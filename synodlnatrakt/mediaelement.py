@@ -23,7 +23,7 @@ class Movie(object):
 		self.rating = 0
 		self.lastseen = ""
 		self.added = ""
-		self.synoindex = synoindex
+		self.synoindex = int(synoindex)
 		self.mediatype = "movie"
 		self.tmdb_id = 0
 		self.type = "movie"
@@ -149,7 +149,7 @@ class Episode(object):
 		self.rating = 0
 		self.lastseen = 0
 		self.added = 0
-		self.synoindex = synoindex
+		self.synoindex = int(synoindex)
 		self.location = None
 		self.showname = None
 		self._log = loglist
