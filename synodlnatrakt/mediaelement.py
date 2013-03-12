@@ -238,7 +238,6 @@ class Episode(object):
                 db.session.merge(insert2)
 
             db.session.merge(insert)
-
             db.session.commit()
 
     def generate(self):
