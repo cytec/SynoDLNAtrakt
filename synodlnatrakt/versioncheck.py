@@ -13,7 +13,12 @@
 #  You should have received a copy of the GNU General Public License
 #  along with Headphones.  If not, see <http://www.gnu.org/licenses/>.
 
-import platform, subprocess, re, os, urllib2, tarfile
+import platform
+import subprocess
+import re
+import os
+import urllib2
+import tarfile
 
 from lib import requests
 from synodlnatrakt import config
@@ -22,16 +27,17 @@ from synodlnatrakt.logger import logger
 user = "cytec"
 branch = "2.0"
 
+
 def runGit(args):
-    
-    git_locations = ['git','/opt/bin/git']
-          
+
+    git_locations = ['git', '/opt/bin/git']
+
     output = err = None
-    
+
     for cur_git in git_locations:
-    
-        cmd = cur_git+' '+args
-    
+
+        cmd = cur_git + ' ' + args
+
         try:
             logger.debug('Trying to execute: "' + cmd + '" with shell in ' + config.basedir)
             p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True, cwd=config.basedir)
@@ -40,7 +46,7 @@ def runGit(args):
         except OSError:
             logger.debug('Command ' + cmd + ' didn\'t work, couldn\'t find git')
             continue
-            
+
         if 'not found' in output or "not recognized as an internal or external command" in output:
             logger.debug('Unable to find git with command ' + cmd)
             output = None
@@ -49,38 +55,39 @@ def runGit(args):
             output = None
         elif output:
             break
-            
+
     return (output, err)
-            
+
+
 def getVersion():
 
     if os.path.isdir(os.path.join(config.basedir, '.git')):
-    
+
         output, err = runGit('rev-parse HEAD')
-        
+
         if not output:
             logger.error('Couldn\'t find latest installed version.')
             return None
-            
+
         cur_commit_hash = output.strip()
-        
+
         if not re.match('^[a-z0-9]+$', cur_commit_hash):
             logger.error('Output doesn\'t look like a hash, not using it')
             return None
-        
+
         config.current_version = cur_commit_hash
         return cur_commit_hash
 
-        
     else:
-        
+
         return None
-    
+
+
 def checkGithub():
 
     # Get the latest commit available from github
     url = 'https://api.github.com/repos/%s/synodlnatrakt/commits/%s' % (user, branch)
-    logger.info ('Retrieving latest version information from github')
+    logger.info('Retrieving latest version information from github')
 
     try:
         result = requests.get(url)
@@ -89,12 +96,13 @@ def checkGithub():
         logger.warn('Could not get the latest commit from github')
         config.commits_behind = 0
         return config.current_version
-    
-    # See how many commits behind we are    
+
+    # See how many commits behind we are
     if config.current_version:
         logger.info('Comparing currently installed version with latest github version')
-        url = 'https://api.github.com/repos/%s/synodlnatrakt/compare/%s...%s' % (user, config.current_version, config.latest_version)
-        
+        url = 'https://api.github.com/repos/%s/synodlnatrakt/compare/%s...%s' % (
+            user, config.current_version, config.latest_version)
+
         try:
             result = requests.get(url)
             config.commits_behind = result.json['total_commits']
@@ -102,34 +110,32 @@ def checkGithub():
             logger.warn('Could not get commits behind from github')
             config.commits_behind = 0
             return config.current_version
-            
+
         if config.commits_behind >= 1:
             logger.info('New version is available. You are %s commits behind' % config.commits_behind)
         elif config.commits_behind == 0:
             logger.info('SynoDLNAtrakt is up to date')
         elif config.commits_behind == -1:
             logger.info('You are running an unknown version of SynoDLNAtrakt. Run the updater to identify your version')
-            
+
     else:
         logger.info('You are running an unknown version of SynoDLNAtrakt. Run the updater to identify your version')
-    
+
     return config.latest_version
-        
+
+
 def update():
 
-       
     output, err = runGit('pull origin ' + branch)
-    
+
     if not output:
         logger.error('Couldn\'t download latest version')
-        
+
     for line in output.split('\n'):
-    
+
         if 'Already up-to-date.' in line:
             logger.info('No update available, not updating')
             logger.info('Output: ' + str(output))
         elif line.endswith('Aborting.'):
-            logger.error('Unable to update from git: '+line)
+            logger.error('Unable to update from git: ' + line)
             logger.info('Output: ' + str(output))
-            
-    

@@ -3,7 +3,14 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, scoped_session
 
 
-engine = create_engine('postgresql+pg8000://admin@localhost/mediaserver', encoding='utf-8', convert_unicode=True, echo=False, pool_recycle=3600)
+engine = create_engine(
+    'postgresql+pg8000://admin@localhost/mediaserver',
+    encoding='utf-8',
+    convert_unicode=True,
+    echo=False,
+    pool_recycle=3600
+)
+
 metadata = MetaData()
 
 Base = declarative_base()
@@ -39,44 +46,43 @@ Base = declarative_base()
 # )
 
 class Video(Base):
-	__tablename__ = 'video'
+    __tablename__ = 'video'
 
-	id = Column(Integer, primary_key=True)
-	path = Column(String)
-	title = Column(String)
-	filesize = Column(Integer)
-	# album = Column(String)
-	# container_type = Column(String)
-	# video_codec = Column(String)
-	# frame_bitrate = Column(Integer)
-	# frame_rate_num = Column(Integer)
-	# frame_rate_den = Column(Integer)
-	# video_bitrate = Column(Integer)
-	# video_profile = Column(Integer)
-	# video_level = Column(Integer)
-	# resolutionX = Column(Integer)
-	# resolutionY = Column(Integer)
-	# audio_codec = Column(String)
-	# audio_bitrate = Column(Integer)
-	# frequency = Column(Integer)
-	# channel = Column(Integer)
-	duration = Column(Integer)
-	date = Column(Integer)
-	mdate = Column(Integer)
-	# fs_uuid = Column(Integer)
-	# fs_online = Column(Integer)
+    id = Column(Integer, primary_key=True)
+    path = Column(String)
+    title = Column(String)
+    filesize = Column(Integer)
+    # album = Column(String)
+    # container_type = Column(String)
+    # video_codec = Column(String)
+    # frame_bitrate = Column(Integer)
+    # frame_rate_num = Column(Integer)
+    # frame_rate_den = Column(Integer)
+    # video_bitrate = Column(Integer)
+    # video_profile = Column(Integer)
+    # video_level = Column(Integer)
+    # resolutionX = Column(Integer)
+    # resolutionY = Column(Integer)
+    # audio_codec = Column(String)
+    # audio_bitrate = Column(Integer)
+    # frequency = Column(Integer)
+    # channel = Column(Integer)
+    duration = Column(Integer)
+    date = Column(Integer)
+    mdate = Column(Integer)
+    # fs_uuid = Column(Integer)
+    # fs_online = Column(Integer)
 
+    def __init__(self, path, duration, date, mdate, title, filesize):
+        self.path = path
+        self.duration = duration
+        self.date = date
+        self.mdate = mdate
+        self.title = title
+        self.filesize = filesize
 
-	def __init__(self, path, duration, date, mdate, title, filesize):
-		self.path = path
-		self.duration = duration
-		self.date = date
-		self.mdate = mdate
-		self.title = title
-		self.filesize = filesize
-
-	def __repr__(self):
-		return u"<Video(id:{0}, path:{1}, duration:{2}, data:{3}, mdate:{4}, title:{5}, filesize:{6} )>".format(self.id, self.path, self.duration, self.date, self.mdate, self.title, self.filesize)
+    def __repr__(self):
+        return u"<Video(id:{0}, path:{1}, duration:{2}, data:{3}, mdate:{4}, title:{5}, filesize:{6} )>".format(self.id, self.path, self.duration, self.date, self.mdate, self.title, self.filesize)
 
 
 Base.metadata.create_all(engine)
