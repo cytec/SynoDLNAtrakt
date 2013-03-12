@@ -2,7 +2,7 @@ from synodlnatrakt import helper, config
 from synodlnatrakt.mediaelement import Episode, Movie
 from synodlnatrakt import pgsql, trakt, db, pgsql, trakt, ui, versioncheck
 
-import datetime, sys, os
+import datetime, sys, os, subprocess
 
 from synodlnatrakt.logger import logger
 
@@ -17,6 +17,7 @@ def restart():
 	#/var/packages/synodlnatrakt/scripts/start-stop-status start
 	#maybe ill shoud use the spk python?
 	os.execv(sys.executable, args)
+	#subprocess.call(['/Library/Frameworks/Python.framework/Versions/2.7/bin/python', '/Users/workstation/Documents/github/SynoDLNAtrakt/SynoDLNAtrakt','restart',"--config={0}".format(config.cfg_path)])
 
 def checkupdate():
 	versioncheck.getVersion()
@@ -53,7 +54,7 @@ def scanlogs(force=False):
 				if m.progress < config.min_progress:
 					m._calc_runtime()
 					m.to_database()
-				
+
 				if m.progress > config.min_progress and m.scrobbled != 1:
 					logger.info(u"loaded Mediaelement from db: {0}".format(key))
 					scrobble = trakt.sendRequest(m)
@@ -65,7 +66,7 @@ def scanlogs(force=False):
 					m.to_database()
 	logger.info(u"READLOG FINISHED")
 
-	
+
 	response = {
 		'status': 'success',
 		'message': 'added {0} series/movies to synodlnatrakt'.format(len(logelement))
@@ -73,7 +74,7 @@ def scanlogs(force=False):
 
 	if len(logelement) > 0:
 		ui.notifications.success("Yeah",'parsed {0} series/movies from log'.format(len(logelement)))
-	
+
 	return response
 
 def import_mediaserver(force=False, max_entrys=20):
@@ -105,7 +106,7 @@ def import_mediaserver(force=False, max_entrys=20):
 				#logger.info(u"already scrobbled: {0}".format(result.id))
 				logger.debug(u"loaded Mediaelement from db: {0}".format(result.id))
 				if m.progress > config.min_progress and m.scrobbled != 1:
-					
+
 					scrobble = trakt.sendRequest(m)
 					if scrobble:
 						m.scrobbled = 1
@@ -114,7 +115,7 @@ def import_mediaserver(force=False, max_entrys=20):
 				else:
 					#m._calc_runtime()
 					logger.debug(u"no changes")
-					
+
 	logger.info(u"IMPORT FROM MEDIASERVER FINISHED")
 
 	response = {
@@ -122,6 +123,7 @@ def import_mediaserver(force=False, max_entrys=20):
 		'message': 'added {0} series/movies to synodlnatrakt'.format(counter)
 	}
 	ui.notifications.success("Yeah",'added {0} series/movies to synodlnatrakt'.format(counter))
+	pgsql.session.remove()
 	return response
 
 
@@ -131,16 +133,16 @@ def update_movies(force=False):
 	logger.info(u"TRAKT SYNC STARTED")
 	logger.info(u"SYNCING MOVIES...")
 	traktmovies = trakt.getWatched("movie")
-	
+
 	movielist = []
-	
+
 	for a in traktmovies:
 		#print a
 		movielist.append(a["imdb_id"])
-	
-	
+
+
 	allmovies = db.session.query(db.Movies).filter(db.Movies.scrobbled == 0).all()
-	
+
 	for movie in allmovies:
 		if movie.imdb_id in movielist:
 			logger.info(u"Movie: {0} -> {1} marked as seen because of trakt".format(movie.imdb_id, movie.name))
@@ -148,23 +150,23 @@ def update_movies(force=False):
 			movie.scrobbled = 1
 			movie.lastseen = datetime.datetime(2000,1,1).strftime('%Y-%m-%d %H:%M:%S')
 			db.session.merge(movie)
-	
+
 	db.session.commit()
 
 
 	traktratings = trakt.getRatings("movie")
 	allmovies = db.session.query(db.Movies).all()
-	
+
 	ratings = []
-	
+
 	for movie in allmovies:
 		ratings.append(u"{0}".format(movie.imdb_id))
-	
-	
+
+
 	for a in traktratings:
-		
+
 		if a["imdb_id"] in ratings:
-			
+
 			result = (
 				db.session.query(db.Movies)
 					.filter(db.Movies.imdb_id == a["imdb_id"])
@@ -184,16 +186,16 @@ def update_movies(force=False):
 def update_series():
 	logger.info(u"SYNCING SERIES...")
 	serieslist = []
-	
+
 	allseries = db.session.query(db.TVShows).all()
-	
+
 	for series in allseries:
 		serieslist.append(u"{0}".format(series.tvdb_id))
-	
-	traktseries = trakt.getWatched("series")	
+
+	traktseries = trakt.getWatched("series")
 	for show in traktseries:
 		if show["tvdb_id"] in serieslist:
-			for season in show["seasons"]:	
+			for season in show["seasons"]:
 				result = (
 					db.session.query(db.TVEpisodes)
 						.filter(db.TVEpisodes.show_id == show["tvdb_id"])
@@ -242,4 +244,5 @@ def update_series():
 		u'message': u'Synced successfully'
 	}
 	ui.notifications.success("Yeah",'Synced successfully')
+	db.session.remove()
 	return myanswer
