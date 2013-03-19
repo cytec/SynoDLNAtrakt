@@ -85,6 +85,7 @@ CFG = "aa"
 sha1hash = None
 add_to_list = 0
 list_name = "watchlist"
+blur_images = 1
 
 
 def CheckSection(sec):
@@ -134,7 +135,7 @@ def initialize():
         absolute_ep_anime, hide_watched, datadir, logtoconsole, debugmode, min_progress, interval, \
         language, port, page_limit, trakt_user, trakt_pass, use_boxcar, boxcar_username, \
         move_watched_movies, move_watched_series, move_movies_to_dir, move_series_to_dir, update_synoindex, \
-        delete_from_index, delete_from_disk, cachedir, datadir, dbpath, sha1hash, add_to_list, list_name
+        delete_from_index, delete_from_disk, cachedir, datadir, dbpath, sha1hash, add_to_list, list_name, blur_images
 
     CFG = ConfigObj(cfg_path)
 
@@ -164,7 +165,8 @@ def initialize():
     username = check_setting_str(CFG, 'Advanced', 'username', '')
     password = check_setting_str(CFG, 'Advanced', 'password', '')
     page_limit = check_setting_str(CFG, 'Advanced', 'page_limit', 50)
-    watched_flags = check_setting_str(CFG, 'Advanced', 'watched_flags', 1)
+    watched_flags = bool(check_setting_int(CFG, 'Advanced', 'watched_flags', 1))
+    blur_images = bool(check_setting_int(CFG, 'Advanced', 'blur_images', 1))
 
     # trakt
     trakt_pass = check_setting_str(CFG, 'Trakt', 'trakt_pass', '')
@@ -226,6 +228,7 @@ def save_config():
     new_config['Advanced']['password'] = password
     new_config['Advanced']['page_limit'] = int(page_limit)
     new_config['Advanced']['watched_flags'] = int(watched_flags)
+    new_config['Advanced']['blur_images'] = int(blur_images)
 
     new_config['Trakt'] = {}
     new_config['Trakt']['trakt_pass'] = trakt_pass

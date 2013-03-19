@@ -1,11 +1,11 @@
 %include incl_top title=title, topmenu=topmenu
 %from synodlnatrakt import config
-     
+
   <div role="main">
 	<div class="container">
     <div class="row">
       <div class="span12">
-        
+
         <form id="myForm" method="POST" class="form-horizontal well" >
           <div class="page-header">
             <h1>Settings <small>Adjust your settings for SynoDLNAtrakt</small></h1>
@@ -25,7 +25,7 @@
               <div class="tab-pane active" id="basic">
                 <fieldset>
                   <legend>Basic Config</legend>
-      
+
                   <div class="control-group">
                     <label class="control-label" for="moviedir">Movie directorys</label>
                     <div class="controls">
@@ -65,7 +65,7 @@
                       <span class="help-block">Minimal progress that must be watched before scrobbeling to trakt</span>
                     </div>
                   </div>
-                   
+
                   <div class="form-actions">
                     <button type="submit" class="btn btn-primary">Save changes</button>
                     <button type="button" class="btn cancel">Cancel</button>
@@ -78,7 +78,7 @@
               <div class="tab-pane" id="webserver">
                 <fieldset>
                   <legend>Webserver Config <small>This Settings require a restart</small></legend>
-      
+
                   <div class="control-group">
                     <label class="control-label" for="port">Port</label>
                     <div class="controls">
@@ -116,8 +116,8 @@
                     </div>
                   </div>
 
-                  
-           
+
+
                   <div class="form-actions">
                     <button type="submit" class="btn btn-primary">Save changes</button>
                     <button type="button" class="btn cancel">Cancel</button>
@@ -131,7 +131,7 @@
 
                 <fieldset>
                   <legend>Advanced Config</legend>
-      
+
                   <div class="control-group">
                     <label class="control-label" for="language">Language</label>
                     <div class="controls">
@@ -155,7 +155,7 @@
                       <span class="help-block">how many items should be shown per page</span>
                     </div>
                   </div>
-      
+
                   <div class="control-group">
                     <div class="controls">
                       <label class="checkbox">
@@ -178,6 +178,19 @@
                           <input name="delete_logs" type="checkbox"> delete logs
                         %end if
                         <span class="help-block">deleting logfiles after scrobbled the found results to trakt</span>
+                      </label>
+                    </div>
+                  </div>
+
+                  <div class="control-group">
+                    <div class="controls">
+                      <label class="checkbox">
+                        %if config.blur_images:
+                          <input name="blur_images" type="checkbox" checked> blur images
+                        %else:
+                          <input name="blur_images" type="checkbox"> blur images
+                        %end if
+                        <span class="help-block">blur fanart images useing PIL (disable if it takes to long)</span>
                       </label>
                     </div>
                   </div>
@@ -258,7 +271,7 @@
                       <span class="help-block">Name of the List you want to add the movies to (default: watchlist)</span>
                     </div>
                   </div>
-                  
+
 
                   <div class="form-actions">
                     <button type="submit" class="btn btn-primary">Save changes</button>
@@ -269,10 +282,10 @@
             </div>
           </div>
 
-          
-          
 
-         
+
+
+
         </form>
     </div>
   </div>
@@ -294,11 +307,11 @@
   <!-- scripts concatenated and minified via build script -->
   <script src="/static/js/bootstrap.min.js"></script>
   <script src="/static/js/plugins.js"></script>
-  <script src="/static/js/script.js"></script>  
-  <script src="/static/js/shadowbox.js"></script>  
+  <script src="/static/js/script.js"></script>
+  <script src="/static/js/shadowbox.js"></script>
   <script type="text/javascript">
 
-  
+
     $('button[type="submit"]').click( function(event) {
       event.preventDefault()
       args = $('#myForm').serialize()
@@ -344,4 +357,4 @@
 </html>
 
 
-	
+

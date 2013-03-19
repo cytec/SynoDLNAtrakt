@@ -429,8 +429,7 @@ def saveConfig():
     config.debugmode = False
     config.watched_flags = False
     config.add_to_list = False
-
-    # print config.moviedir
+    config.blur_images = False
 
     for a in request.forms:
         # print "Setting config.{0} to {1}".format(a, request.forms.get(a))
