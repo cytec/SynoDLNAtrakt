@@ -235,10 +235,10 @@ def rate(mediaelement, rating, returnStatus=False):
 def getWatched(mediatype, returnStatus=True):
     '''get watched movies/episodes'''
     if mediatype == "series":
-        req = "/user/library/shows/watched.json/%%API_KEY%%/%%USERNAME%%"
+        req = "/user/library/shows/watched.json/%%API_KEY%%/%%USERNAME%%/min"
 
     if mediatype == "movie":
-        req = "/user/library/movies/watched.json/%%API_KEY%%/%%USERNAME%%"
+        req = "/user/library/movies/watched.json/%%API_KEY%%/%%USERNAME%%/min"
 
     return send("GET", req, None, returnStatus)
 
