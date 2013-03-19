@@ -43,96 +43,42 @@ def get_images(theid, thetype):
     logger.debug(u"FANARTPATH -> {0}".format(fanartpath))
 
     if thetype == "series":
-        t = tvdb_api.Tvdb(language=config.language)
-        show = t[int(theid)]
-
-        if not os.path.exists(coverpath):
-            try:
-                # urllib.urlretrieve(show["poster"], coverpath)
-                r = requests.get(show["poster"])
-                if r.status_code == 200 and "image" in r.headers["content-type"]:
-                    f = open(coverpath, "w")
-                    f.write(r.content)
-                    f.close()
-                    logger.debug(u"Downloading Poster for {0}".format(theid))
-            except:
-                logger.debug(u"Unable to Download Poster for {0}".format(theid))
-
-            if os.path.exists(coverpath):
-                im = Image.open(coverpath)
-                if im.size[0] > 320:
-                    new_size = scale_dimensions(im.size[0], im.size[1], 320)
-                    im = im.resize(new_size, Image.ANTIALIAS)
-                    im.save(coverpath)
-        else:
-            logger.debug(u"Cover already exists")
-
-        if not os.path.exists(fanartpath):
-            try:
-                r = requests.get(show["fanart"])
-                if r.status_code == 200 and "image" in r.headers["content-type"]:
-                    f = open(fanartpath, "w")
-                    f.write(r.content)
-                    f.close()
-                    logger.debug(u"Downloading Fanart for {0}".format(theid))
-            except:
-                logger.debug(u"Unable to Download Fanart for {0}".format(theid))
-
-            if os.path.exists(fanartpath):
-                im = Image.open(fanartpath)
-                if im.size[0] > 1200:
-                    new_size = scale_dimensions(im.size[0], im.size[1], 1200)
-                    im = im.resize(new_size, Image.ANTIALIAS)
-                    logger.info(u"Resized Fanart")
-                    im = im.filter(MyGaussianBlur(radius=7))
-                    logger.info(u"Blured Fanart")
-                    im.save(fanartpath)
-        else:
-            logger.debug(u"Fanart already exists")
+        url = "http://api.trakt.tv/show/summary.json/{0}/{1}".format(config.trakt_key, theid)
 
     if thetype == "movie":
-        movieinfo = tmdb.getMovieInfo(theid, lang=config.language)
-        if not os.path.exists(coverpath):
-            try:
-                r = requests.get(movieinfo["images"][0]["original"])
+        url = "http://api.trakt.tv/movie/summary.json/{0}/{1}".format(config.trakt_key, theid)
 
-                if r.status_code == 200 and "image" in r.headers["content-type"]:
-                    f = open(coverpath, "w")
-                    f.write(r.content)
-                    f.close()
-                    logger.debug(u"Downloading Poster for {0}".format(theid))
-            except:
-                logger.debug(u"Unable to Download Poster for {0}".format(theid))
+    if not os.path.exists(coverpath) or not os.path.exists(fanartpath):
+        r = requests.get(url)
+        if r and r.status_code == 200:
+            cover_url = "{0}-300.jpg".format(os.path.splitext(r.json["images"]["poster"])[0])
+            fanart_url = "{0}-940.jpg".format(os.path.splitext(r.json["images"]["fanart"])[0])
+            logger.debug(cover_url, fanart_url)
 
-            if os.path.exists(coverpath):
-                im = Image.open(coverpath)
-                if im.size[0] > 320:
-                    new_size = scale_dimensions(im.size[0], im.size[1], 320)
-                    im = im.resize(new_size, Image.ANTIALIAS)
-                    im.save(coverpath)
+            if not os.path.exists(coverpath):
+                try:
+                    cover = requests.get(cover_url)
+                    if cover.status_code == 200 and "image" in cover.headers["content-type"]:
+                        f = open(coverpath, "w")
+                        f.write(cover.content)
+                        f.close()
+                        logger.debug(u"downloaded poster for {0}".format(theid))
+                except:
+                    logger.debug(u"unable to download poster for {0}".format(theid))
 
-        else:
-            logger.debug(u"Cover already exists")
+            if not os.path.exists(fanartpath):
+                try:
+                    fanart = requests.get(fanart_url)
+                    if fanart.status_code == 200 and "image" in fanart.headers["content-type"]:
+                        f = open(fanartpath, "w")
+                        f.write(fanart.content)
+                        f.close()
+                        logger.debug(u"downloaded fanart for {0}".format(theid))
+                except:
+                    logger.debug(u"unable to download fanart for {0}".format(theid))
 
-        if not os.path.exists(fanartpath):
-            try:
-                r = requests.get(movieinfo["images"][-1]["original"])
-                if r.status_code == 200 and "image" in r.headers["content-type"]:
-                    f = open(fanartpath, "w")
-                    f.write(r.content)
-                    f.close()
-                    logger.debug(u"Downloading Fanart for {0}".format(theid))
-            except:
-                logger.debug(u"Unable to Download Fanart for {0}".format(theid))
-
-            if os.path.exists(fanartpath):
-                im = Image.open(fanartpath)
-                if im.size[0] > 1200:
-                    new_size = scale_dimensions(im.size[0], im.size[1], 1200)
-                    im = im.resize(new_size, Image.ANTIALIAS)
-                    logger.info(u"Resized Fanart")
+                if os.path.exists(fanartpath) and config.blur_images:
+                    im = Image.open(fanartpath)
                     im = im.filter(MyGaussianBlur(radius=7))
-                    logger.info(u"Blured Fanart")
+                    logger.debug(u"blured fanart for {0}".format(theid))
                     im.save(fanartpath)
-        else:
-            logger.debug(u"Fanart already exists")
