@@ -125,6 +125,9 @@ class Movie(object):
             if config.add_to_list:
                 trakt.add_to_list(self, listname=config.list_name)
 
+            if config.add_to_collection:
+                trakt.to_collection(self)
+
     def postprocess(self):
         if config.delete_from_disk and self.progress == 100:
             pass
@@ -274,3 +277,6 @@ class Episode(object):
 
                 if config.add_to_list:
                     trakt.add_to_list(self, listname=config.list_name)
+
+                if config.add_to_collection:
+                    trakt.to_collection(self)

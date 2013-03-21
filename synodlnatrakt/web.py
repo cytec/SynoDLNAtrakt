@@ -430,6 +430,7 @@ def saveConfig():
     config.watched_flags = False
     config.add_to_list = False
     config.blur_images = False
+    config.add_to_collection = False
 
     for a in request.forms:
         # print "Setting config.{0} to {1}".format(a, request.forms.get(a))

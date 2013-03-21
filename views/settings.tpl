@@ -250,6 +250,19 @@
                   <div class="control-group">
                     <div class="controls">
                       <label class="checkbox">
+                        %if config.add_to_collection:
+                          <input id="add_to_collection" name="add_to_collection" type="checkbox" checked> add Movies/Episodes to your trakt.tv collection
+                        %else:
+                          <input id="add_to_collection" name="add_to_collection" type="checkbox"> add Movies/Episodes to your trakt.tv collection
+                        %end if
+                        <span class="help-block">Add Movies/Episodes to trakt.tv collection on import</span>
+                      </label>
+                    </div>
+                  </div>
+
+                  <div class="control-group">
+                    <div class="controls">
+                      <label class="checkbox">
                         %if config.add_to_list:
                           <input id="add_to_list" name="add_to_list" type="checkbox" checked> Add Movies to trakt.tv list
                         %else:

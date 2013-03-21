@@ -203,6 +203,43 @@ def add_to_list(mediaelement, listname="synodlnatrakt", returnStatus=False):
     return send("POST", req, args, returnStatus)
 
 
+def to_collection(mediaelement, returnStatus=True):
+    ''' add movie/episode to your trakt collection '''
+    if mediaelement.type == "series":
+        req = "/show/episode/library/%%API_KEY%%"
+
+        args = {
+            "username": config.trakt_user,
+            "password": config.sha1hash,
+            "tvdb_id": mediaelement.show_id,
+            #"title": mediaelement.showname,
+            #"year": mediaelement.year,
+            "episodes": [
+                {
+                    "season": mediaelement.season,
+                    "episode": mediaelement.episode
+                }
+            ]
+        }
+
+    if mediaelement.type == "movie":
+        req = "/movie/library/%%API_KEY%%"
+
+        args = {
+            "username": config.trakt_user,
+            "password": config.sha1hash,
+            "movies": [
+                {
+                    "imdb_id": mediaelement.imdb_id,
+                    "title": mediaelement.name,
+                    "year": mediaelement.year
+                }
+            ]
+        }
+
+    return send("POST", req, args, returnStatus)
+
+
 def rate(mediaelement, rating, returnStatus=False):
     '''rate an episode/movie'''
 
@@ -212,21 +249,21 @@ def rate(mediaelement, rating, returnStatus=False):
             "username": config.trakt_user,
             "password": config.sha1hash,
             "tvdb_id": mediaelement.show_id,
-                #"title": mediaelement.showname,
-                #"year": mediaelement.year,
-                "season": mediaelement.season,
-                "episode": mediaelement.episode,
-                "rating": rating
+            #"title": mediaelement.showname,
+            #"year": mediaelement.year,
+            "season": mediaelement.season,
+            "episode": mediaelement.episode,
+            "rating": rating
         }
     if mediaelement.type == "movie":
         req = "/rate/movie/%%API_KEY%%"
         args = {
-                "username": config.trakt_user,
-                "password": config.sha1hash,
-                "imdb_id": mediaelement.imdb_id,
-                "title": mediaelement.name,
-                "year": mediaelement.year,
-                "rating": rating
+            "username": config.trakt_user,
+            "password": config.sha1hash,
+            "imdb_id": mediaelement.imdb_id,
+            "title": mediaelement.name,
+            "year": mediaelement.year,
+            "rating": rating
         }
 
     return send("POST", req, args, returnStatus)
