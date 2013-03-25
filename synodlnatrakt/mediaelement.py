@@ -123,9 +123,11 @@ class Movie(object):
             images.get_images(self.imdb_id, "movie")
 
             if config.add_to_list:
+                logger.debug(u"trying to add '{0}' to your trakt.tv list: '{1}'".format(self.name, config.list_name))
                 trakt.add_to_list(self, listname=config.list_name)
 
             if config.add_to_collection:
+                logger.debug(u"trying to add '{0}' to your trakt.tv collection".format(self.name))
                 trakt.to_collection(self)
 
     def postprocess(self):
@@ -276,7 +278,9 @@ class Episode(object):
                 images.get_images(self.show_id, "series")
 
                 if config.add_to_list:
+                    logger.debug(u"trying to add '{0}' to your trakt.tv list: '{1}'".format(self.name, config.list_name))
                     trakt.add_to_list(self, listname=config.list_name)
 
                 if config.add_to_collection:
+                    logger.debug(u"trying to add '{0}' to your trakt collection".format(self.name, config.list_name))
                     trakt.to_collection(self)
