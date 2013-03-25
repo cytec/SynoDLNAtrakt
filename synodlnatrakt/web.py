@@ -11,8 +11,6 @@ import os
 import re
 from synodlnatrakt import ui, versioncheck
 from math import ceil
-import logging
-import datetime
 
 
 def check_auth(username, password):
@@ -479,7 +477,7 @@ def scrobble():
         answer = trakt.seen(m, returnStatus=True)
         m.scrobbled = 1
         m.progress = 100
-        m.lastseen = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        m.lastseen = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         m.to_database()
         return answer
     else:
