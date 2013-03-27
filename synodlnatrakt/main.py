@@ -15,6 +15,30 @@ def setup():
     pass
 
 
+def delete_orphans():
+    logger.info("DELETING ORPHAN DATABASE ENTRYS...")
+    movies = db.session.query(db.Movies).all()
+    for m in movies:
+        #path = m.path.replace("/volume1/", "/Volumes/")
+        if not os.path.exists(m.path):
+            logger.debug(u"{0} seems to be an orphan...".format(m.path))
+            db.session.delete(m)
+
+    episode = db.session.query(db.TVEpisodes).all()
+    for m in episode:
+        #path = m.path.replace("/volume1/", "/Volumes/")
+        if not os.path.exists(m.path):
+            logger.debug(u"{0} seems to be an orphan...".format(m.path))
+            db.session.delete(m)
+
+    series = db.session.query(db.TVShows).all()
+    for m in series:
+        count = db.session.query(db.TVEpisodes).filter(db.TVEpisodes.show_id == m.tvdb_id).count()
+        if count is None or count is 0:
+            logger.debug(u"{0} seems to be an empty TVShow...".format(m.name))
+            db.session.delete(m)
+    db.session.commit()
+
 def restart():
     logger.info(u"restarting SynoDLNAtrakt...")
     args = [sys.executable, os.path.join(config.basedir, "SynoDLNAtrakt.py"), "restart", "--config={0}".format(config.cfg_path)]
