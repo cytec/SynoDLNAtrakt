@@ -96,6 +96,7 @@ class Riff(core.AVContainer):
             log.debug(u'WARNING: avi has no index')
             self._set('corrupt', True)
 
+        self._finalize()
 
     def _find_subtitles(self, filename):
         """
