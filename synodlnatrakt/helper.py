@@ -17,6 +17,41 @@ from lib.tvdb_api import tvdb_api
 from synodlnatrakt import config, db, pgsql, images, ui
 from synodlnatrakt.logger import logger
 from synodlnatrakt.name_parser import parser
+import lib.enzyme as enzyme
+
+
+def updateMediaflags():
+    movies = db.session.query(db.Movies).filter(db.Movies.acodec is None).all()
+    for m in movies:
+        #path = m.path.replace("/volume1/", "/Volumes/")
+
+        try:
+            minfo = enzyme.parse(m.path)
+            print minfo
+            m.vcodec = minfo.video[0].codec
+            m.vwidth = minfo.video[0].width
+            m.acodec = minfo.audio[0].codec
+            logger.debug(u"generating mediaflags for {0}".format(m.name))
+            db.session.merge(m)
+        except:
+            logger.error(u"mediaflags for {0} cant be generated".format(m.name))
+    episode = db.session.query(db.TVEpisodes).filter(db.TVEpisodes.acodec is None).all()
+    for m in episode:
+        #path = m.path.replace("/volume1/", "/Volumes/")
+
+        try:
+            minfo = enzyme.parse(m.path)
+            print minfo
+            m.vcodec = minfo.video[0].codec
+            m.vwidth = minfo.video[0].width
+            m.acodec = minfo.audio[0].codec
+            logger.debug(u"generating mediaflags for {0}".format(m.name))
+            db.session.merge(m)
+        except:
+            logger.error(u"mediaflags for {0} cant be generated".format(m.name))
+
+    db.session.commit()
+    ui.notifications.success("Madiaflags", 'successfully generated')
 
 
 def updateMovie(synoindex, imdb_id):

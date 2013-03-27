@@ -350,6 +350,15 @@ def index():
     # myresponse = main.scanlogs(force=True)
     return myresponse
 
+@post('/settings/force/mediaflags')
+@requires_auth
+def index():
+    exec_date = datetime.now() + timedelta(seconds=2)
+    sched.add_date_job(helper.updateMediaflags, exec_date)
+    myresponse = {'status': 'success', 'message': 'forced mediaflag generation'}
+    # myresponse = main.scanlogs(force=True)
+    return myresponse
+
 
 @route('/logs/<loglevel>')
 @requires_auth
@@ -429,6 +438,7 @@ def saveConfig():
     config.add_to_list = False
     config.blur_images = False
     config.add_to_collection = False
+    config.mediaflags = False
 
     for a in request.forms:
         # print "Setting config.{0} to {1}".format(a, request.forms.get(a))

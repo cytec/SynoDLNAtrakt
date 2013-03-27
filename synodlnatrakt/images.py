@@ -51,9 +51,9 @@ def get_images(theid, thetype):
     if not os.path.exists(coverpath) or not os.path.exists(fanartpath):
         r = requests.get(url)
         if r and r.status_code == 200:
-            cover_url = "{0}-300.jpg".format(os.path.splitext(r.json["images"]["poster"])[0])
-            fanart_url = "{0}-940.jpg".format(os.path.splitext(r.json["images"]["fanart"])[0])
-            logger.debug(cover_url, fanart_url)
+            cover_url = "{0}-300.jpg".format(os.path.splitext(r.json()["images"]["poster"])[0])
+            fanart_url = "{0}-940.jpg".format(os.path.splitext(r.json()["images"]["fanart"])[0])
+            logger.debug(u"{0}, {1}".format(cover_url, fanart_url))
 
             if not os.path.exists(coverpath):
                 try:

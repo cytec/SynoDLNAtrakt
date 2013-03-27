@@ -32,6 +32,17 @@ TITLE_SPLIT_KEYWORDS = [
     "complete", "720p", "1080p", "hdtv", "br-rip", "dubbed"
 ]
 
+CODEC_MAP = {
+    "ac3": "ac3",
+    "xvid mpeg-4": "xvid",
+    "avc1": "avc1",
+    "mpeg layer 3": "mp3",
+    "8192": "ac3",
+    "mp4a": "m4a",
+    "8193": "dts",
+    "divx v5": "divx",
+}
+
     # Title strip items
 TITLE_STRIP_SEARCH = [".", "-", "_"]
 
@@ -87,6 +98,8 @@ add_to_list = 0
 list_name = "watchlist"
 blur_images = 1
 add_to_collection = 1
+mediaflags = 1
+delete_orphans = 0
 
 
 def CheckSection(sec):
@@ -137,7 +150,7 @@ def initialize():
         language, port, page_limit, trakt_user, trakt_pass, use_boxcar, boxcar_username, \
         move_watched_movies, move_watched_series, move_movies_to_dir, move_series_to_dir, update_synoindex, \
         delete_from_index, delete_from_disk, cachedir, datadir, dbpath, sha1hash, add_to_list, list_name, blur_images, \
-        add_to_collection
+        add_to_collection, mediaflags, delete_orphans
 
     CFG = ConfigObj(cfg_path)
 
@@ -169,6 +182,8 @@ def initialize():
     page_limit = check_setting_str(CFG, 'Advanced', 'page_limit', 50)
     watched_flags = bool(check_setting_int(CFG, 'Advanced', 'watched_flags', 1))
     blur_images = bool(check_setting_int(CFG, 'Advanced', 'blur_images', 1))
+    mediaflags = bool(check_setting_int(CFG, 'Advanced', 'mediaflags', 1))
+    delete_orphans =  bool(check_setting_int(CFG, 'Advanced', 'delete_orphans', 0))
 
     # trakt
     trakt_pass = check_setting_str(CFG, 'Trakt', 'trakt_pass', '')
@@ -232,6 +247,8 @@ def save_config():
     new_config['Advanced']['page_limit'] = int(page_limit)
     new_config['Advanced']['watched_flags'] = int(watched_flags)
     new_config['Advanced']['blur_images'] = int(blur_images)
+    new_config['Advanced']['mediaflags'] = int(mediaflags)
+    new_config['Advanced']['delete_orphans'] = int(delete_orphans)
 
     new_config['Trakt'] = {}
     new_config['Trakt']['trakt_pass'] = trakt_pass

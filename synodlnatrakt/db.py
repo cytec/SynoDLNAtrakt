@@ -53,7 +53,15 @@ class TVEpisodes(Base):
     is_anime = Column(Integer)
     abs_ep = Column(Integer)
 
-    def __init__(self, show_id, tvdb_id, name, season, episode, description, path, duration, progress, scrobbled, rating, lastseen, added, synoindex, is_anime, abs_ep):
+    acodec = Column(String)
+    vcodec = Column(String)
+    vwidth = Column(Integer)
+
+    def __init__(
+        self, show_id, tvdb_id, name, season, episode, description, path,
+        duration, progress, scrobbled, rating, lastseen, added, synoindex,
+        is_anime, abs_ep, acodec, vcodec, vwidth
+    ):
         self.show_id = show_id
         self.tvdb_id = tvdb_id
         self.name = name
@@ -70,6 +78,9 @@ class TVEpisodes(Base):
         self.synoindex = synoindex
         self.abs_ep = abs_ep
         self.is_anime = is_anime
+        self.acodec = acodec
+        self.vcodec = vcodec
+        self.vwidth = vwidth
 
     def __repr__(self):
         return u"<TVEpisodes('{0} {1} {2} {3} {4})>".format(self.progress, self.show_id, self.name, self.season, self.episode)
@@ -92,7 +103,15 @@ class Movies(Base):
     added = Column(Integer)
     synoindex = Column(Integer, unique=True, primary_key=True)
 
-    def __init__(self, imdb_id, tmdb_id, name, year, description, path, duration, progress, scrobbled, rating, lastseen, added, synoindex):
+    acodec = Column(String)
+    vcodec = Column(String)
+    vwidth = Column(Integer)
+
+    def __init__(
+        self, imdb_id, tmdb_id, name, year, description, path,
+        duration, progress, scrobbled, rating, lastseen, added,
+        synoindex, acodec, vwidth, vcodec
+    ):
         self.imdb_id = imdb_id
         self.tmdb_id = tmdb_id
         self.name = name
@@ -106,6 +125,9 @@ class Movies(Base):
         self.lastseen = lastseen
         self.added = added
         self.synoindex = synoindex
+        self.acodec = acodec
+        self.vcodec = vcodec
+        self.vwidth = vwidth
 
     def __repr__(self):
         return u"<Movies('{0}{1}{2}{3}{4})>".format(self.path, self.imdb_id, self.name, self.year)

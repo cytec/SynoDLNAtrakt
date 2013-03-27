@@ -1,8 +1,8 @@
 %include incl_top title=title, topmenu=topmenu
 %from synodlnatrakt import config
-  
 
-   
+
+
   <div role="main">
 	<div class="container">
     <div class="row">
@@ -43,6 +43,7 @@
             </form>
           </div>
           <p><button id="import" class="btn btn-large btn-block" type="button">Force Import</button></p>
+          <p><button id="mediaflags" class="btn btn-large btn-block" type="button">Force Mediaflags</button></p>
         </div>
       </div>
 </div>
@@ -62,8 +63,8 @@
   <!-- scripts concatenated and minified via build script -->
   <script src="/static/js/bootstrap.min.js"></script>
   <script src="/static/js/plugins.js"></script>
-  <script src="/static/js/script.js"></script>  
-  <script src="/static/js/shadowbox.js"></script>  
+  <script src="/static/js/script.js"></script>
+  <script src="/static/js/shadowbox.js"></script>
   <script type="text/javascript">
 
     $('button').click(function(){
@@ -108,4 +109,4 @@
 </html>
 
 
-	
+

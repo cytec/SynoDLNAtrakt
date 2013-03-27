@@ -4,6 +4,8 @@ import re
 from synodlnatrakt import pgsql, config, db, helper, images, trakt
 from synodlnatrakt.logger import logger
 
+import lib.enzyme as enzyme
+
 from lib.tvdb_api import tvdb_api
 from lib.themoviedb import tmdb
 
@@ -28,6 +30,9 @@ class Movie(object):
         self.tmdb_id = 0
         self.type = "movie"
         self._log = loglist
+        self.acodec = ""
+        self.vcodec = ""
+        self.vwidth = ""
 
         if database:
             self.from_database()
@@ -74,6 +79,9 @@ class Movie(object):
             self.added = result.added
             self.synoindex = result.synoindex
             self.tmdb_id = result.tmdb_id
+            self.acodec = result.acodec
+            self.vcodec = result.vcodec
+            self.vwidth = result.vwidth
 
         return self
 
@@ -92,7 +100,10 @@ class Movie(object):
                 rating=self.rating,
                 lastseen=self.lastseen,
                 added=self.added,
-                synoindex=self.synoindex
+                synoindex=self.synoindex,
+                acodec=self.acodec,
+                vcodec=self.vcodec,
+                vwidth=self.vwidth
             )
             # dir(insert)
             db.session.merge(insert)
@@ -104,6 +115,14 @@ class Movie(object):
         self.path = dbresult.path
         self.duration = dbresult.duration
         self.added = dbresult.date
+
+        if config.mediaflags:
+            #path = self.path.replace("/volume1/","/Volumes/")
+
+            minfo = enzyme.parse(self.path)
+            self.vcodec = minfo.video[0].codec
+            self.vwidth = minfo.video[0].width
+            self.acodec = minfo.audio[0].codec
 
         for curdir in config.moviedir:
             if curdir in self.path:
@@ -159,6 +178,9 @@ class Episode(object):
         self.is_anime = 0
         self.abs_ep = 0
         self.type = "series"
+        self.acodec = ""
+        self.vcodec = ""
+        self.vwidth = ""
         if database:
             self = self.from_database()
         else:
@@ -209,6 +231,9 @@ class Episode(object):
             # self._calc_runtime()
             tmpname = db.session.query(db.TVShows.name).filter(db.TVShows.tvdb_id == self.show_id).first()
             self.showname = tmpname.name
+            self.acodec = result.acodec
+            self.vcodec = result.vcodec
+            self.vwidth = result.vwidth
         return self
 
     def to_database(self):
@@ -229,7 +254,10 @@ class Episode(object):
                 added=self.added,
                 synoindex=self.synoindex,
                 abs_ep=self.abs_ep,
-                is_anime=self.is_anime
+                is_anime=self.is_anime,
+                acodec=self.acodec,
+                vcodec=self.vcodec,
+                vwidth=self.vwidth
             )
 
             result = db.session.query(db.TVShows).filter(db.TVShows.tvdb_id == self.show_id).first()
@@ -252,6 +280,14 @@ class Episode(object):
         self.added = dbresult.date
         self.show_id, self.showname = helper.checkNFO(self.path, "series")
         self.season, self.episode = helper.checkNFO(self.path, "episode")
+
+        if config.mediaflags:
+            #path = self.path.replace("/volume1/", "/Volumes/")
+
+            minfo = enzyme.parse(self.path)
+            self.vcodec = minfo.video[0].codec
+            self.vwidth = minfo.video[0].width
+            self.acodec = minfo.audio[0].codec
 
         for curdir in config.seriesdir:
             # print curdir, self.path

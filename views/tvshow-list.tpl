@@ -30,7 +30,7 @@
   <script src="/static/js/bootstrap.min.js"></script>
   <script src="/static/js/plugins.js"></script>
   <script type="text/javascript" src="/static/js/notifier.js"></script>
-  <script src="/static/js/script.js"></script>  
+  <script src="/static/js/script.js"></script>
   <script type="text/javascript">
 
   </script>
@@ -40,4 +40,4 @@
 </html>
 
 
-	
+

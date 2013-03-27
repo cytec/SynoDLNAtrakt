@@ -1,7 +1,34 @@
 %include incl_top title=title, topmenu=topmenu
-
+%from synodlnatrakt import config
     <div class="row banner-top" style="background-image: url(/cache/fanart/{{movie.imdb_id}}.jpg)">
       <h1>{{movie.name}}</h1>
+      %if config.mediaflags:
+      <div class="codec big">
+        <!-- {{movie.vcodec}}  {{movie.acodec}} {{movie.vwidth}} -->
+
+        %if movie.vcodec.lower() in config.CODEC_MAP.keys():
+          <img src="/static/img/flags/videocodec/{{config.CODEC_MAP[movie.vcodec.lower()]}}.png" />
+        %else:
+          <img src="/static/img/flags/videocodec/default.png" />
+        %end if
+
+        %if movie.acodec.lower() in config.CODEC_MAP.keys():
+          <img src="/static/img/flags/audio/{{config.CODEC_MAP[movie.acodec.lower()]}}.png" />
+        %else:
+          <img src="/static/img/flags/audio/defaultsound.png" />
+        %end if
+
+        %if movie.vwidth < 768:
+          <img src="/static/img/flags/resolution/480.png" />
+        %elif movie.vwidth >= 768 and movie.vwidth < 1280:
+          <img src="/static/img/flags/resolution/576.png" />
+        %elif movie.vwidth >= 1280 and movie.vwidth < 1920:
+          <img src="/static/img/flags/resolution/720.png" />
+        %elif movie.vwidth >= 1920:
+          <img src="/static/img/flags/resolution/1080.png" />
+        %end if
+      </div>
+      %end if
     </div>
   <div role="main">
 	<div class="movie container" synoindex="{{movie.synoindex}}">
@@ -13,7 +40,7 @@
           <li class="delete"><i class="icon-remove"></i></li>
           <li class="edit"><i class="icon-pencil"></i></li>
         </ul>
-        
+
       </div>
       <div class="span12" style="display: none;" id="edit">
         <b>Synoindex:</b> {{movie.synoindex}}<br />
@@ -38,7 +65,7 @@
             <div id="searchResults">
             </div>
             <button type="button" id="submit" value="Submit" class="btn btn-success hidden">Submit</button>
-         
+
         </form>
       </div>
     </div>
@@ -51,10 +78,10 @@
         <h1 class="hidden-phone">{{movie.name}} ({{movie.year}})</h1>
         <p>{{movie.description}}</p>
 
-        
+
     </div>
     <div class="span12">
-      
+
 
     </div>
 
@@ -75,10 +102,10 @@
   <!-- scripts concatenated and minified via build script -->
   <script src="/static/js/bootstrap.min.js"></script>
   <script src="/static/js/plugins.js"></script>
-  <script src="/static/js/jquery.raty.min.js"></script>   
+  <script src="/static/js/jquery.raty.min.js"></script>
   <script src="/static/js/notification.js"></script>
-    <script src="/static/js/shadowbox.js"></script>  
-  <script src="/static/js/script.js"></script>  
+    <script src="/static/js/shadowbox.js"></script>
+  <script src="/static/js/script.js"></script>
   <script type="text/javascript">
 
   Shadowbox.init({
@@ -97,7 +124,7 @@
       }
     }
     $('.stream').click(function(){
-      
+
 
       args = {
         'type' : 'movie',
@@ -112,7 +139,7 @@
           title:      "{{movie.name}}",
           height:     580,
           width:      740,
-          options : { onFinish : runDivx } 
+          options : { onFinish : runDivx }
         });
 
      // WinId = window.open('', 'newwin');
@@ -163,7 +190,7 @@
       htmlstring = '<fieldset>\n<legend>Search Results:</legend>\n'
       $.post('/update/movie', {'name':searchstring}, function(data){
         //console.log(data.length)
-        for (var i = 0; i < data.length; i++) { 
+        for (var i = 0; i < data.length; i++) {
           //alert(data[i].name);
 
           html = '<label class="radio"><input type="radio" name="new_id" value="'+data[i].imdb_id+'" ><a href="'+data[i].url+'" target="_blank">'+data[i].name + ' ('+ data[i].released+')</a></label>'
@@ -227,7 +254,7 @@
         } else {
           addNotification("error", "Unable", "to update rating for \"{{movie.name}}\"")
         }
-      });    
+      });
 
     }
 
@@ -255,4 +282,4 @@
 </html>
 
 
-	
+

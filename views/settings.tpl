@@ -185,6 +185,19 @@
                   <div class="control-group">
                     <div class="controls">
                       <label class="checkbox">
+                        %if config.mediaflags:
+                          <input name="mediaflags" type="checkbox" checked> use mediaflags
+                        %else:
+                          <input name="mediaflags" type="checkbox"> use mediaflags
+                        %end if
+                        <span class="help-block">use enzyme to create mediaflags (resolution, codecs)</span>
+                      </label>
+                    </div>
+                  </div>
+
+                  <div class="control-group">
+                    <div class="controls">
+                      <label class="checkbox">
                         %if config.blur_images:
                           <input name="blur_images" type="checkbox" checked> blur images
                         %else:

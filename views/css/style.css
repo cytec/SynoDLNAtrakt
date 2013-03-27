@@ -115,7 +115,7 @@ table .progress{
 
 .movie-list .span12, .series-list .span12{
   display: block;
-  background-position: center center; 
+  background-position: center center;
   background-repeat: no-repeat;
   background-size: cover;
   background-attachment: fixed;
@@ -150,8 +150,8 @@ a, a:hover{
 
 .banner-top{
   border-radius: 0 !important;
-  text-align: center; 
-  height: 500px; 
+  text-align: center;
+  height: 500px;
   padding: 0 !important;
   margin: 0 0 20px 0!important;
   box-shadow: inset 0 0 37px #444;
@@ -160,7 +160,7 @@ a, a:hover{
   color: #fff;
   width: 100%;
   overflow: hidden;
-  background-position: center center; 
+  background-position: center center;
   background-repeat: no-repeat;
   /*xbackground-size: auto;*/
   background-attachment: fixed;
@@ -217,6 +217,27 @@ a, a:hover{
     color: #444 !important
   }
 
+.codec{
+  position: absolute;
+  bottom: 0;
+  left: 10px;
+  xdisplay: none;
+
+}
+
+.codec img{
+  width: 70px;
+}
+
+.codec.big{
+  text-align: center;
+  width: 100%
+}
+
+.codec.big img{
+  width: auto
+}
+
 
 /*
 mobile .list-background { display: block;}
@@ -225,14 +246,14 @@ mobile .list-background { display: block;}
 
   .banner-top{
     height: 300px;
-    background-position: center center; 
+    background-position: center center;
     background-repeat: no-repeat;
     /*xbackground-size: auto;*/
     background-attachment: scroll;
   }
 
   .movie-list .span12, .series-list .span12, .banner-top{
-    background-position: center center; 
+    background-position: center center;
     background-repeat: no-repeat;
     /*xbackground-size: auto;*/
     background-attachment: scroll;
@@ -273,7 +294,7 @@ padding-left: 0px;
 
   .banner-top{
     height: 100px;
-    background-position: center center; 
+    background-position: center center;
     background-repeat: no-repeat;
     /*xbackground-size: auto;*/
     background-attachment: scroll;
@@ -281,7 +302,7 @@ padding-left: 0px;
 
   .movie-list .span12, .series-list .span12, .banner-top{
     display: table;
-    background-position: center center; 
+    background-position: center center;
     background-repeat: no-repeat;
     /*xbackground-size: auto;*/
     background-attachment: scroll;
@@ -327,6 +348,10 @@ padding-left: 0px;
 
   .tab-pane{
     display: block !important;
+  }
+
+  .codec{
+    text-align: center
   }
 
 }
