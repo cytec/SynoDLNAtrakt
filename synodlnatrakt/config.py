@@ -13,6 +13,8 @@ datadir = basedir
 
 cfg_path = os.path.join(datadir, "config.ini")
 
+#current alembic version for database
+cur_version = "26259a28fa2e"
 
 SYS_ENCODING = ''
 BASEPATH = os.getcwd()

@@ -32,6 +32,8 @@ class MyDaemon(Daemon):
 
         starttime = datetime.now()
 
+
+
         @sched.interval_schedule(minutes=parse_logs_int, start_date=starttime + timedelta(minutes=1))
         def parse_logs():
             main.scanlogs()
@@ -54,14 +56,15 @@ class MyDaemon(Daemon):
                 main.delete_orphans()
 
         sched.start()
+        main.update_db()
         # sched.print_jobs()
 
         TEMPLATE_PATH.insert(0, config.templatedir)
 
         web.run(host='0.0.0.0', port=config.port, debug=True)
 
-        while True:
-            pass
+        # while True:
+        #     pass
 
 if len(sys.argv) == 3 and '--config' in sys.argv[2]:
     config.cfg_path = sys.argv[2].replace("--config=", "")

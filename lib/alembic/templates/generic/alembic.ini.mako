@@ -2,7 +2,7 @@
 
 [alembic]
 # path to migration scripts
-script_location = alembic
+script_location = ${script_location}
 
 # template used to generate migration files
 # file_template = %%(rev)s_%%(slug)s
@@ -11,7 +11,8 @@ script_location = alembic
 # the 'revision' command, regardless of autogenerate
 # revision_environment = false
 
-sqlalchemy.url = sqlite:///SynoDLNAtrakt.db
+sqlalchemy.url = driver://user:pass@localhost/dbname
+
 
 # Logging configuration
 [loggers]
@@ -39,8 +40,8 @@ handlers =
 qualname = alembic
 
 [handler_console]
-class = FileHandler
-args= ('migration.log', 'w')
+class = StreamHandler
+args = (sys.stderr,)
 level = NOTSET
 formatter = generic
 

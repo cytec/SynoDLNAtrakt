@@ -8,11 +8,42 @@ import os
 import subprocess
 
 from synodlnatrakt.logger import logger
-
+from alembic.config import Config
+from alembic.script import ScriptDirectory
+from alembic.migration import MigrationContext
+from alembic.environment import EnvironmentContext
+from alembic import command
 
 def setup():
     # create directorys...
     pass
+
+
+def update_db():
+    if os.path.exists("{0}/SynoDLNAtrakt.db".format(config.datadir)):
+        alembic_cfg = Config("{0}/alembic.ini".format(config.basedir))
+        alembic_cfg.set_main_option(
+            "sqlalchemy.url", "sqlite:////{0}/SynoDLNAtrakt.db".format(config.datadir))
+        alembic_cfg.set_main_option(
+            "script_location", "{0}/alembic".format(config.basedir))
+
+        alembic_cfg.set_section_option("handler_console", "args", "('{0}/logs/migration.log', 'w')".format(config.datadir))
+
+        print alembic_cfg.file_config.__dict__
+        engine = db.engine
+        conn = engine.connect()
+
+        context = MigrationContext.configure(conn)
+        current_rev = context.get_current_revision()
+
+        script = ScriptDirectory.from_config(alembic_cfg)
+        env = EnvironmentContext(alembic_cfg, script)
+
+        if current_rev != env.get_head_revision():
+            logger.debug(u"running database update...")
+            command.upgrade(alembic_cfg, "head")
+        else:
+            logger.debug(u"database is up to date")
 
 
 def delete_orphans():

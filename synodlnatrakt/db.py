@@ -14,6 +14,16 @@ engine = create_engine('sqlite:///{0}'.format(dbpath), echo=False)
 
 Base = declarative_base()
 
+class Version(Base):
+    __tablename__ = 'alembic_version'
+
+    version_num = Column(String, default=config.cur_version, primary_key=True)
+
+    def __init__(self, version_num):
+        self.version_num = version_num
+
+    def __repr__(self):
+        return u"<Version({})".format(self.version_num)
 
 class TVShows(Base):
     __tablename__ = 'tv_shows'
@@ -138,3 +148,7 @@ Session = sessionmaker()
 Session.configure(bind=engine)
 session = scoped_session(Session)
 # session = Session()
+#
+if session.query(Version).first() is None:
+    session.merge(Version(version_num=config.cur_version))
+    session.commit()
