@@ -30,8 +30,7 @@ def updateMediaflags():
             m.vcodec = minfo.video[0].codec
             m.vwidth = minfo.video[0].width
             m.acodec = minfo.audio[0].codec
-            logger.debug(u"generating mediaflags for {0}: acodec => {1}, vcodec => {2}, vwidth => {3}".format(
-                m.name, m.vcodec, m.vwidth, m.acodec))
+            logger.debug(u"generating mediaflags for {0}: acodec => {1}, vcodec => {2}, vwidth => {3}".format(m.name, m.acodec, m.vcodec, m.vwidth))
             db.session.merge(m)
             db.session.commit()
         except:
@@ -46,8 +45,7 @@ def updateMediaflags():
             m.vcodec = minfo.video[0].codec
             m.vwidth = minfo.video[0].width
             m.acodec = minfo.audio[0].codec
-            logger.debug(u"generating mediaflags for {0}: acodec => {1}, vcodec => {2}, vwidth => {3}".format(
-                m.name, m.vcodec, m.vwidth, m.acodec))
+            logger.debug(u"generating mediaflags for {0}: acodec => {1}, vcodec => {2}, vwidth => {3}".format(m.name, m.acodec, m.vcodec, m.vwidth))
             db.session.merge(m)
             db.session.commit()
         except:
