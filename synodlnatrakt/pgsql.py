@@ -48,38 +48,58 @@ Base = declarative_base()
 class Video(Base):
     __tablename__ = 'video'
 
-    id = Column(Integer, primary_key=True)
-    path = Column(String)
-    title = Column(String)
-    filesize = Column(Integer)
-    # album = Column(String)
-    # container_type = Column(String)
-    # video_codec = Column(String)
-    # frame_bitrate = Column(Integer)
-    # frame_rate_num = Column(Integer)
-    # frame_rate_den = Column(Integer)
-    # video_bitrate = Column(Integer)
-    # video_profile = Column(Integer)
-    # video_level = Column(Integer)
-    # resolutionX = Column(Integer)
-    # resolutionY = Column(Integer)
-    # audio_codec = Column(String)
-    # audio_bitrate = Column(Integer)
-    # frequency = Column(Integer)
-    # channel = Column(Integer)
-    duration = Column(Integer)
-    date = Column(Integer)
-    mdate = Column(Integer)
-    # fs_uuid = Column(Integer)
-    # fs_online = Column(Integer)
+    id = Column(Integer, primary_key=True)  # synoindex id
+    path = Column(String)                   # path to file
+    title = Column(String)                  # title of the video file
+    filesize = Column(Integer)              # filesize in byte
+    album = Column(String)                  # folder name of file...
+    container_type = Column(String)         # avi, mkv, "matroska,webm" etc
+    video_codec = Column(String)            # mpeg4, h264 etc
+    frame_bitrate = Column(Integer)         # ???
+    frame_rate_num = Column(Integer)        # fps (25, 30) etc
+    frame_rate_den = Column(Integer)        # ???
+    video_bitrate = Column(Integer)         # ???
+    video_profile = Column(Integer)         # ???
+    video_level = Column(Integer)           # ???
+    resolutionx = Column(Integer)           # width
+    resolutiony = Column(Integer)           # height
+    audio_codec = Column(String)            # ac3, dts, mp3 etc
+    audio_bitrate = Column(Integer)         # bitrate of audio stream
+    frequency = Column(Integer)             # ???
+    channel = Column(Integer)               # audio channels 2, 6 etc
+    duration = Column(Integer)              # duration in seconds
+    date = Column(Integer)                  # add date timestamp
+    mdate = Column(Integer)                 # modifiy date timestamp
+    fs_uuid = Column(Integer)               # ???
+    fs_online = Column(Integer)             # file is online (True/False)
 
-    def __init__(self, path, duration, date, mdate, title, filesize):
+    def __init__(
+            self, path, duration, date, mdate, title, filesize, album, container_type, video_codec, frame_bitrate,
+            frame_rate_num, frame_rate_den, video_bitrate, video_profile, video_level, resolutionx, resolutiony,
+            audio_codec, audio_bitrate, frequency, channel, fs_uuid, fs_online
+    ):
         self.path = path
         self.duration = duration
         self.date = date
         self.mdate = mdate
         self.title = title
         self.filesize = filesize
+        self.album = album
+        self.container_type = container_type
+        self.video_codec = video_codec
+        self.frame_bitrate = frame_bitrate
+        self.frame_rate_num = frame_rate_num
+        self.video_bitrate = video_bitrate
+        self.video_profile = video_profile
+        self.video_level = video_level
+        self.resolutionx = resolutionx
+        self.resolutiony = resolutiony
+        self.audio_codec = audio_codec
+        self.audio_bitrate = audio_bitrate
+        self.frequency = frequency
+        self.channel = channel
+        self.fs_uuid = fs_uuid
+        self.fs_online = fs_online
 
     def __repr__(self):
         return u"<Video(id:{0}, path:{1}, duration:{2}, data:{3}, mdate:{4}, title:{5}, filesize:{6} )>".format(self.id, self.path, self.duration, self.date, self.mdate, self.title, self.filesize)
