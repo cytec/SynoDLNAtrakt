@@ -2,7 +2,7 @@
 %from synodlnatrakt import config
     <div class="row banner-top" style="background-image: url(/cache/fanart/{{movie.imdb_id}}.jpg)">
       <h1>{{movie.name}}</h1>
-      %if config.mediaflags:
+      %if config.mediaflags and movie.vcodec and movie.acodec and movie.vwidth:
       <div class="codec big">
         <!-- {{movie.vcodec}}  {{movie.acodec}} {{movie.vwidth}} -->
 
