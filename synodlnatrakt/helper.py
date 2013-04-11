@@ -27,11 +27,10 @@ def updateMediaflags():
 
         try:
             minfo = enzyme.parse(m.path)
-            print minfo
             m.vcodec = minfo.video[0].codec
             m.vwidth = minfo.video[0].width
             m.acodec = minfo.audio[0].codec
-            logger.debug(u"generating mediaflags for {0}".format(m.name))
+            logger.debug(u"generating mediaflags for {0}: acodec => {1}, vcodec => {2}, vwidth => {3}".format(m.name, m.vcodec, m.vwidth, m.acodec))
             db.session.merge(m)
         except:
             logger.error(u"mediaflags for {0} cant be generated".format(m.name))
@@ -45,7 +44,7 @@ def updateMediaflags():
             m.vcodec = minfo.video[0].codec
             m.vwidth = minfo.video[0].width
             m.acodec = minfo.audio[0].codec
-            logger.debug(u"generating mediaflags for {0}".format(m.name))
+            logger.debug(u"generating mediaflags for {0}: acodec => {1}, vcodec => {2}, vwidth => {3}".format(m.name, m.vcodec, m.vwidth, m.acodec))
             db.session.merge(m)
         except:
             logger.error(u"mediaflags for {0} cant be generated".format(m.name))
