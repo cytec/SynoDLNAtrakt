@@ -39,6 +39,8 @@ def update_db():
         script = ScriptDirectory.from_config(alembic_cfg)
         env = EnvironmentContext(alembic_cfg, script)
 
+        logger.debug(u"current_rev: {0}\nHead_rev: {1}".format(current_rev, env.get_head_revision()))
+
         if current_rev != env.get_head_revision():
             logger.debug(u"running database update...")
             command.upgrade(alembic_cfg, "head")
