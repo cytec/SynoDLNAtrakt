@@ -39,7 +39,9 @@ def update_db():
         script = ScriptDirectory.from_config(alembic_cfg)
         env = EnvironmentContext(alembic_cfg, script)
 
-        #logger.debug(u"Alembic Config: {0}".fromat(alembic_cfg.file_config.__dict__))
+        logger.debug(u"Alembic Config: {0}/alembic.ini".format(config.basedir))
+        logger.debug(u"Scripts: {0}/alembic".format(config.basedir))
+        logger.debug(u"database: sqlite:////{0}/SynoDLNAtrakt.db".format(config.datadir))
         logger.debug(u"current_rev: {0}\nHead_rev: {1}".format(current_rev, env.get_head_revision()))
 
         # if current_rev != env.get_head_revision():
