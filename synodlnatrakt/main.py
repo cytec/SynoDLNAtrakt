@@ -29,7 +29,7 @@ def update_db():
 
         alembic_cfg.set_section_option("handler_console", "args", "('{0}/logs/migration.log', 'w')".format(config.datadir))
 
-        print alembic_cfg.file_config.__dict__
+        #print alembic_cfg.file_config.__dict__
         engine = db.engine
         conn = engine.connect()
 
@@ -39,12 +39,18 @@ def update_db():
         script = ScriptDirectory.from_config(alembic_cfg)
         env = EnvironmentContext(alembic_cfg, script)
 
+        logger.debug(u"Alembic Config: {0}".fromat(alembic_cfg.file_config.__dict__))
         logger.debug(u"current_rev: {0}\nHead_rev: {1}".format(current_rev, env.get_head_revision()))
 
-        if current_rev != env.get_head_revision():
-            logger.debug(u"running database update...")
+        # if current_rev != env.get_head_revision():
+        #     logger.debug(u"running database update...")
+        #     command.upgrade(alembic_cfg, "head")
+        # else:
+        #     logger.debug(u"database is up to date")
+        try:
             command.upgrade(alembic_cfg, "head")
-        else:
+            logger.debug(u"running database update...")
+        except:
             logger.debug(u"database is up to date")
 
 
