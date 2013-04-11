@@ -32,6 +32,7 @@ def updateMediaflags():
             m.acodec = minfo.audio[0].codec
             logger.debug(u"generating mediaflags for {0}: acodec => {1}, vcodec => {2}, vwidth => {3}".format(m.name, m.vcodec, m.vwidth, m.acodec))
             db.session.merge(m)
+            db.session.commit()
         except:
             logger.error(u"mediaflags for {0} cant be generated".format(m.name))
     episode = db.session.query(db.TVEpisodes).filter(db.TVEpisodes.acodec == None).all()
@@ -46,10 +47,11 @@ def updateMediaflags():
             m.acodec = minfo.audio[0].codec
             logger.debug(u"generating mediaflags for {0}: acodec => {1}, vcodec => {2}, vwidth => {3}".format(m.name, m.vcodec, m.vwidth, m.acodec))
             db.session.merge(m)
+            db.session.commit()
         except:
             logger.error(u"mediaflags for {0} cant be generated".format(m.name))
 
-    db.session.commit()
+    #db.session.commit()
     ui.notifications.success("Madiaflags", 'successfully generated')
 
 
