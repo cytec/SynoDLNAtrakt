@@ -21,7 +21,7 @@ import lib.enzyme as enzyme
 
 
 def updateMediaflags():
-    movies = db.session.query(db.Movies).filter(db.Movies.acodec is None).all()
+    movies = db.session.query(db.Movies).filter(db.Movies.acodec == None).all()
     for m in movies:
         #path = m.path.replace("/volume1/", "/Volumes/")
 
@@ -35,7 +35,7 @@ def updateMediaflags():
             db.session.merge(m)
         except:
             logger.error(u"mediaflags for {0} cant be generated".format(m.name))
-    episode = db.session.query(db.TVEpisodes).filter(db.TVEpisodes.acodec is None).all()
+    episode = db.session.query(db.TVEpisodes).filter(db.TVEpisodes.acodec == None).all()
     for m in episode:
         #path = m.path.replace("/volume1/", "/Volumes/")
 
