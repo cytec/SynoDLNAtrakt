@@ -23,7 +23,7 @@ def update_db():
     if os.path.exists("{0}/SynoDLNAtrakt.db".format(config.datadir)):
         alembic_cfg = Config("{0}/alembic.ini".format(config.basedir))
         alembic_cfg.set_main_option(
-            "sqlalchemy.url", "sqlite:////{0}/SynoDLNAtrakt.db".format(config.datadir))
+            "sqlalchemy.url", "sqlite:///{0}/SynoDLNAtrakt.db".format(config.datadir))
         alembic_cfg.set_main_option(
             "script_location", "{0}/alembic".format(config.basedir))
 
