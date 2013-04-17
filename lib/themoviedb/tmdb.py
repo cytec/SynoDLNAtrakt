@@ -51,10 +51,10 @@ config['apikey'] = "a8b9f96dde091408a03cb4c78477bd14"
 from synodlnatrakt import config as synoconf
 
 config['urls'] = {}
-config['urls']['movie.search'] = "http://api.themoviedb.org/2.1/Movie.search/{0}/xml/%(apikey)s/%%s" % (config)
-config['urls']['movie.getInfo'] = "http://api.themoviedb.org/2.1/Movie.getInfo/{0}/xml/%(apikey)s/%%s" % (config)
-config['urls']['movie.imdbLookup'] = "http://api.themoviedb.org/2.1/Movie.imdbLookup/{0}/xml/%(apikey)s/%%s" % (config)
-config['urls']['media.getInfo'] = "http://api.themoviedb.org/2.1/Media.getInfo/{0}/xml/%(apikey)s/%%s/%%s" % (config)
+config['urls']['movie.search'] = "http://api.themoviedb.org/2.1/Movie.search/##LANGUAGE##/xml/%(apikey)s/%%s" % (config)
+config['urls']['movie.getInfo'] = "http://api.themoviedb.org/2.1/Movie.getInfo/##LANGUAGE##/xml/%(apikey)s/%%s" % (config)
+config['urls']['movie.imdbLookup'] = "http://api.themoviedb.org/2.1/Movie.imdbLookup/##LANGUAGE##/xml/%(apikey)s/%%s" % (config)
+config['urls']['media.getInfo'] = "http://api.themoviedb.org/2.1/Media.getInfo/##LANGUAGE##/xml/%(apikey)s/%%s/%%s" % (config)
 
 import os
 import struct
@@ -158,12 +158,12 @@ class MovieResult(dict):
     def __repr__(self):
         return "<MovieResult: %s (%s)>" % (self.get("name"), self.get("released"))
 
-    def info(self):
+    def info(self, lang="en"):
         """Performs a MovieDb.getMovieInfo search on the current id, returns
         a Movie object
         """
         cur_id = self['id']
-        info = MovieDb().getMovieInfo(cur_id)
+        info = MovieDb().getMovieInfo(cur_id, lang)
         return info
 
 class Movie(dict):
@@ -408,7 +408,7 @@ class MovieDb:
         """
         title = urllib.quote(title.encode("utf-8"))
         url = config['urls']['movie.search'] % (title)
-        url = url.format(lang)
+        url = url.replace("##LANGUAGE##", lang)
         print url
         etree = XmlHandler(url).getEt()
         search_results = SearchResults()
@@ -424,11 +424,12 @@ class MovieDb:
         """
         if str(id).startswith('tt'):
             imdb_url = config['urls']['movie.imdbLookup'] % (id)
-            imdb_url = imdb_url.format(lang)
+            imdb_url = imdb_url.replace("##LANGUAGE##", lang)
             etree = XmlHandler(imdb_url).getEt()
             id = etree.find("movies/movie/id").text
         url = config['urls']['movie.getInfo'] % (id)
-        url = url.format(lang)
+        url = url.replace("##LANGUAGE##", lang)
+        print url
         etree = XmlHandler(url).getEt()
         moviesTree = etree.find("movies").findall("movie")
 
@@ -442,7 +443,8 @@ class MovieDb:
         passing a TMDb ID, you pass a file hash and filesize in bytes
         """
         url = config['urls']['media.getInfo'] % (hash, size)
-        url = url.format(lang)
+        url = url.replace("##LANGUAGE##", lang)
+        print url
         etree = XmlHandler(url).getEt()
         moviesTree = etree.find("movies").findall("movie")
         if len(moviesTree) == 0:
