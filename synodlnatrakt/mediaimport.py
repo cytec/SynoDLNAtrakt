@@ -35,6 +35,7 @@ def series(max_entrys=20):
 
 
 def search(searchstring, max_entrys=20):
+    counter = 0
     logger.info(u"searching for files which contain: '{0}'".format(searchstring))
     result = (
         pgsql.session.query(pgsql.Video)
@@ -54,6 +55,7 @@ def search(searchstring, max_entrys=20):
         else:
             m.generate()
             m.to_database()
+            counter = + 1
 
     response = {
         u'status': u'success',
