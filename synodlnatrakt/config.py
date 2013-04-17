@@ -14,7 +14,7 @@ datadir = basedir
 cfg_path = os.path.join(datadir, "config.ini")
 
 #current alembic version for database
-cur_version = "26259a28fa2e"
+cur_version = "396785072a1f"
 
 SYS_ENCODING = ''
 BASEPATH = os.getcwd()
@@ -39,10 +39,15 @@ CODEC_MAP = {
     "xvid mpeg-4": "xvid",
     "avc1": "avc1",
     "mpeg layer 3": "mp3",
+    "mp3": "mp3",
     "8192": "ac3",
     "mp4a": "m4a",
     "8193": "dts",
     "divx v5": "divx",
+    "mpeg4": "mpeg4",
+    "h264": "h264",
+    "aac_lc": "aac",
+    "dts": "dts"
 }
 
     # Title strip items

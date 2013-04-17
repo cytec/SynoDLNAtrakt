@@ -108,6 +108,15 @@ class Movie(object):
             # dir(insert)
             db.session.merge(insert)
             db.session.commit()
+            logger.debug(u"{0} saved to database".format(self.path))
+
+    def mediaflags(self):
+        dbresult = pgsql.session.query(pgsql.Video).filter(pgsql.Video.id == self.synoindex).first()
+        self.acodec = dbresult.audio_codec
+        self.vcodec = dbresult.video_codec
+        self.vwidth = dbresult.resolutionx
+        logger.debug(u"generating mediaflags for {0}: acodec => {1}, vcodec => {2}, vwidth => {3}".format(self.name, self.acodec, self.vcodec, self.vwidth))
+        self.to_database()
 
     def generate(self):
         # stuff we get from synoindex db
@@ -115,14 +124,17 @@ class Movie(object):
         self.path = dbresult.path
         self.duration = dbresult.duration
         self.added = dbresult.date
+        self.acodec = dbresult.audio_codec
+        self.vcodec = dbresult.video_codec
+        self.vwidth = dbresult.resolutionx
 
-        if config.mediaflags:
-            #path = self.path.replace("/volume1/","/Volumes/")
+        # if config.mediaflags:
+        #     #path = self.path.replace("/volume1/","/Volumes/")
 
-            minfo = enzyme.parse(self.path)
-            self.vcodec = minfo.video[0].codec
-            self.vwidth = minfo.video[0].width
-            self.acodec = minfo.audio[0].codec
+        #     minfo = enzyme.parse(self.path)
+        #     self.vcodec = minfo.video[0].codec
+        #     self.vwidth = minfo.video[0].width
+        #     self.acodec = minfo.audio[0].codec
 
         for curdir in config.moviedir:
             if curdir in self.path:
@@ -272,6 +284,15 @@ class Episode(object):
 
             db.session.merge(insert)
             db.session.commit()
+            logger.debug(u"{0} saved to database".format(self.path))
+
+    def mediaflags(self):
+        dbresult = pgsql.session.query(pgsql.Video).filter(pgsql.Video.id == self.synoindex).first()
+        self.acodec = dbresult.audio_codec
+        self.vcodec = dbresult.video_codec
+        self.vwidth = dbresult.resolutionx
+        logger.debug(u"generating mediaflags for {0}: acodec => {1}, vcodec => {2}, vwidth => {3}".format(self.name, self.acodec, self.vcodec, self.vwidth))
+        self.to_database()
 
     def generate(self):
         dbresult = pgsql.session.query(pgsql.Video).filter(pgsql.Video.id == self.synoindex).first()
@@ -280,14 +301,17 @@ class Episode(object):
         self.added = dbresult.date
         self.show_id, self.showname = helper.checkNFO(self.path, "series")
         self.season, self.episode = helper.checkNFO(self.path, "episode")
+        self.acodec = dbresult.audio_codec
+        self.vcodec = dbresult.video_codec
+        self.vwidth = dbresult.resolutionx
 
-        if config.mediaflags:
-            #path = self.path.replace("/volume1/", "/Volumes/")
+        # if config.mediaflags:
+        #     #path = self.path.replace("/volume1/", "/Volumes/")
 
-            minfo = enzyme.parse(self.path)
-            self.vcodec = minfo.video[0].codec
-            self.vwidth = minfo.video[0].width
-            self.acodec = minfo.audio[0].codec
+        #     minfo = enzyme.parse(self.path)
+        #     self.vcodec = minfo.video[0].codec
+        #     self.vwidth = minfo.video[0].width
+        #     self.acodec = minfo.audio[0].codec
 
         for curdir in config.seriesdir:
             # print curdir, self.path

@@ -25,31 +25,13 @@ def updateMediaflags():
     for m in movies:
         # path = m.path.replace("/volume1/", "/Volumes/")
 
-        try:
-            minfo = enzyme.parse(m.path)
-            m.vcodec = minfo.video[0].codec
-            m.vwidth = minfo.video[0].width
-            m.acodec = minfo.audio[0].codec
-            logger.debug(u"generating mediaflags for {0}: acodec => {1}, vcodec => {2}, vwidth => {3}".format(m.name, m.acodec, m.vcodec, m.vwidth))
-            db.session.merge(m)
-            db.session.commit()
-        except:
-            logger.error(u"mediaflags for {0} cant be generated".format(m.name))
+        m.mediaflags()
+
     episode = db.session.query(db.TVEpisodes).filter(db.TVEpisodes.acodec == None).all()
     for m in episode:
         # path = m.path.replace("/volume1/", "/Volumes/")
 
-        try:
-            minfo = enzyme.parse(m.path)
-            print minfo
-            m.vcodec = minfo.video[0].codec
-            m.vwidth = minfo.video[0].width
-            m.acodec = minfo.audio[0].codec
-            logger.debug(u"generating mediaflags for {0}: acodec => {1}, vcodec => {2}, vwidth => {3}".format(m.name, m.acodec, m.vcodec, m.vwidth))
-            db.session.merge(m)
-            db.session.commit()
-        except:
-            logger.error(u"mediaflags for {0} cant be generated".format(m.name))
+        m.mediaflags()
 
     # db.session.commit()
     ui.notifications.success("Madiaflags", 'successfully generated')
@@ -217,14 +199,14 @@ def tmdbsearch(searchstring):
         results = tmdb.search(searchstring, lang=config.language)
         if results:
             firstresult = results[0]
-            movieinfo = firstresult.info()
+            movieinfo = firstresult.info(lang=config.language)
         else:
             # search again for movie without the year
             searchstring = re.sub(" \([0-9]{4}\)", "", searchstring)
             results = tmdb.search(searchstring, lang=config.language)
             if results:
                 firstresult = results[0]
-                movieinfo = firstresult.info()
+                movieinfo = firstresult.info(lang=config.language)
             else:
                 logger.error(u"Can't find any matches for {0}".format(searchstring))
                 return None, None, None, None
@@ -386,7 +368,7 @@ def checkNFO(filepath, nfotype):
 
                 logger.debug(u"Parsed {0} to {1}".format(filepath, searchstring))
                 # first search file...
-                # searchstring.reverse()
+                #searchstring.reverse()
                 for entry in searchstring:
                     title, imdb_id, tmdb_id, year = tmdbsearch(entry)
                     if imdb_id:
