@@ -312,12 +312,12 @@ def send(method, req, args={}, returnStatus=False, debug=config.debugmode):
     logger.debug(u"Sending infos to trakt: URL: {0}, Data: {1}, Method: {2}".format(url, logargs, method))
 
     if response and debug:
-        logger.debug(u"Trakt Response: {0}".format(response.json))
+        logger.debug(u"Trakt Response: {0}".format(response.json()))
 
     if returnStatus:
-        return response.json
+        return response.json()
     else:
-        if response.json["status"] == "success":
+        if response.json()["status"] == "success":
             return True
         else:
             return None
