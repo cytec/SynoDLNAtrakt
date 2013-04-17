@@ -91,7 +91,7 @@ def checkGithub():
 
     try:
         result = requests.get(url)
-        config.latest_version = result.json["sha"]
+        config.latest_version = result.json()["sha"]
     except:
         logger.warn('Could not get the latest commit from github')
         config.commits_behind = 0
@@ -105,7 +105,7 @@ def checkGithub():
 
         try:
             result = requests.get(url)
-            config.commits_behind = result.json['total_commits']
+            config.commits_behind = result.json()['total_commits']
         except:
             logger.warn('Could not get commits behind from github')
             config.commits_behind = 0
