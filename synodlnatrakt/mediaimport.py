@@ -34,6 +34,36 @@ def series(max_entrys=20):
     return response
 
 
+def search(searchstring, max_entrys=20):
+    logger.info(u"searching for files which contain: '{0}'".format(searchstring))
+    result = (
+        pgsql.session.query(pgsql.Video)
+        .filter(pgsql.Video.path.like('%{0}%'.format(searchstring)))
+        .order_by(pgsql.Video.date.desc())
+        .limit(max_entrys)
+    )
+    for entry in result:
+        mediatype = helper.get_media_type(entry.id)
+        if mediatype == "series":
+            m = Episode(entry.id, None, database=True)
+        elif mediatype == "movie":
+            m = Movie(entry.id, None, database=True)
+
+        if m.path:
+            logger.info(u"loaded Mediaelement from db: {0}".format(episode.id))
+        else:
+            m.generate()
+            m.to_database()
+
+    response = {
+        u'status': u'success',
+        u'message': u'added {0} episodes to synodlnatrakt'.format(max_entrys)
+    }
+
+    ui.notifications.success("Yeah", "added {0} episodes to the database".format(counter))
+    return response
+
+
 def movies(max_entrys=20):
     counter = 0
     for folder in config.moviedir:

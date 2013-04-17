@@ -226,7 +226,7 @@ def index(synoindex):
 @requires_auth
 def index():
     name = request.forms.get("name")
-    movies = tmdb.search(name)
+    movies = tmdb.search(name, lang=config.language)
     return json.dumps(movies)
 
 # @route('/save/movie/<synoindex>/<imdb_id>')
@@ -282,6 +282,7 @@ def index():
     max_entrys = request.forms.get('max_entrys')
     folder = request.forms.get('folder')
     mediatype = request.forms.get('mediatype')
+    search_term = request.forms.get('contains')
 
     exec_date = datetime.now() + timedelta(seconds=2)
 
@@ -293,23 +294,27 @@ def index():
 
     answer = {'status': 'error', 'message': 'Something went wrong while forceing this action'}
 
+    if search_term:
+        sched.add_date_job(mediaimport.search, exec_date, [search_term, max_entrys])
+        answer = {'status': 'success', 'message': 'force mediaserver import of {0} elements with {1} in name'.format(max_entrys, search_term)}
+
     # when none is selected query all...
-    if not mediatype and not folder:
+    elif not mediatype and not folder and not search_term:
         # myresponse = main.import_mediaserver(force=True, max_entrys=int(max_entrys))
         sched.add_date_job(main.import_mediaserver, exec_date, [1, max_entrys])
         answer = {'status': 'success', 'message': 'force mediaserver import of {0} elements'.format(max_entrys)}
 
-    elif mediatype == "series":
+    elif mediatype == "series"  and not search_term:
         # myresponse = mediaimport.series(max_entrys=int(max_entrys))
         sched.add_date_job(mediaimport.series, exec_date, [max_entrys])
         answer = {'status': 'success', 'message': 'force series import of {0} elements'.format(max_entrys)}
 
-    elif mediatype == "movies":
+    elif mediatype == "movies" and not search_term:
         # myresponse = mediaimport.movies(max_entrys=int(max_entrys))
         sched.add_date_job(mediaimport.movies, exec_date, [max_entrys])
         answer = {'status': 'success', 'message': 'force mediaserver movie of {0} elements'.format(max_entrys)}
 
-    elif folder and folder != "":
+    elif folder and folder != "" and not search_term:
         # myresponse = mediaimport.folder(folder, max_entrys=int(max_entrys))
         sched.add_date_job(mediaimport.folder, exec_date, [folder, max_entrys])
         answer = {'status': 'success', 'message': 'force import of {0} elements from folder \"{1}\"'.format(max_entrys, folder)}

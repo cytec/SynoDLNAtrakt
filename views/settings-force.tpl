@@ -31,6 +31,8 @@
                 <label>Entrys</label>
                 <input type="text" name="max_entrys" placeholder="20">
                 <span class="help-block">load the last x entrys (enter 0 for all)</span>
+                <input type="text" name="contains" placeholder="search for names...">
+                <span class="help-block">Search for Files which contain the above string</span>
                 <label class="radio">
                   <input type="radio" name="mediatype" id="mediatype2" value="series" >
                   Process all Series Folders
