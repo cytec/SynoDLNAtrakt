@@ -26,7 +26,7 @@
           <h1>{{showname.name}}</h1>
           <h2>{{entry.season}}x{{entry.episode}} {{entry.name}}</h2>
           %if config.mediaflags:
-          <div class="codec span11">
+          <div class="codec">
             <!-- {{entry.vcodec}}  {{entry.acodec}} {{entry.vwidth}} -->
 
             %if entry.vcodec and entry.vcodec.lower() in config.CODEC_MAP.keys():

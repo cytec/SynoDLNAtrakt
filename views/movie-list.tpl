@@ -35,19 +35,19 @@
     <a class="media-element" href="/movies/view/{{entry.synoindex}}">
       <h1>{{entry.name}} <br /> {{entry.year}}</h1>
       %if config.mediaflags:
-      <div class="codec span11">
+      <div class="codec">
         <!-- {{entry.vcodec}}  {{entry.acodec}} {{entry.vwidth}} -->
 
         %if entry.vcodec and entry.vcodec.lower() in config.CODEC_MAP.keys():
           <img src="/static/img/flags/videocodec/{{config.CODEC_MAP[entry.vcodec.lower()]}}.png" />
         %else:
-          <img src="/static/img/flags/videocodec/default.png" />
+          <img src="/static/img/flags/videocodec/default.png" alt="{{entry.vcodec}}"/>
         %end if
 
         %if entry.acodec and entry.acodec.lower() in config.CODEC_MAP.keys():
           <img src="/static/img/flags/audio/{{config.CODEC_MAP[entry.acodec.lower()]}}.png" />
         %else:
-          <img src="/static/img/flags/audio/defaultsound.png" />
+          <img src="/static/img/flags/audio/defaultsound.png" alt="{{entry.acodec}}"/>
         %end if
 
         %if entry.vwidth < 768:

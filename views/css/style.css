@@ -99,7 +99,7 @@ table .progress{
   padding: 40px 20px;
   display: table;
   width: 100%;
-  background: rgba(0,0,0,0.2)
+  background: rgba(0,0,0,0.2);
   -webkit-box-sizing: border-box;
      -moz-box-sizing: border-box;
           box-sizing: border-box;
@@ -120,7 +120,7 @@ table .progress{
   display: block;
   background-position: center center;
   background-repeat: no-repeat;
-  background-size: cover;
+  background-size: cover !important;
   background-attachment: fixed;
 }
 .movie .span12{
@@ -221,10 +221,11 @@ a, a:hover{
   }
 
 .codec{
-  position: absolute;
+  xposition: absolute;
   bottom: 0;
   left: 10px;
   xdisplay: none;
+  display: table-row;
 
 }
 
@@ -234,7 +235,9 @@ a, a:hover{
 
 .codec.big{
   text-align: center;
-  width: 100%
+  width: 100%;
+  position: absolute;
+  display: block
 }
 
 .codec.big img{
@@ -354,7 +357,8 @@ padding-left: 0px;
   }
 
   .codec{
-    text-align: center
+    text-align: center;
+
   }
 
 }

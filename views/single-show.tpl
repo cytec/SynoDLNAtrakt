@@ -12,7 +12,7 @@
         <ul class="unstyled pull-right inline">
           <li class="edit"><i class="icon-pencil"></i></li>
         </ul>
-        
+
       </div>
       <div class="span12" style="display: none;" id="edit">
         <b>Name:</b> {{show.name}}<br />
@@ -31,18 +31,18 @@
             <div id="searchResults">
             </div>
             <button type="button" id="submit" value="Submit" class="btn btn-success hidden">Submit</button>
-         
+
         </form> -->
       </div>
     </div>
     <div class="row">
-      <div id="star" class="pull-right">asdas</div>
+      <div id="star" class="pull-right"></div>
       <div class="span12">
         %curseason = -1
         %for entry in content:
-        
+
         %if entry.season != curseason:
-          
+
           %curseason = entry.season
           </table>
           <h1>Season {{entry.season}}</h1>
@@ -59,8 +59,8 @@
           </tr>
         </thead>
         %end if
-      
-    
+
+
 
         <tr season="{{entry.season}}" episode="{{entry.episode}}" ep-name="{{entry.name}}" syno-id="{{entry.synoindex}}" rating="{{entry.rating}}" rel="popover" data-placement="top" data-content="{{entry.description}}" data-original-title="{{entry.name}}" data-trigger="hover">
           <td class="episode">{{entry.episode}}</td>
@@ -88,10 +88,10 @@
 
           </td>
           <td class="stream center-text" href="/stream"><i class="icon-play"></i></td>
-          <td class="delete center-text"><i class="icon-remove"></i></td>         
+          <td class="delete center-text"><i class="icon-remove"></i></td>
         </tr>
-    
-      
+
+
       %end for
     </div>
   </div>
@@ -113,10 +113,10 @@
   <!-- scripts concatenated and minified via build script -->
   <script src="/static/js/bootstrap.min.js"></script>
   <script src="/static/js/plugins.js"></script>
-  <script src="/static/js/script.js"></script>  
-    <script src="/static/js/jquery.raty.min.js"></script>   
+  <script src="/static/js/script.js"></script>
+    <script src="/static/js/jquery.raty.min.js"></script>
 
-  <script src="/static/js/shadowbox.js"></script>  
+  <script src="/static/js/shadowbox.js"></script>
   <script type="text/javascript">
 
     Shadowbox.init({
@@ -131,7 +131,7 @@
       args = {
         'type' : 'series',
         'synoindex': $(this).parent().attr("syno-id")
-      }    
+      }
 
       el = $(this)
       $.post("/scrobble", args, function(data){
@@ -186,7 +186,7 @@
           title:      epname,
           height:     580,
           width:      740,
-          options : { onFinish : runDivx } 
+          options : { onFinish : runDivx }
         });
      });
     });
@@ -248,7 +248,7 @@
         } else {
           addNotification("error", "Unable", "to update rating")
         }
-      });    
+      });
 
     }
 
@@ -270,7 +270,7 @@
         }
       })
     }
-    
+
 
   </script>
   <!-- end scripts -->
@@ -280,4 +280,4 @@
 </html>
 
 
-	
+
