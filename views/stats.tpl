@@ -1,5 +1,6 @@
 %include incl_top title=title, topmenu=topmenu
-%from synodlnatrakt import config, db
+%from synodlnatrakt import config, db, sched
+%import datetime
 
 %episodes = db.session.query(db.TVEpisodes)
 %seriescount = db.session.query(db.TVShows).count()
@@ -21,6 +22,10 @@
         you have {{movies.count()}} movies<br />
         you watched {{movies.filter(db.Movies.scrobbled ==1).count()}} movies which are {{b}}%<br />
         you rated {{movies.filter(db.Movies.rating != 0).count()}} movies<br />
+
+        %for x in sched._pending_jobs:
+          {{sched._pending_jobs[x][0].name}} {{sched._pending_jobs[x][0].trigger.run_date}}
+        %end for
 
         <div class="row statistics" style="text-align:center">
           <div class="span6">
