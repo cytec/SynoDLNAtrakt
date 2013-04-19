@@ -1,5 +1,6 @@
 %include incl_top title=title, topmenu=topmenu
-%from synodlnatrakt import config, db, sched
+%from synodlnatrakt import config, db
+%from synodlnatrakt.timer import sched
 %import datetime
 
 %episodes = db.session.query(db.TVEpisodes)
