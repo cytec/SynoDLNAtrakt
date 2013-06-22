@@ -377,10 +377,10 @@ def checkNFO(filepath, nfotype):
                     else:
                         myreturn = None, None, None
 
-                if myreturn == (None, None, None):
-                    f = codecs.open("error.txt", "a", encoding="utf-8")
-                    f.write(u"{0}\n".format(filepath))
-                    f.close()
+                # if myreturn == (None, None, None):
+                #     f = codecs.open(os.path.join(config.datadir, "error.txt"), "a", encoding="utf-8")
+                #     f.write(u"{0}\n".format(filepath))
+                #     f.close()
 
                 return myreturn
 
