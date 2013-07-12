@@ -78,6 +78,7 @@
               <ul class="dropdown-menu">
                 <li><a href="/settings">General</a></li>
                 <li><a href="/settings/force">Force</a></li>
+                <li><a href="/stats">Stats</a></li>
               </ul>
             </li>
             <li class="dropdown logs">
