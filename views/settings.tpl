@@ -29,7 +29,7 @@
                   <div class="control-group">
                     <label class="control-label" for="moviedir">Movie directorys</label>
                     <div class="controls">
-                      <input type="text" class="span8" id="moviedir" name="moviedir" placeholder="{{','.join(config.moviedir)}}">
+                      <input type="text" class="input-xxlarge" id="moviedir" name="moviedir" placeholder="{{','.join(config.moviedir)}}">
                       <span class="help-block">Absoulte path to your main movies dir (seperated by ",")</span>
                     </div>
                   </div>
@@ -37,7 +37,7 @@
                   <div class="control-group">
                     <label class="control-label" for="seriesdir">Series directorys</label>
                     <div class="controls">
-                      <input type="text" class="span8" id="seriesdir" name="seriesdir" placeholder="{{','.join(config.seriesdir)}}">
+                      <input type="text" class="input-xxlarge" id="seriesdir" name="seriesdir" placeholder="{{','.join(config.seriesdir)}}">
                       <span class="help-block">Absoulte path to your main series dir (seperated by ",")</span>
                     </div>
                   </div>
@@ -297,6 +297,29 @@
                       <span class="help-block">Name of the List you want to add the movies to (default: watchlist)</span>
                     </div>
                   </div>
+
+                  <div class="control-group">
+                    <div class="controls">
+                      <label class="checkbox">
+                        %if config.use_whitelist:
+                          <input id="use_whitelist" name="use_whitelist" type="checkbox" checked> Use Whitelist for DLNA devices?
+                        %else:
+                          <input id="use_whitelist" name="use_whitelist" type="checkbox"> Use Whitelist for DLNA devices?
+                        %end if
+                        <span class="help-block">If true only selected User-Agents will be parsed</span>
+                      </label>
+                    </div>
+                  </div>
+
+                  %if config.use_whitelist:
+                  <div class="control-group">
+                    <label class="control-label" for="whitelist">Whitelist</label>
+                    <div class="controls">
+                      <input class="input-xxlarge" type="text" id="whitelist" name="whitelist" placeholder="{{','.join(config.whitelist)}}">
+                      <span class="help-block">The User-Agent of the Device you want to parse from the DLNA logs</span>
+                    </div>
+                  </div>
+                  %end if
 
 
                   <div class="form-actions">

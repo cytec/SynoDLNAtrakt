@@ -444,6 +444,7 @@ def saveConfig():
     config.blur_images = False
     config.add_to_collection = False
     config.mediaflags = False
+    config.use_whitelist = False
 
     for a in request.forms:
         # print "Setting config.{0} to {1}".format(a, request.forms.get(a))
@@ -471,6 +472,16 @@ def saveConfig():
                 newserieslist.append(x.strip())
             config.seriesdir = newserieslist
             print config.seriesdir
+
+        if a == "whitelist" and request.forms.get("whitelist") != "":
+            whitelist = request.forms.get("whitelist").split('|')
+            newWhitelist = []
+            for x in whitelist:
+                newWhitelist.append(x.strip())
+            config.whitelist = newWhitelist
+            print config.whitelist
+            #config.whitelist = request.forms.get("whitelist").split('|')
+
         # print type(request.forms.get(a))
     try:
         config.save_config()

@@ -34,6 +34,8 @@ TITLE_SPLIT_KEYWORDS = [
     "complete", "720p", "1080p", "hdtv", "br-rip", "dubbed"
 ]
 
+apikey = "1234"
+
 CODEC_MAP = {
     "ac3": "ac3",
     "xvid mpeg-4": "xvid",
@@ -50,7 +52,7 @@ CODEC_MAP = {
     "dts": "dts"
 }
 
-    # Title strip items
+# Title strip items
 TITLE_STRIP_SEARCH = [".", "-", "_"]
 
 # remove this trash from filename before trying to guess it... ex:
@@ -107,6 +109,8 @@ blur_images = 1
 add_to_collection = 1
 mediaflags = 1
 delete_orphans = 0
+use_whitelist = False
+whitelist = ""
 
 
 def CheckSection(sec):
@@ -157,7 +161,7 @@ def initialize():
         language, port, page_limit, trakt_user, trakt_pass, use_boxcar, boxcar_username, \
         move_watched_movies, move_watched_series, move_movies_to_dir, move_series_to_dir, update_synoindex, \
         delete_from_index, delete_from_disk, cachedir, datadir, dbpath, sha1hash, add_to_list, list_name, blur_images, \
-        add_to_collection, mediaflags, delete_orphans
+        add_to_collection, mediaflags, delete_orphans, use_whitelist, whitelist
 
     CFG = ConfigObj(cfg_path)
 
@@ -190,7 +194,9 @@ def initialize():
     watched_flags = bool(check_setting_int(CFG, 'Advanced', 'watched_flags', 1))
     blur_images = bool(check_setting_int(CFG, 'Advanced', 'blur_images', 1))
     mediaflags = bool(check_setting_int(CFG, 'Advanced', 'mediaflags', 1))
-    delete_orphans =  bool(check_setting_int(CFG, 'Advanced', 'delete_orphans', 0))
+    delete_orphans = bool(check_setting_int(CFG, 'Advanced', 'delete_orphans', 0))
+    use_whitelist = bool(check_setting_int(CFG, 'Advanced', 'use_whitelist', 0))
+    whitelist = check_setting_str(CFG, 'Advanced', 'whitelist', 'Mozilla/5.0 (compatible; LG-HttpClient-v1.0.3 UPnP/1.1; MSIE 8.0; Windows NT 5.1; LG_UA; AD_LOGON=LGE.NET; .NET CLR 2.0.50727; .NET CLR 3.0.04506.30; .NET CLR 3.0.04506.648; LG_UA; AD_LOGON=LGE.NET; LG NetCast.TV-2011)').split('|')
 
     # trakt
     trakt_pass = check_setting_str(CFG, 'Trakt', 'trakt_pass', '')
@@ -213,6 +219,8 @@ def initialize():
     delete_from_disk = bool(check_setting_int(CFG, 'Postprocessing', 'delete_from_disk', 0))
 
     cachedir = os.path.join(datadir, "cache")
+
+    print whitelist
 
     save_config()
 
@@ -256,6 +264,8 @@ def save_config():
     new_config['Advanced']['blur_images'] = int(blur_images)
     new_config['Advanced']['mediaflags'] = int(mediaflags)
     new_config['Advanced']['delete_orphans'] = int(delete_orphans)
+    new_config['Advanced']['use_whitelist'] = int(use_whitelist)
+    new_config['Advanced']['whitelist'] = '|'.join(whitelist)
 
     new_config['Trakt'] = {}
     new_config['Trakt']['trakt_pass'] = trakt_pass

@@ -116,6 +116,7 @@ def createWatchedFile(mediaelement):
 
 def parseLog():
     idtimes = {}
+    BLACKLIST = []
     p = apachelog.parser(apachelog.formats['lighttpd'])
     time_format = '[%d/%b/%Y:%H:%M:%S]'
 
@@ -127,6 +128,13 @@ def parseLog():
                 x = re.match(config.logregex, data["%r"])
                 theid = x.group("theid")
                 extension = x.group("ext")
+
+                if (config.use_whitelist and data["%{User-Agent}i"] not in config.whitelist):
+                    if not (data["%{User-Agent}i"] in BLACKLIST):
+                        logger.error(u"User Agent not in Whitelist: {0}".format(data["%{User-Agent}i"]))
+                        BLACKLIST.append(data["%{User-Agent}i"])
+
+                    continue
 
                 if extension not in config.medialist:
                     continue

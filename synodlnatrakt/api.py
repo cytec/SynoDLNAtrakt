@@ -1,42 +1,50 @@
-from datetime import datetime
-from bottle import route, post, template, run, static_file, request, response
+from synodlnatrakt.mediaelement import Episode, Movie
+from synodlnatrakt import db, trakt, config
+from datetime import datetime, timedelta
+from synodlnatrakt.timer import sched
+from synodlnatrakt import logger, helper, main, mediaimport
+from lib.bottle import route, post, template, run, static_file, request, response
+from apscheduler.scheduler import Scheduler
 import json
-import os, re
-
-# options:
-# get last seen episodes/series/movies
-# index file from mediaserver by id/path
-
-apikeyinvalid = {
-	'status': 'error',
-	'message': 'Invalid API key'
-}
+from lib.themoviedb import tmdb
+import os
+import re
+from synodlnatrakt import ui, versioncheck
+from math import ceil
 
 
-@route('/aps/<apikey>')
-def index(apikey):
-	if apikey != 123:
-		content = apikeyinvalid
-		response.status = 404
-	else:
 
-		content = {
-			'status': 'success',
-			'message': 'your api key is valid'
-		}
-
-	response.content_type = "application/json"
-	
-	return content
-
-@route('/api/<apikey:int>/<option>')
-def index():
-
-	synoindex = request.get('synoindex')
-	path = request.get('path')
-
-	if synoindex:
-		pqsql
+@route('/api/<api_key>')
+def list_methods(api_key):
+    if api_key == config.apikey:
+        methods = []
+        methods.append({"name": "list movies", "url": "/api/apikey/list/movies"})
+        return json.dumps({"result": "success", "message": "Valid API key {0}", "data": methods})
+    else:
+        return json.dumps({"result": "error", "message": "Invalid API key {0}"})
 
 
-run(host='0.0.0.0', port=1337, reloader=True)
+@route('/api/<api_key>/list/<kind_of>')
+def list_methods(api_key):
+    if api_key == config.apikey:
+        if kind_of == "movies":
+
+        elif kind_of == "series":
+
+        elif kind_of == "episode":
+
+    else:
+        pass
+
+@route('/api/<api_key>/info/<kind_of>')
+def list_methods(api_key):
+    if api_key == config.apikey:
+        if kind_of == "movies":
+
+        elif kind_of == "series":
+
+        elif kind_of == "episode":
+
+    else:
+        pass
+
