@@ -222,7 +222,7 @@ def update_movies(force=False):
             movie.progress = 100
             movie.scrobbled = 1
             if not movie.lastseen:
-                movie.lastseen = datetime.datetime(2000, 1, 1).strftime('%Y-%m-%d %H:%M:%S')
+                movie.lastseen = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
             db.session.merge(movie)
 
     db.session.commit()
@@ -284,7 +284,7 @@ def update_series():
                         a.progress = 100
                         a.scrobbled = 1
                         if not a.lastseen:
-                            a.lastseen = datetime.datetime(2000, 1, 1).strftime('%Y-%m-%d %H:%M:%S')
+                            a.lastseen = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
                         db.session.merge(a)
                         logger.info(
                             u"marked {0}: {2}x{3} \"{1}\" as watched".format(show["title"], a.name, a.season, a.episode))

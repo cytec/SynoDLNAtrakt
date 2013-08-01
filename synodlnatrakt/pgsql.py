@@ -4,7 +4,7 @@ from sqlalchemy.orm import sessionmaker, scoped_session
 
 
 engine = create_engine(
-    'postgresql+pg8000://admin:933461@192.168.0.55/mediaserver',
+    'postgresql+pg8000://admin@localhost/mediaserver',
     encoding='utf-8',
     convert_unicode=True,
     echo=False,
