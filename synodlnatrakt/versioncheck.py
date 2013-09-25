@@ -30,7 +30,7 @@ branch = "2.0"
 
 def runGit(args):
 
-    git_locations = ['git', '/opt/bin/git', '/usr/local/git']
+    git_locations = ['git', '/opt/bin/git', '/usr/local/git/bin/git']
 
     output = err = None
 
