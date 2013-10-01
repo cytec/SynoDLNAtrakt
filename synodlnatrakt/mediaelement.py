@@ -7,8 +7,10 @@ from synodlnatrakt.logger import logger
 import lib.enzyme as enzyme
 
 from lib.tvdb_api import tvdb_api
-from lib.themoviedb import tmdb
+import tmdb3
+tmdb3.set_key(config.tmdb_key)
 
+tmdb3.set_locale(config.language, config.language)
 
 class Movie(object):
     '''Movie object'''
@@ -43,9 +45,9 @@ class Movie(object):
         # enddate - startdate = duration
         # self.progress = 0
         try:
-            duration = self._log[-1] - self._log[1]
+            duration = self._log[-1] - self._log[0]
         except:
-            duration = self._log[1] - self._log[1]
+            duration = self._log[0] - self._log[0]
         h, m, s = str(duration).split(":")
         viewed = int(h) * 60
         viewed = (viewed + int(m)) * 60
@@ -148,9 +150,9 @@ class Movie(object):
 
         if self.imdb_id:
 
-            movie = tmdb.getMovieInfo(self.imdb_id, lang=config.language)
-            self.description = movie["overview"]
-            self.tmdb_id = movie["id"]
+            movie = tmdb3.Movie.fromIMDB(self.imdb_id)
+            self.description = movie.overview
+            self.tmdb_id = movie.id
             images.get_images(self.imdb_id, "movie")
 
             if config.add_to_list:
