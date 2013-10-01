@@ -242,11 +242,6 @@ def index():
             pass
     return json.dumps(result)
 
-# @route('/save/movie/<synoindex>/<imdb_id>')
-# def index(synoindex, imdb_id):
-# 	result = helper.updateMovie(synoindex, imdb_id)
-# 	return result
-
 
 @post('/search')
 def index():
