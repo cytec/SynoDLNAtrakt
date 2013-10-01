@@ -229,7 +229,18 @@ def index(synoindex):
 def index():
     name = request.forms.get("name")
     movies = tmdb3.searchMovie(name)
-    return json.dumps(movies)
+    result = []
+    for movie in movies:
+        try:
+            cur_result = {}
+            cur_result["imdb_id"] = movie.imdb
+            cur_result["name"] = movie.title
+            cur_result["url"] = "http://themoviedb.org/movie/%s" % movie.id
+            cur_result["released"] = movie.releasedate.year
+            result.append(cur_result)
+        except:
+            pass
+    return result
 
 # @route('/save/movie/<synoindex>/<imdb_id>')
 # def index(synoindex, imdb_id):
