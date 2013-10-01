@@ -1,7 +1,6 @@
 import Image
 import ImageFilter
 from lib.tvdb_api import tvdb_api
-from lib.themoviedb import tmdb
 import os
 import requests
 

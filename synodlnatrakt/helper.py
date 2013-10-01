@@ -12,13 +12,15 @@ import codecs
 from urllib import urlretrieve
 from xml.dom.minidom import parse, parseString
 from lib.apachelog import apachelog as apachelog
-from lib.themoviedb import tmdb
+import tmdb3
 from lib.tvdb_api import tvdb_api
 from synodlnatrakt import config, db, pgsql, images, ui
 from synodlnatrakt.logger import logger
 from synodlnatrakt.name_parser import parser
 import lib.enzyme as enzyme
 
+tmdb3.set_key(config.tmdb_key)
+tmdb3.set_locale(config.language, config.language)
 
 def updateMediaflags():
     movies = db.session.query(db.Movies).filter(db.Movies.acodec == None).all()
@@ -38,16 +40,16 @@ def updateMediaflags():
 
 
 def updateMovie(synoindex, imdb_id):
-    movie = tmdb.getMovieInfo(imdb_id, lang=config.language)
+    movie = tmdb3.Movie.fromIMDB(imdb_id)
     result = db.session.query(db.Movies).filter(db.Movies.synoindex == synoindex).first()
     if result:
         oldname = result.name
         oldyear = result.year
-        result.name = movie["name"]
-        result.description = movie["overview"]
-        result.imdb_id = movie["imdb_id"]
-        result.tmdb_id = movie["id"]
-        result.year = movie["released"].split("-")[0]
+        result.name = movie.title
+        result.description = movie.overview
+        result.imdb_id = movie.imdb
+        result.tmdb_id = movie.id
+        result.year = movie.releasedate.year
         result.rating = 0
         result.lastseen = ""
         result.progress = 0
@@ -202,27 +204,25 @@ def cache_cover(theid, mediatype):
 def tmdbsearch(searchstring):
     logger.debug(u"searching tmdb for: {0}".format(searchstring))
     if searchstring[:2] == "tt":
-        movieinfo = tmdb.getMovieInfo('{0}'.format(searchstring), lang=config.language)
+        movieinfo = tmdb3.Movie.fromIMDB('{0}'.format(searchstring))
     else:
-        results = tmdb.search(searchstring, lang=config.language)
+        results = tmdb3.searchMovieWithYear(searchstring)
         if results:
-            firstresult = results[0]
-            movieinfo = firstresult.info(lang=config.language)
+            movieinfo = results[0]
         else:
             # search again for movie without the year
             searchstring = re.sub(" \([0-9]{4}\)", "", searchstring)
-            results = tmdb.search(searchstring, lang=config.language)
+            results = tmdb3.searchMovie(searchstring)
             if results:
-                firstresult = results[0]
-                movieinfo = firstresult.info(lang=config.language)
+                movieinfo = results[0]
             else:
                 logger.error(u"Can't find any matches for {0}".format(searchstring))
                 return None, None, None, None
-    imdb_id = movieinfo["imdb_id"]
-    tmdb_id = movieinfo["id"]
-    title = movieinfo["name"]
+    imdb_id = movieinfo.imdb
+    tmdb_id = movieinfo.id
+    title = movieinfo.title
     try:
-        year = movieinfo["released"].split("-")[0]
+        year = movieinfo.releasedate.year
     except:
         year = 0000
     logger.info(u"Found result for {0} -> Fullname: {1}, year {3}, imdb_id: {2}".format(searchstring, title, imdb_id, year))

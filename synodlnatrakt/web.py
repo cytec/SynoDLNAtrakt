@@ -6,12 +6,14 @@ from synodlnatrakt import logger, helper, main, mediaimport
 from lib.bottle import route, post, template, run, static_file, request, response
 from apscheduler.scheduler import Scheduler
 import json
-from lib.themoviedb import tmdb
 import os
 import re
 from synodlnatrakt import ui, versioncheck
 from math import ceil
 
+import tmdb3
+tmdb3.set_key(config.tmdb_key)
+tmdb3.set_locale(config.language, config.language)
 
 def check_auth(username, password):
     if config.username != "":
@@ -226,7 +228,7 @@ def index(synoindex):
 @requires_auth
 def index():
     name = request.forms.get("name")
-    movies = tmdb.search(name, lang=config.language)
+    movies = tmdb3.searchMovie(name)
     return json.dumps(movies)
 
 # @route('/save/movie/<synoindex>/<imdb_id>')
@@ -485,6 +487,7 @@ def saveConfig():
         # print type(request.forms.get(a))
     try:
         config.save_config()
+        tmdb3.set_locale(config.language)
         ui.notifications.success("Yeah", "settings saved successfully")
     except:
         ui.notifications.error("Whooopsy...", "settings not saved")

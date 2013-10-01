@@ -5,10 +5,6 @@ from synodlnatrakt import config, images
 
 from os import path
 
-from lib.tvdb_api import tvdb_api
-from lib.themoviedb import tmdb
-
-
 dbpath = path.join(config.datadir, "SynoDLNAtrakt.db")
 engine = create_engine('sqlite:///{0}'.format(dbpath), echo=False)
 
