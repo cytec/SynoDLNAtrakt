@@ -206,13 +206,19 @@ def tmdbsearch(searchstring):
     if searchstring[:2] == "tt":
         movieinfo = tmdb3.Movie.fromIMDB('{0}'.format(searchstring))
     else:
-        results = tmdb3.searchMovieWithYear(u'%s' % searchstring)
+        try:
+            results = tmdb3.searchMovieWithYear(u'%s' % searchstring)
+        except:
+            results = None
         if results:
             movieinfo = results[0]
         else:
             # search again for movie without the year
             searchstring = re.sub(" \([0-9]{4}\)", "", searchstring)
-            results = tmdb3.searchMovie(u'%s' % searchstring)
+            try:
+                results = tmdb3.searchMovie(u'%s' % searchstring)
+            except:
+                results = None
             if results:
                 movieinfo = results[0]
             else:
