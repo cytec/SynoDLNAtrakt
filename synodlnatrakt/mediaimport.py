@@ -51,7 +51,7 @@ def search(searchstring, max_entrys=20):
             m = Movie(entry.id, None, database=True)
 
         if m.path:
-            logger.info(u"loaded Mediaelement from db: {0}".format(episode.id))
+            logger.info(u"loaded Mediaelement from db: {0}".format(entry.id))
         else:
             m.generate()
             m.to_database()
