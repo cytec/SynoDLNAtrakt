@@ -57,8 +57,8 @@ def updateMovie(synoindex, imdb_id):
     db.session.merge(result)
     db.session.commit()
     images.get_images(imdb_id, "movie")
-    ui.notifications.success(movie["name"], 'updated {0} ({1}) with {2} ({3})'.format(
-        oldname, oldyear, movie["name"], movie["released"].split("-")[0]))
+    ui.notifications.success(movie.title, 'updated {0} ({1}) with {2} ({3})'.format(
+        oldname, oldyear, movie.title, movie.releasedate.year))
     # answer = {u"status":u"success", u"message": u"updated {0} with {1}".format(oldname, movie["name"]), u"title": movie["name"]}
     # return answer
 
