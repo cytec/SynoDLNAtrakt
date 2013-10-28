@@ -21,7 +21,7 @@ def setup():
 
 def generate_stats():
     logger.debug(u"generating new stats...")
-    since = datetime.datetime.now() - datetime.timedelta(days=60)
+    since = datetime.datetime.now() - datetime.timedelta(days=30)
 
     movies = db.session.query(db.Movies)
     episodes = db.session.query(db.TVEpisodes)
@@ -29,7 +29,7 @@ def generate_stats():
     last_episodes = movies.filter(db.Movies.lastseen < since).all()
 
     line_chart = pygal.HorizontalBar(style=BlueStyle)
-    line_chart.title = 'Watched in the last 60 days'
+    line_chart.title = 'Watched in the last 30 days'
     line_chart.add('Movies', len(last_movies))
     line_chart.add('Episodes', len(last_episodes))
 
@@ -51,7 +51,7 @@ def generate_stats():
 
 
     line_chart = pygal.Pie(style=BlueStyle)
-    line_chart.title = 'Movie Ratong'
+    line_chart.title = 'Movie Rating'
     line_chart.add('unrated', len(movies.filter(db.Movies.rating == 0).all()))
     line_chart.add('1', len(movies.filter(db.Movies.rating == 1).all()))
     line_chart.add('2', len(movies.filter(db.Movies.rating == 2).all()))
