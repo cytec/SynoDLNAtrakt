@@ -6,7 +6,8 @@ import datetime
 import sys
 import os
 import subprocess
-
+import pygal
+from pygal.style import BlueStyle
 from synodlnatrakt.logger import logger
 from alembic.config import Config
 from alembic.script import ScriptDirectory
@@ -18,6 +19,52 @@ def setup():
     # create directorys...
     pass
 
+def generate_stats():
+    logger.debug(u"generating new stats...")
+    since = datetime.datetime.now() - datetime.timedelta(days=60)
+
+    movies = db.session.query(db.Movies)
+    episodes = db.session.query(db.TVEpisodes)
+    last_movies = movies.filter(db.Movies.lastseen > since).all()
+    last_episodes = movies.filter(db.Movies.lastseen < since).all()
+
+    line_chart = pygal.HorizontalBar(style=BlueStyle)
+    line_chart.title = 'Watched in the last 60 days'
+    line_chart.add('Movies', len(last_movies))
+    line_chart.add('Episodes', len(last_episodes))
+
+    line_chart.render_to_file(os.path.join(config.templatedir,'img','last_days.svg'))
+
+    line_chart = pygal.Pie(style=BlueStyle)
+    line_chart.title = 'Movies watches/unseen'
+    line_chart.add('watched', len(movies.filter(db.Movies.progress == 100).all()))
+    line_chart.add('unseen', len(movies.filter(db.Movies.progress < 100).all()))
+
+    line_chart.render_to_file(os.path.join(config.templatedir,'img','movies_seen.svg'))
+
+    line_chart = pygal.Pie(style=BlueStyle)
+    line_chart.title = 'Episodes watches/unseen'
+    line_chart.add('watched', len(episodes.filter(db.TVEpisodes.progress == 100).all()))
+    line_chart.add('unseen', len(episodes.filter(db.TVEpisodes.progress < 100).all()))
+
+    line_chart.render_to_file(os.path.join(config.templatedir,'img','episodes_seen.svg'))
+
+
+    line_chart = pygal.Pie(style=BlueStyle)
+    line_chart.title = 'Movie Ratong'
+    line_chart.add('unrated', len(movies.filter(db.Movies.rating == 0).all()))
+    line_chart.add('1', len(movies.filter(db.Movies.rating == 1).all()))
+    line_chart.add('2', len(movies.filter(db.Movies.rating == 2).all()))
+    line_chart.add('3', len(movies.filter(db.Movies.rating == 3).all()))
+    line_chart.add('4', len(movies.filter(db.Movies.rating == 4).all()))
+    line_chart.add('5', len(movies.filter(db.Movies.rating == 5).all()))
+    line_chart.add('6', len(movies.filter(db.Movies.rating == 6).all()))
+    line_chart.add('7', len(movies.filter(db.Movies.rating == 7).all()))
+    line_chart.add('8', len(movies.filter(db.Movies.rating == 8).all()))
+    line_chart.add('9', len(movies.filter(db.Movies.rating == 9).all()))
+    line_chart.add('10', len(movies.filter(db.Movies.rating == 10).all()))
+
+    line_chart.render_to_file(os.path.join(config.templatedir,'img','movie_rating.svg'))
 
 def update_db():
     if os.path.exists("{0}/SynoDLNAtrakt.db".format(config.datadir)):

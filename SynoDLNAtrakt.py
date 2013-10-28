@@ -52,7 +52,7 @@ class MyDaemon(Daemon):
 
         @sched.interval_schedule(minutes=trakt_sync_int ,start_date=starttime + timedelta(seconds=10))
         def generate_stats():
-            helper.generate_stats()
+            main.generate_stats()
 
         if config.delete_orphans:
             @sched.interval_schedule(minutes=480, start_date=starttime+timedelta(minutes=60))
