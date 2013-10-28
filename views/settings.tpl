@@ -159,6 +159,19 @@
                   <div class="control-group">
                     <div class="controls">
                       <label class="checkbox">
+                        %if config.movies_3d:
+                          <input name="movies_3d" type="checkbox" checked> Use 3D Movies as seperate Movies?
+                        %else:
+                          <input name="movies_3d" type="checkbox"> Use 3D Movies as seperate Movies?
+                        %end if
+                        <span class="help-block">should 3D Movies appear as a seperate Movie type?</span>
+                      </label>
+                    </div>
+                  </div>
+
+                  <div class="control-group">
+                    <div class="controls">
+                      <label class="checkbox">
                         %if config.try_guessing:
                           <input name="try_guessing" type="checkbox" checked> Try Guessing
                         %else:

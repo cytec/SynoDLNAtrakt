@@ -62,6 +62,8 @@ TITLE_STRIP_SEARCH = [".", "-", "_"]
 removejunk = ["BR-Ripdvd", "BR-Rip", "DVDRip", "German", "Dubbed", "uncut", "extendet", "complete", "bluray", "720p",
               "1080p", "hdtv", "PAL", "DL", "AC3", "DVD-Rip", "dvd", "720P"]
 
+keyword_3d = ['3d','hsbs','sbs','half']
+
 trakt_key = "860f1d1eda847c3b934a2d942eef110e13d21b12"
 
 the_srings = ["the ", "der ", "die ", "das "]
@@ -113,6 +115,7 @@ mediaflags = 1
 delete_orphans = 0
 use_whitelist = False
 whitelist = ""
+movies_3d = False
 
 
 def CheckSection(sec):
@@ -163,7 +166,7 @@ def initialize():
         language, port, page_limit, trakt_user, trakt_pass, use_boxcar, boxcar_username, \
         move_watched_movies, move_watched_series, move_movies_to_dir, move_series_to_dir, update_synoindex, \
         delete_from_index, delete_from_disk, cachedir, datadir, dbpath, sha1hash, add_to_list, list_name, blur_images, \
-        add_to_collection, mediaflags, delete_orphans, use_whitelist, whitelist
+        add_to_collection, mediaflags, delete_orphans, use_whitelist, whitelist, movies_3d
 
     CFG = ConfigObj(cfg_path)
 
@@ -182,6 +185,7 @@ def initialize():
     absolute_ep_anime = bool(check_setting_int(CFG, 'General', 'absolute_ep_anime', 1))
     hide_watched = bool(check_setting_int(CFG, 'General', 'hide_watched', 0))
     datadir = check_setting_str(CFG, 'General', 'datadir', os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    movies_3d = bool(check_setting_int(CFG, 'General', 'movies_3d', 0))
 
     # adcanced
     logtoconsole = bool(check_setting_int(CFG, 'Advanced', 'logtoconsole', 0))
@@ -251,6 +255,7 @@ def save_config():
     new_config['General']['absolute_ep_anime'] = int(absolute_ep_anime)
     new_config['General']['hide_watched'] = int(hide_watched)
     new_config['General']['datadir'] = datadir
+    new_config['General']['movies_3d'] = int(movies_3d)
 
     new_config['Advanced'] = {}
     new_config['Advanced']['logtoconsole'] = int(logtoconsole)

@@ -27,6 +27,9 @@
         %elif movie.vwidth >= 1920:
           <img src="/static/img/flags/resolution/1080.png" />
         %end if
+        %if config.movies_3d and [i for i in config.keyword_3d if i in movie.path.lower()]:
+          <img src="/static/img/flags/resolution/3dbd.png" />
+        %end if
       </div>
       %end if
     </div>
