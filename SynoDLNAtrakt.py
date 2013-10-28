@@ -50,6 +50,10 @@ class MyDaemon(Daemon):
         def update_checker():
             main.checkupdate()
 
+        @sched.interval_schedule(minutes=trakt_sync_int ,start_date=starttime + timedelta(seconds=10))
+        def generate_stats():
+            helper.generate_stats()
+
         if config.delete_orphans:
             @sched.interval_schedule(minutes=480, start_date=starttime+timedelta(minutes=60))
             def delete_orphans():
@@ -57,7 +61,7 @@ class MyDaemon(Daemon):
 
         sched.start()
         main.update_db()
-        # sched.print_jobs()
+        #sched.print_jobs()
 
         TEMPLATE_PATH.insert(0, config.templatedir)
 
