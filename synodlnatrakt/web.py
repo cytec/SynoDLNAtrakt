@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 from synodlnatrakt.mediaelement import Episode, Movie
 from synodlnatrakt import db, trakt, config
 from datetime import datetime, timedelta
@@ -13,8 +16,10 @@ from math import ceil
 
 import tmdb3
 tmdb3.set_key(config.tmdb_key)
-tmdb3.set_locale(config.language, config.language)
-
+if config.language != "en":
+    tmdb3.set_locale(config.language, config.language)
+else:
+    tmdb3.set_locale(config.language, "US")
 def check_auth(username, password):
     if config.username != "":
         if username == config.username and password == config.password:
@@ -493,7 +498,11 @@ def saveConfig():
         # print type(request.forms.get(a))
     try:
         config.save_config()
-        tmdb3.set_locale(config.language)
+
+        if config.language != "en":
+            tmdb3.set_locale(config.language, config.language)
+        else:
+            tmdb3.set_locale(config.language, "US")
         ui.notifications.success("Yeah", "settings saved successfully")
     except:
         ui.notifications.error("Whooopsy...", "settings not saved")

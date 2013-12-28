@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import os
 import re
 
@@ -9,8 +12,10 @@ import lib.enzyme as enzyme
 from lib.tvdb_api import tvdb_api
 import tmdb3
 tmdb3.set_key(config.tmdb_key)
-
-tmdb3.set_locale(config.language, config.language)
+if config.language != "en":
+    tmdb3.set_locale(config.language, config.language)
+else:
+    tmdb3.set_locale(config.language, "US")
 
 class Movie(object):
     '''Movie object'''

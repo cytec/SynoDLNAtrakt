@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 # Author: cytec <iamcytec@googlemail.com>
 # URL: http://github.com/cytec/SynoDLNAtrakt/
 #
@@ -20,7 +23,10 @@ from synodlnatrakt.name_parser import parser
 import lib.enzyme as enzyme
 
 tmdb3.set_key(config.tmdb_key)
-tmdb3.set_locale(config.language, config.language)
+if config.language != "en":
+    tmdb3.set_locale(config.language, config.language)
+else:
+    tmdb3.set_locale(config.language, "US")
 
 def updateMediaflags():
     movies = db.session.query(db.Movies).filter(db.Movies.acodec == None).all()

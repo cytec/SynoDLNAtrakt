@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 # Author: cytec <iamcytec@googlemail.com>
 # URL: http://github.com/cytec/SynoDLNAtrakt/
 #
