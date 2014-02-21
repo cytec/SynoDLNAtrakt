@@ -377,6 +377,14 @@ def index():
     # myresponse = main.scanlogs(force=True)
     return myresponse
 
+@post('/settings/force/orphans')
+@requires_auth
+def index():
+    exec_date = datetime.now() + timedelta(seconds=2)
+    sched.add_date_job(main.delete_orphans, exec_date)
+    myresponse = {'status': 'success', 'message': 'forced delete of orphans'}
+    # myresponse = main.scanlogs(force=True)
+    return myresponse
 
 @route('/logs/<loglevel>')
 @requires_auth

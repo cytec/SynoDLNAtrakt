@@ -11,7 +11,7 @@
           <div class="span6 offset3">
             <div class="well">
               <p><i class="btn btn-inverse icon-wrench"> Toggle Advanced Settings</i></p>
-  
+
             <p><button id="sync" class="btn btn-large btn-block" type="button">Force trakt.tv sync</button></p>
             <p><button id="scrobble" class="btn btn-large btn-block" type="button">Force Scrobble</button></p>
             <div class="advanced" style="display:none">
@@ -47,6 +47,7 @@
             </div>
             <p><button id="import" class="btn btn-large btn-block" type="button">Force Import</button></p>
             <p><button id="mediaflags" class="btn btn-large btn-block" type="button">Force Mediaflags</button></p>
+            <p><button id="orphans" class="btn btn-large btn-block" type="button">Force delete Orphans</button></p>
           </div>
         </div>
       </div>
