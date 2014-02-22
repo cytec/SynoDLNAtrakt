@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 
 import os
 import sys
@@ -65,7 +68,7 @@ class MyDaemon(Daemon):
 
         TEMPLATE_PATH.insert(0, config.templatedir)
 
-        web.run(host='0.0.0.0', port=config.port, debug=True)
+        web.run(host='0.0.0.0', port=config.port, debug=True, server="paste")
 
         # while True:
         #     pass
