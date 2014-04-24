@@ -1,10 +1,10 @@
 from sqlalchemy import create_engine, MetaData, Column, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, scoped_session
-
+from synodlnatrakt import config
 
 engine = create_engine(
-    'postgresql+pg8000://admin@localhost/mediaserver',
+    'postgresql+pg8000://{0}@localhost/mediaserver'.format(config.postgres_user),
     encoding='utf-8',
     convert_unicode=True,
     echo=False,

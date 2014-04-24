@@ -119,6 +119,7 @@ delete_orphans = 0
 use_whitelist = False
 whitelist = ""
 movies_3d = False
+postgres_user = 'admin'
 
 
 def CheckSection(sec):
@@ -169,7 +170,7 @@ def initialize():
         language, port, page_limit, trakt_user, trakt_pass, use_boxcar, boxcar_username, \
         move_watched_movies, move_watched_series, move_movies_to_dir, move_series_to_dir, update_synoindex, \
         delete_from_index, delete_from_disk, cachedir, datadir, dbpath, sha1hash, add_to_list, list_name, blur_images, \
-        add_to_collection, mediaflags, delete_orphans, use_whitelist, whitelist, movies_3d
+        add_to_collection, mediaflags, delete_orphans, use_whitelist, whitelist, movies_3d, postgres_user
 
     CFG = ConfigObj(cfg_path)
 
@@ -191,6 +192,7 @@ def initialize():
     movies_3d = bool(check_setting_int(CFG, 'General', 'movies_3d', 0))
 
     # adcanced
+    postgres_user = check_setting_str(CFG, 'Advanced', 'postgres_user', 'admin')
     logtoconsole = bool(check_setting_int(CFG, 'Advanced', 'logtoconsole', 0))
     debugmode = bool(check_setting_int(CFG, 'Advanced', 'debugmode', 1))
     min_progress = check_setting_int(CFG, 'Advanced', 'min_progress', 80)
@@ -261,6 +263,7 @@ def save_config():
     new_config['General']['movies_3d'] = int(movies_3d)
 
     new_config['Advanced'] = {}
+    new_config['Advanced']['postgres_user'] = postgres_user
     new_config['Advanced']['logtoconsole'] = int(logtoconsole)
     new_config['Advanced']['debugmode'] = int(debugmode)
     new_config['Advanced']['min_progress'] = int(min_progress)
