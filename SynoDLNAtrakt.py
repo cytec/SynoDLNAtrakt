@@ -19,12 +19,12 @@ from datetime import datetime, timedelta
 class MyDaemon(Daemon):
 
     def run(self):
+        config.initialize()
+        config.save_config()
+
         from synodlnatrakt import web
         from synodlnatrakt import main, versioncheck
         from lib.bottle import TEMPLATE_PATH
-
-        config.initialize()
-        config.save_config()
 
         versioncheck.getVersion()
         versioncheck.checkGithub()

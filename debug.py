@@ -11,6 +11,10 @@ sys.path.append(os.path.join(base_path, 'lib'))
 
 from synodlnatrakt.timer import sched
 from synodlnatrakt import config
+
+config.initialize()
+config.save_config()
+
 from datetime import datetime, timedelta
 
 
