@@ -9,6 +9,10 @@ base_path = os.path.dirname(os.path.abspath(__file__))
 # Insert local directories into path
 sys.path.append(os.path.join(base_path, 'lib'))
 
+if not hasattr(sys, "setdefaultencoding"):
+    reload(sys)
+
+sys.setdefaultencoding('utf-8')
 
 from synodlnatrakt.timer import sched
 from synodlnatrakt import config

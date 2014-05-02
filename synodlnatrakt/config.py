@@ -172,7 +172,7 @@ def initialize():
         delete_from_index, delete_from_disk, cachedir, datadir, dbpath, sha1hash, add_to_list, list_name, blur_images, \
         add_to_collection, mediaflags, delete_orphans, use_whitelist, whitelist, movies_3d, postgres_user
 
-    CFG = ConfigObj(cfg_path)
+    CFG = ConfigObj(cfg_path, encoding="UTF8")
 
     CheckSection('General')
     CheckSection('Advanced')
@@ -181,9 +181,9 @@ def initialize():
     CheckSection('Postprocessing')
 
     # general
-    accesslog = check_setting_str(CFG, 'General', 'accesslog', '/var/log/lighttpd/access.log')
-    moviedir = check_setting_str(CFG, 'General', 'moviedir', '/path/to/moviedir/|/path/to/2nd/moviedir/').split('|')
-    seriesdir = check_setting_str(CFG, 'General', 'seriesdir', '/path/to/seriesdir/|/path/to/2nd/seriesdir/').split('|')
+    accesslog = check_setting_str(CFG, 'General', 'accesslog', u'/var/log/lighttpd/access.log')
+    moviedir = check_setting_str(CFG, 'General', 'moviedir', u'/path/to/moviedir/|/path/to/2nd/moviedir/').split('|')
+    seriesdir = check_setting_str(CFG, 'General', 'seriesdir', u'/path/to/seriesdir/|/path/to/2nd/seriesdir/').split('|')
     try_guessing = bool(check_setting_int(CFG, 'General', 'try_guessing', 1))
     delete_logs = bool(check_setting_int(CFG, 'General', 'delete_logs', 0))
     absolute_ep_anime = bool(check_setting_int(CFG, 'General', 'absolute_ep_anime', 1))
@@ -248,13 +248,12 @@ def initialize():
 
 def save_config():
 
-    new_config = ConfigObj()
-    new_config.filename = cfg_path
+    new_config = ConfigObj(cfg_path, encoding='UTF8')
 
     new_config['General'] = {}
     new_config['General']['accesslog'] = accesslog
-    new_config['General']['moviedir'] = '|'.join(moviedir)
-    new_config['General']['seriesdir'] = '|'.join(seriesdir)
+    new_config['General']['moviedir'] = u'|'.join(moviedir)
+    new_config['General']['seriesdir'] = u'|'.join(seriesdir)
     new_config['General']['try_guessing'] = int(try_guessing)
     new_config['General']['delete_logs'] = int(delete_logs)
     new_config['General']['absolute_ep_anime'] = int(absolute_ep_anime)
@@ -278,7 +277,7 @@ def save_config():
     new_config['Advanced']['mediaflags'] = int(mediaflags)
     new_config['Advanced']['delete_orphans'] = int(delete_orphans)
     new_config['Advanced']['use_whitelist'] = int(use_whitelist)
-    new_config['Advanced']['whitelist'] = '|'.join(whitelist)
+    new_config['Advanced']['whitelist'] = u'|'.join(whitelist)
 
     new_config['Trakt'] = {}
     new_config['Trakt']['trakt_pass'] = trakt_pass
