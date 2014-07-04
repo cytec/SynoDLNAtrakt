@@ -569,7 +569,7 @@ def array_dim_lengths(arr):
     else:
         return [len(arr)]
     return retval
-    
+
 class array_send(object):
     def __init__(self, typeoid, bin_out_func):
         self.typeoid = typeoid
@@ -627,6 +627,7 @@ pg_types = {
     26: {"txt_in": numeric_in}, # oid type
     700: {"bin_in": float4recv},
     701: {"bin_in": float8recv},
+    705: {"txt_in": varcharin}, # UNKNOWN
     829: {"txt_in": varcharin}, # MACADDR type
     1000: {"bin_in": array_recv}, # BOOL[]
     1003: {"bin_in": array_recv}, # NAME[]
