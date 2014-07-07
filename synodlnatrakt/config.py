@@ -28,7 +28,7 @@ medialist = ["avi", "mkv", "mov", "mp4", "m4v", "ts", "hdmov", "wmv", "mpg", "mp
 tmdb_key = "a8b9f96dde091408a03cb4c78477bd14"
 
 # regex for getting the id and extension from access.log
-logregex = ".*/(?P<theid>\d{1,5})\.(?P<ext>\w{3,5}).*"
+logregex = ".*/(\w\D+)?(?P<theid>\d{1,5})\.(?P<ext>\w{3,5}).*"
 seriesregex = "(?P<name>.*).?[sS](?P<season>\d{1,2})[eE|xX|epEP|\.|-]?(?P<episode>\d{1,2})"
 movieregex = "(?P<name>[^()]*)\.?\(?(?P<year>\d{4})\)?"
 
