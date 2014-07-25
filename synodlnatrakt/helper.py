@@ -388,7 +388,7 @@ def checkNFO(filepath, nfotype):
 
                 logger.debug(u"Parsed {0} to {1}".format(filepath, searchstring))
                 # first search file...
-                #searchstring.reverse()
+                searchstring.reverse()
                 for entry in searchstring:
                     title, imdb_id, tmdb_id, year = tmdbsearch(entry)
                     if imdb_id:
